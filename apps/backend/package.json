@@ -1,0 +1,19 @@
+{
+  "name": "3may",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "test": "glob -c \"node --loader tsx --test\" \"./src/**/*.test.ts\""
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "typescript": "^5.1.6",
+    "tsx": "^3.12.7",
+    "glob": "^10.3.3",
+    "@types/aws-lambda": "^8.10.119",
+    "serverless": "^3.34.0",
+    "serverless-esbuild": "^1.46.0",
+    "esbuild": "^0.17.19"
+  }
+}
