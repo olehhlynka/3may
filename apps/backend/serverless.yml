@@ -1,4 +1,5 @@
 service: threemay
+useDotenv: true
 
 plugins:
   - serverless-esbuild
@@ -8,6 +9,7 @@ provider:
   runtime: nodejs20.x
   region: eu-central-1
   stage: ${opt:stage, 'dev'}
+  memorySize: 256
   timeout: 30
   environment:
     MONGO_URL: ${env:MONGO_URL}
@@ -22,16 +24,13 @@ custom:
     packager: pnpm
 
 functions:
-  # Serverless Framework specific syntax
-  Function1:
-    handler: handlers/api/function1/index.handler
-    name: ${self:custom.servicePrefix}-function1
+  PostItem:
+    handler: handlers/api/post-lost-item/index.handler
+    name: ${self:custom.servicePrefix}-post-lost-item
     events:
       - httpApi:
-          path: /api/Function1
-          method: GET
-    environment:
-      CUSTOM_VAR: ${self:custom.customVariable1}
+          path: /items/{status}
+          method: POST
 
   # Function2:
   #   handler: handlers/api/function2/index.handler

@@ -5,15 +5,22 @@
   "scripts": {
     "test": "glob -c \"node --loader tsx --test\" \"./src/**/*.test.ts\""
   },
-  "dependencies": {},
+  "dependencies": {
+    "@3may/contracts": "workspace:^",
+    "@middy/core": "^5.3.3",
+    "@middy/http-cors": "^5.3.3",
+    "@swarmion/serverless-contracts": "^0.31.3",
+    "ajv": "^8.13.0",
+    "mongodb": "^6.6.1"
+  },
   "devDependencies": {
-    "@types/node": "^18.0.0",
-    "typescript": "^5.1.6",
-    "tsx": "^3.12.7",
-    "glob": "^10.3.3",
     "@types/aws-lambda": "^8.10.119",
+    "@types/node": "^18.0.0",
+    "esbuild": "^0.17.19",
+    "glob": "^10.3.3",
     "serverless": "^3.34.0",
     "serverless-esbuild": "^1.46.0",
-    "esbuild": "^0.17.19"
+    "tsx": "^3.12.7",
+    "typescript": "^5.1.6"
   }
 }
