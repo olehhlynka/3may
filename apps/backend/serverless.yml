@@ -25,12 +25,20 @@ custom:
 
 functions:
   PostItem:
-    handler: handlers/api/post-lost-item/index.handler
-    name: ${self:custom.servicePrefix}-post-lost-item
+    handler: handlers/api/post-item/index.handler
+    name: ${self:custom.servicePrefix}-post-item
     events:
       - httpApi:
           path: /items/{status}
           method: POST
+
+  GetItems:
+    handler: handlers/api/get-items/index.handler
+    name: ${self:custom.servicePrefix}-get-items
+    events:
+      - httpApi:
+          path: /items/{status}
+          method: GET
 
   # Function2:
   #   handler: handlers/api/function2/index.handler

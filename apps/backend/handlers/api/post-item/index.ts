@@ -9,30 +9,23 @@ import {
   DbConnectionContext,
   dbConnection,
 } from '@/middlewares/database-connection-middleware';
+import { itemStatusMap } from '@3may/types';
 
-enum ItemStatus {
-  LOST = 'LOST',
-  FOUND = 'FOUND',
-}
-
-const itemStatusMap: Record<string, ItemStatus> = {
-  lost: ItemStatus.LOST,
-  found: ItemStatus.FOUND,
-};
+const ITEMS_COLLECTION = 'items';
 
 const main = getHandler(postNewItemContract, { ajv })(async (
   event,
   context,
 ) => {
-  const { db, mongoClient } = context as DbConnectionContext;
-  const { title, description, photo, coordinates, date, tags } = event.body;
+  const { db } = context as DbConnectionContext;
+  const { title, description, photo, lng, lat, date, tags } = event.body;
   const { status } = event.pathParameters;
 
-  const insertResult = await db.collection('items').insertOne({
+  const insertResult = await db.collection(ITEMS_COLLECTION).insertOne({
     title,
     description,
     status: itemStatusMap[status],
-    location: { type: 'Point', coordinates },
+    location: { type: 'Point', coordinates: [lng, lat] },
     photo,
     date,
     tags,

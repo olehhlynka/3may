@@ -50,6 +50,9 @@ importers:
       '@3may/contracts':
         specifier: workspace:^
         version: link:../../packages/contracts
+      '@3may/types':
+        specifier: workspace:^
+        version: link:../../packages/types
       '@middy/core':
         specifier: ^5.3.3
         version: 5.3.3
@@ -148,9 +151,22 @@ importers:
 
   packages/contracts:
     dependencies:
+      '@3may/types':
+        specifier: workspace:^
+        version: link:../types
       '@swarmion/serverless-contracts':
         specifier: ^0.31.3
         version: 0.31.3(@serverless/typescript@3.38.0)(ajv@8.13.0)(aws-cdk-lib@2.141.0(constructs@10.3.0))(axios@1.6.8)
+      typescript:
+        specifier: ^5.4.5
+        version: 5.4.5
+    devDependencies:
+      json-schema-to-ts:
+        specifier: ^3.1.0
+        version: 3.1.0
+
+  packages/types:
+    dependencies:
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
@@ -2905,6 +2921,10 @@ packages:
     resolution: {integrity: sha512-2adDesYifYEXYxNySx3gG0RR69rDWIjqAFzK/JPXdOvjHLZ/UP6d2rkpy6a+AxyhtRp2SvFPZ4+EW36jBinUbA==}
     engines: {node: '>=16'}
 
+  json-schema-to-ts@3.1.0:
+    resolution: {integrity: sha512-UeVN/ery4/JeXI8h4rM8yZPxsH+KqPi/84qFxHfTGHZnWnK9D0UU9ZGYO+6XAaJLqCWMiks+ARuFOKAiSxJCHA==}
+    engines: {node: '>=16'}
+
   json-schema-traverse@0.4.1:
     resolution: {integrity: sha512-xbbCH5dCYU5T8LcEhhuh7HJ88HXuW3qsI3Y0zOZFKfZEHcpWiHU/Jxzk629Brsab/mMiHQti9wMP+845RPe3Vg==}
 
@@ -3966,6 +3986,9 @@ packages:
 
   ts-algebra@1.2.2:
     resolution: {integrity: sha512-kloPhf1hq3JbCPOTYoOWDKxebWjNb2o/LKnNfkWhxVVisFFmMJPPdJeGoGmM+iRLyoXAR61e08Pb+vUXINg8aA==}
+
+  ts-algebra@2.0.0:
+    resolution: {integrity: sha512-FPAhNPFMrkwz76P7cdjdmiShwMynZYN6SgOujD1urY4oNm80Ou9oMdmbR45LotcKOXoy7wSmHkRFE6Mxbrhefw==}
 
   ts-api-utils@1.3.0:
     resolution: {integrity: sha512-UQMIo7pb8WRomKR1/+MFVLTroIvDVtMX3K6OUir8ynLyzB8Jeriont2bTAtmNPa1ekAgN7YPDyf6V+ygrdU+eQ==}
@@ -5845,7 +5868,7 @@ snapshots:
     dependencies:
       '@serverless/typescript': 3.38.0
       aws-cdk-lib: 2.141.0(constructs@10.3.0)
-      json-schema-to-ts: 3.0.0
+      json-schema-to-ts: 3.1.0
 
   '@szmarczak/http-timer@4.0.6':
     dependencies:
@@ -7710,6 +7733,11 @@ snapshots:
       '@types/json-schema': 7.0.15
       ts-algebra: 1.2.2
 
+  json-schema-to-ts@3.1.0:
+    dependencies:
+      '@babel/runtime': 7.24.5
+      ts-algebra: 2.0.0
+
   json-schema-traverse@0.4.1: {}
 
   json-schema-traverse@1.0.0: {}
@@ -8822,6 +8850,8 @@ snapshots:
       escape-string-regexp: 1.0.5
 
   ts-algebra@1.2.2: {}
+
+  ts-algebra@2.0.0: {}
 
   ts-api-utils@1.3.0(typescript@5.4.5):
     dependencies:

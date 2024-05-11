@@ -1,10 +1,11 @@
+import { errorSchema } from '@/schemas/error-schema';
 import {
   ApiGatewayContract,
   HttpStatusCodes,
 } from '@swarmion/serverless-contracts';
 
 export const postNewItemContract = new ApiGatewayContract({
-  id: 'postLostItem',
+  id: 'postNewItem',
   path: '/items/{status}',
   method: 'POST',
   integrationType: 'restApi',
@@ -14,17 +15,13 @@ export const postNewItemContract = new ApiGatewayContract({
       title: { type: 'string' },
       description: { type: 'string' },
       photo: { type: 'string' },
-      coordinates: {
-        type: 'array',
-        items: { type: 'number' },
-        minItems: 2,
-        maxItems: 2,
-      },
+      lng: { type: 'number', minimum: -180, maximum: 180 },
+      lat: { type: 'number', minimum: -90, maximum: 90 },
       date: { type: 'string' },
       tags: { type: 'array', items: { type: 'string' } },
     },
     additionalProperties: false,
-    required: ['title', 'description', 'coordinates', 'date'],
+    required: ['title', 'description', 'date', 'lng', 'lat'],
   } as const,
   pathParametersSchema: {
     type: 'object',
@@ -43,13 +40,6 @@ export const postNewItemContract = new ApiGatewayContract({
       required: ['id'],
       additionalProperties: false,
     } as const,
-    [HttpStatusCodes.BAD_GATEWAY]: {
-      type: 'object',
-      properties: {
-        message: { type: 'string' },
-      },
-      required: ['message'],
-      additionalProperties: false,
-    },
+    [HttpStatusCodes.BAD_GATEWAY]: errorSchema,
   } as const,
 });
