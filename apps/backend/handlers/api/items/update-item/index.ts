@@ -9,7 +9,6 @@ import {
   DbConnectionContext,
   dbConnection,
 } from '@/middlewares/database-connection-middleware';
-import { itemStatusMap } from '@3may/types';
 import { ITEMS_COLLECTION } from '@/common/constants/database-constants';
 import { ObjectId } from 'mongodb';
 
@@ -25,9 +24,9 @@ const main = getHandler(updateItemContract, { ajv })(async (event, context) => {
       $set: {
         ...(title && { title }),
         ...(description && { description }),
-        ...(status && { status: itemStatusMap[status] }),
-        ...(lng &&
-          lat && { location: { type: 'Point', coordinates: [lng, lat] } }),
+        ...(status && { status }),
+        ...(lng && { 'location.coordinates.0': lng }),
+        ...(lat && { 'location.coordinates.1': lat }),
         ...(photo && { photo }),
         ...(date && { date }),
         ...(tags && { tags }),

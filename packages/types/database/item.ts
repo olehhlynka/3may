@@ -1,14 +1,9 @@
 import { ObjectId } from 'mongodb';
 
 export enum ItemStatus {
-  LOST = 'LOST',
-  FOUND = 'FOUND',
+  LOST = 'lost',
+  FOUND = 'found',
 }
-
-export const itemStatusMap: Record<string, ItemStatus> = {
-  lost: ItemStatus.LOST,
-  found: ItemStatus.FOUND,
-};
 
 export interface ILocation {
   type: 'Point';

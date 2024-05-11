@@ -9,7 +9,6 @@ import {
   DbConnectionContext,
   dbConnection,
 } from '@/middlewares/database-connection-middleware';
-import { itemStatusMap } from '@3may/types';
 import { ITEMS_COLLECTION } from '@/common/constants/database-constants';
 
 const main = getHandler(postNewItemContract, { ajv })(async (
@@ -23,7 +22,7 @@ const main = getHandler(postNewItemContract, { ajv })(async (
   const insertResult = await db.collection(ITEMS_COLLECTION).insertOne({
     title,
     description,
-    status: itemStatusMap[status],
+    status: status,
     location: { type: 'Point', coordinates: [lng, lat] },
     photo,
     date,
