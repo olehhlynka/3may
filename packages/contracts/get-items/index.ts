@@ -4,9 +4,8 @@ import {
 } from '@swarmion/serverless-contracts';
 
 import { JSONSchema } from 'json-schema-to-ts';
-
-import { ItemStatus } from '@3may/types';
 import { errorSchema } from '@/schemas/error-schema';
+import { itemSchema } from '@/schemas/item-schema';
 
 const queryStringParametersSchema = {
   type: 'object',
@@ -24,22 +23,13 @@ const queryStringParametersSchema = {
 const successSchema = {
   type: 'object',
   properties: {
-    title: { type: 'string' },
-    status: { type: 'string', enum: ItemStatus },
-    description: { type: 'string' },
-    photo: { type: 'string' },
-    coordinates: {
+    items: {
       type: 'array',
-      items: { type: 'number' },
-      minItems: 2,
-      maxItems: 2,
+      items: itemSchema,
     },
-    user: { type: 'object' }, //TODO: provide context
-    date: { type: 'string' },
-    tags: { type: 'array', items: { type: 'string' } },
   },
   additionalProperties: false,
-  required: ['title', 'description', 'coordinates', 'date', 'status', 'user'],
+  required: ['items'],
 } as const satisfies JSONSchema;
 
 export const getItemsContract = new ApiGatewayContract({

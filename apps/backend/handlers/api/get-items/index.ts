@@ -1,6 +1,6 @@
 import cors from '@middy/http-cors';
 import middy from '@middy/core';
-import { getItemsContract } from '@3may/contracts';
+import { ItemType, getItemsContract } from '@3may/contracts';
 import { HttpStatusCodes, getHandler } from '@swarmion/serverless-contracts';
 import { httpResponse } from '@/common/http';
 import { ajv } from '@/common/ajv';
@@ -9,9 +9,7 @@ import {
   DbConnectionContext,
   dbConnection,
 } from '@/middlewares/database-connection-middleware';
-import { IItem } from '@3may/types';
-
-const ITEMS_COLLECTION = 'items';
+import { ITEMS_COLLECTION } from '@/common/constants/database-constants';
 
 const DEFAULT_DISTANCE_M = 5_000;
 const EARTH_RADIUS_M = 6_378_100;
@@ -59,7 +57,7 @@ const main = getHandler(getItemsContract, { ajv })(async (event, context) => {
   }
 
   const items = await db
-    .collection<IItem>(ITEMS_COLLECTION)
+    .collection<ItemType>(ITEMS_COLLECTION)
     .find({
       $geoWithin: {
         $centerSphere: [[Number(lng), Number(lat)], getDistanceInRadians(dist)],
@@ -69,7 +67,7 @@ const main = getHandler(getItemsContract, { ajv })(async (event, context) => {
     .limit(limit ? Number(limit) : DEFAULT_LIMIT)
     .toArray();
 
-  return httpResponse(items);
+  return httpResponse({ items });
 });
 
 export const handler = middy(main)

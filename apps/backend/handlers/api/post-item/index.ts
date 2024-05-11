@@ -10,8 +10,7 @@ import {
   dbConnection,
 } from '@/middlewares/database-connection-middleware';
 import { itemStatusMap } from '@3may/types';
-
-const ITEMS_COLLECTION = 'items';
+import { ITEMS_COLLECTION } from '@/common/constants/database-constants';
 
 const main = getHandler(postNewItemContract, { ajv })(async (
   event,

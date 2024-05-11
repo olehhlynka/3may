@@ -1,9 +1,11 @@
 import { HttpStatusCodes } from '@swarmion/serverless-contracts';
 
-export function httpResponse<T>(data: T, statusCode = 200) {
+export function httpResponse<
+  T extends Record<string, unknown> | Record<string, unknown>[],
+>(data: T, code = HttpStatusCodes.OK as const) {
   return {
     body: data,
-    statusCode,
+    statusCode: code,
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Credentials': 'true',

@@ -22,9 +22,9 @@ export interface IItem {
   description: string;
   status: ItemStatus;
   location: ILocation;
-  photo: string;
   date: Date;
   createdAt: Date;
   updatedAt: Date;
-  tags: string[];
+  tags?: string[];
+  photo?: string;
 }
