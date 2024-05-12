@@ -4,7 +4,7 @@ import {
   HttpStatusCodes,
 } from '@swarmion/serverless-contracts';
 import { JSONSchema } from 'json-schema-to-ts';
-import { itemSchema } from '..';
+import { itemSchema } from '../..';
 
 const pathParametersSchema = {
   type: 'object',

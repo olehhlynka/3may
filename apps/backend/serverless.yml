@@ -71,3 +71,35 @@ functions:
       - httpApi:
           path: /items/search
           method: GET
+
+  AddUser:
+    handler: handlers/api/users/add-user/index.handler
+    name: ${self:custom.servicePrefix}-add-user
+    events:
+      - httpApi:
+          path: /users
+          method: POST
+
+  GetUser:
+    handler: handlers/api/users/get-user/index.handler
+    name: ${self:custom.servicePrefix}-get-user
+    events:
+      - httpApi:
+          path: /users/{userId}
+          method: GET
+
+  DeleteUser:
+    handler: handlers/api/users/delete-user/index.handler
+    name: ${self:custom.servicePrefix}-delete-user
+    events:
+      - httpApi:
+          path: /users/{userId}
+          method: DELETE
+
+  UpdateUser:
+    handler: handlers/api/user/update-user/index.handler
+    name: ${self:custom.servicePrefix}-update-user
+    events:
+      - httpApi:
+          path: /user/{userId}
+          method: PUT

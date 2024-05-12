@@ -4,7 +4,7 @@ import {
   ApiGatewayContract,
   HttpStatusCodes,
 } from '@swarmion/serverless-contracts';
-import { itemSchema } from '..';
+import { itemSchema } from '../..';
 
 export const updateItemContract = new ApiGatewayContract({
   id: 'updateItem',
