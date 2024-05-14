@@ -10,9 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@3may/contracts": "workspace:^",
+    "@swarmion/serverless-contracts": "^0.31.3",
+    "common": "workspace:*",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "common": "workspace:*"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
