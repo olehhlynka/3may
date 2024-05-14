@@ -59,6 +59,9 @@ importers:
       '@middy/core':
         specifier: ^5.3.3
         version: 5.3.3
+      '@middy/do-not-wait-for-empty-event-loop':
+        specifier: ^5.3.4
+        version: 5.3.4
       '@middy/http-cors':
         specifier: ^5.3.3
         version: 5.3.3
@@ -99,6 +102,12 @@ importers:
 
   apps/web-app:
     dependencies:
+      '@3may/contracts':
+        specifier: workspace:^
+        version: link:../../packages/contracts
+      '@swarmion/serverless-contracts':
+        specifier: ^0.31.3
+        version: 0.31.3(@serverless/typescript@3.38.0)(ajv@8.13.0)(aws-cdk-lib@2.141.0(constructs@10.3.0))(axios@1.6.8)
       common:
         specifier: workspace:*
         version: link:../../packages/common
@@ -1084,6 +1093,10 @@ packages:
 
   '@middy/core@5.3.3':
     resolution: {integrity: sha512-/Gq0jS4q+W+4/P+m3GxSVX083GDeBesLebSrubyFlJ9RL75ucGn4gtIPr7OVeUNXyexNCM0r9u0tP8YkAvFvZw==}
+    engines: {node: '>=18'}
+
+  '@middy/do-not-wait-for-empty-event-loop@5.3.4':
+    resolution: {integrity: sha512-+NGGsxEbstIcU1wTvRmWlH6zP0DaENuOIOgaeoVhB9rEqj+es9pQI68GtPnpdqu8th8mAnTRnuwdIAQlrU+6bw==}
     engines: {node: '>=18'}
 
   '@middy/http-cors@5.3.3':
@@ -6070,6 +6083,8 @@ snapshots:
   '@middy/core@5.3.3':
     dependencies:
       '@datastream/core': 0.0.35
+
+  '@middy/do-not-wait-for-empty-event-loop@5.3.4': {}
 
   '@middy/http-cors@5.3.3':
     dependencies:

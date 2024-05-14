@@ -12,12 +12,12 @@ export const postNewItemContract = new ApiGatewayContract({
   bodySchema: {
     type: 'object',
     properties: {
-      title: { type: 'string', maxLength: 60, minLength: 10 },
-      description: { type: 'string', maxLength: 200, minLength: 30 },
+      title: { type: 'string' },
+      description: { type: 'string' },
       photo: { type: 'string', maxLength: 100 },
       lng: { type: 'number', minimum: -180, maximum: 180 },
       lat: { type: 'number', minimum: -90, maximum: 90 },
-      date: { type: 'string', maxLength: 15 },
+      date: { type: 'string' },
       tags: { type: 'array', items: { type: 'string' } },
     },
     additionalProperties: false,

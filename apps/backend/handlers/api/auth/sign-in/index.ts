@@ -10,6 +10,7 @@ import {
   CognitoIdentityProviderClient,
   InitiateAuthCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
+import doNotWaitForEmptyEventLoop from '@middy/do-not-wait-for-empty-event-loop';
 
 const client = new CognitoIdentityProviderClient({});
 
@@ -37,6 +38,7 @@ const main = getHandler(signInContract, { ajv })(async (event) => {
 });
 
 export const handler = middy(main)
+  .use(doNotWaitForEmptyEventLoop())
   .use(cors())
   .use(dbConnection())
   .use(errorHandlingMiddleware());

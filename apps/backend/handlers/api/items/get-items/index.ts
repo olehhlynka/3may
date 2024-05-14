@@ -10,6 +10,7 @@ import {
   dbConnection,
 } from '@/middlewares/database-connection-middleware';
 import { ITEMS_COLLECTION } from '@/common/constants/database-constants';
+import doNotWaitForEmptyEventLoop from '@middy/do-not-wait-for-empty-event-loop';
 
 const DEFAULT_DISTANCE_M = 5_000;
 const EARTH_RADIUS_M = 6_378_100;
@@ -71,6 +72,7 @@ const main = getHandler(getItemsContract, { ajv })(async (event, context) => {
 });
 
 export const handler = middy(main)
+  .use(doNotWaitForEmptyEventLoop())
   .use(cors())
   .use(dbConnection())
   .use(errorHandlingMiddleware());

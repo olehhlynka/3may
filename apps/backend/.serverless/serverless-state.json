@@ -279,7 +279,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/threemay/dev/1715673893466-2024-05-14T08:04:53.466Z/threemay.zip"
+                "S3Key": "serverless/threemay/dev/1715716571378-2024-05-14T19:56:11.378Z/threemay.zip"
               },
               "Handler": "handlers/api/items/post-item/index.handler",
               "Runtime": "nodejs20.x",
@@ -316,7 +316,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/threemay/dev/1715673893466-2024-05-14T08:04:53.466Z/threemay.zip"
+                "S3Key": "serverless/threemay/dev/1715716571378-2024-05-14T19:56:11.378Z/threemay.zip"
               },
               "Handler": "handlers/api/items/get-items/index.handler",
               "Runtime": "nodejs20.x",
@@ -353,7 +353,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/threemay/dev/1715673893466-2024-05-14T08:04:53.466Z/threemay.zip"
+                "S3Key": "serverless/threemay/dev/1715716571378-2024-05-14T19:56:11.378Z/threemay.zip"
               },
               "Handler": "handlers/api/items/delete-item/index.handler",
               "Runtime": "nodejs20.x",
@@ -390,7 +390,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/threemay/dev/1715673893466-2024-05-14T08:04:53.466Z/threemay.zip"
+                "S3Key": "serverless/threemay/dev/1715716571378-2024-05-14T19:56:11.378Z/threemay.zip"
               },
               "Handler": "handlers/api/items/get-item/index.handler",
               "Runtime": "nodejs20.x",
@@ -427,7 +427,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/threemay/dev/1715673893466-2024-05-14T08:04:53.466Z/threemay.zip"
+                "S3Key": "serverless/threemay/dev/1715716571378-2024-05-14T19:56:11.378Z/threemay.zip"
               },
               "Handler": "handlers/api/items/update-item/index.handler",
               "Runtime": "nodejs20.x",
@@ -464,7 +464,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/threemay/dev/1715673893466-2024-05-14T08:04:53.466Z/threemay.zip"
+                "S3Key": "serverless/threemay/dev/1715716571378-2024-05-14T19:56:11.378Z/threemay.zip"
               },
               "Handler": "handlers/api/items/search-items/index.handler",
               "Runtime": "nodejs20.x",
@@ -501,7 +501,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/threemay/dev/1715673893466-2024-05-14T08:04:53.466Z/threemay.zip"
+                "S3Key": "serverless/threemay/dev/1715716571378-2024-05-14T19:56:11.378Z/threemay.zip"
               },
               "Handler": "handlers/api/users/add-user/index.handler",
               "Runtime": "nodejs20.x",
@@ -538,7 +538,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/threemay/dev/1715673893466-2024-05-14T08:04:53.466Z/threemay.zip"
+                "S3Key": "serverless/threemay/dev/1715716571378-2024-05-14T19:56:11.378Z/threemay.zip"
               },
               "Handler": "handlers/api/users/get-user/index.handler",
               "Runtime": "nodejs20.x",
@@ -575,7 +575,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/threemay/dev/1715673893466-2024-05-14T08:04:53.466Z/threemay.zip"
+                "S3Key": "serverless/threemay/dev/1715716571378-2024-05-14T19:56:11.378Z/threemay.zip"
               },
               "Handler": "handlers/api/users/delete-user/index.handler",
               "Runtime": "nodejs20.x",
@@ -612,7 +612,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/threemay/dev/1715673893466-2024-05-14T08:04:53.466Z/threemay.zip"
+                "S3Key": "serverless/threemay/dev/1715716571378-2024-05-14T19:56:11.378Z/threemay.zip"
               },
               "Handler": "handlers/api/users/update-user/index.handler",
               "Runtime": "nodejs20.x",
@@ -642,104 +642,104 @@
               "UpdateUserLogGroup"
             ]
           },
-          "PostItemLambdaVersionGHKKQt8mh7G7X5gKowUPS9X4jvXFMlkAjc53LPjjb8M": {
+          "PostItemLambdaVersionKTXo7EKEsyEUIk7wG4qK4vO9QceVtIIkh0R4nhwlV24": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "PostItemLambdaFunction"
               },
-              "CodeSha256": "FAWroo6tzRWw79r1vNSL0Aq2M4TaBWq9ZqD2At89Usc="
+              "CodeSha256": "WJKaHea716uhAGUVXzKDcsP7ouVE5EwaKPgbllfQJgw="
             }
           },
-          "GetItemsLambdaVersionz50CUgCfsyDzP10qvVUewRjbQIV3hUKq4t1LWjuo": {
+          "GetItemsLambdaVersionOEgjuGHLYGTO3SmKWWdZsG5eWX6o3wwTjoIhcSUEkE": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetItemsLambdaFunction"
               },
-              "CodeSha256": "FAWroo6tzRWw79r1vNSL0Aq2M4TaBWq9ZqD2At89Usc="
+              "CodeSha256": "WJKaHea716uhAGUVXzKDcsP7ouVE5EwaKPgbllfQJgw="
             }
           },
-          "DeleteItemLambdaVersionyoKgOre25KSIc9ti2c9qA7YAw53cU0yzfEcWNVeb8": {
+          "DeleteItemLambdaVersionVb3CtxaTPxaok92oeftbP7z9zAvrdIXgvlrKDUI": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "DeleteItemLambdaFunction"
               },
-              "CodeSha256": "FAWroo6tzRWw79r1vNSL0Aq2M4TaBWq9ZqD2At89Usc="
+              "CodeSha256": "WJKaHea716uhAGUVXzKDcsP7ouVE5EwaKPgbllfQJgw="
             }
           },
-          "GetSingleItemLambdaVersionikAKK4gSSR8KbCrElqVVLses1e64MAAW8WFrIdLRE": {
+          "GetSingleItemLambdaVersionNNi64bqN2bPB9PEpAhr7ETlJHC3tXra8roBl6OtOeY": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetSingleItemLambdaFunction"
               },
-              "CodeSha256": "FAWroo6tzRWw79r1vNSL0Aq2M4TaBWq9ZqD2At89Usc="
+              "CodeSha256": "WJKaHea716uhAGUVXzKDcsP7ouVE5EwaKPgbllfQJgw="
             }
           },
-          "UpdateItemLambdaVersionFYZaGkKt7csPXpdxbTKKYGBHupg698MSTtMMRr15s": {
+          "UpdateItemLambdaVersionhlDgPmL7RkKAv4l3J67obuhJbCqVQeicD6oZLKpwU": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "UpdateItemLambdaFunction"
               },
-              "CodeSha256": "FAWroo6tzRWw79r1vNSL0Aq2M4TaBWq9ZqD2At89Usc="
+              "CodeSha256": "WJKaHea716uhAGUVXzKDcsP7ouVE5EwaKPgbllfQJgw="
             }
           },
-          "SearchItemsLambdaVersionxBUPuzWOaAhPpBXTbQ8JRzSxyUOfRe7YSzwznn3Eaw": {
+          "SearchItemsLambdaVersiong9wB4oOH1jXPmwaZU3i1TgsfblAuOBNTmtMecdqxrs": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "SearchItemsLambdaFunction"
               },
-              "CodeSha256": "FAWroo6tzRWw79r1vNSL0Aq2M4TaBWq9ZqD2At89Usc="
+              "CodeSha256": "WJKaHea716uhAGUVXzKDcsP7ouVE5EwaKPgbllfQJgw="
             }
           },
-          "AddUserLambdaVersiong21Rn2HQhJ4zA9jT18vY04ndai5OVnhUhsNFgH9W4": {
+          "AddUserLambdaVersionHGchsEz8lQvEcLY5XMjzeNX4ghKMIftqnnVDLz9Qjfc": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "AddUserLambdaFunction"
               },
-              "CodeSha256": "FAWroo6tzRWw79r1vNSL0Aq2M4TaBWq9ZqD2At89Usc="
+              "CodeSha256": "WJKaHea716uhAGUVXzKDcsP7ouVE5EwaKPgbllfQJgw="
             }
           },
-          "GetUserLambdaVersionzlGQOYIVD4svfBfRNVJytsN6Hww7dGMKx5kebO6X3g": {
+          "GetUserLambdaVersiongkcbznpOm3aIBweSLQVZ5DY3fsL49R91FvlG0nOQ": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetUserLambdaFunction"
               },
-              "CodeSha256": "FAWroo6tzRWw79r1vNSL0Aq2M4TaBWq9ZqD2At89Usc="
+              "CodeSha256": "WJKaHea716uhAGUVXzKDcsP7ouVE5EwaKPgbllfQJgw="
             }
           },
-          "DeleteUserLambdaVersionJQVHiDMCydQ7ofltb09b0tOoZcLPe7BavKAIbd62QJ0": {
+          "DeleteUserLambdaVersionqLBfvlFOJGbx1F0ZDAWdP3ASNrObMNeoy42mW2RY": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "DeleteUserLambdaFunction"
               },
-              "CodeSha256": "FAWroo6tzRWw79r1vNSL0Aq2M4TaBWq9ZqD2At89Usc="
+              "CodeSha256": "WJKaHea716uhAGUVXzKDcsP7ouVE5EwaKPgbllfQJgw="
             }
           },
-          "UpdateUserLambdaVersionGdTHtHlz8QCYBdvCLnqxnLWXqRhaGMabxJk0fW2S0": {
+          "UpdateUserLambdaVersionsJXrgyF56Sm1CO6SpY1dEhpENOmJB9CCMECUWcizm0": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "UpdateUserLambdaFunction"
               },
-              "CodeSha256": "FAWroo6tzRWw79r1vNSL0Aq2M4TaBWq9ZqD2At89Usc="
+              "CodeSha256": "WJKaHea716uhAGUVXzKDcsP7ouVE5EwaKPgbllfQJgw="
             }
           },
           "HttpApi": {
@@ -1547,7 +1547,7 @@
           "PostItemLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "PostItemLambdaVersionGHKKQt8mh7G7X5gKowUPS9X4jvXFMlkAjc53LPjjb8M"
+              "Ref": "PostItemLambdaVersionKTXo7EKEsyEUIk7wG4qK4vO9QceVtIIkh0R4nhwlV24"
             },
             "Export": {
               "Name": "sls-threemay-dev-PostItemLambdaFunctionQualifiedArn"
@@ -1556,7 +1556,7 @@
           "GetItemsLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetItemsLambdaVersionz50CUgCfsyDzP10qvVUewRjbQIV3hUKq4t1LWjuo"
+              "Ref": "GetItemsLambdaVersionOEgjuGHLYGTO3SmKWWdZsG5eWX6o3wwTjoIhcSUEkE"
             },
             "Export": {
               "Name": "sls-threemay-dev-GetItemsLambdaFunctionQualifiedArn"
@@ -1565,7 +1565,7 @@
           "DeleteItemLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "DeleteItemLambdaVersionyoKgOre25KSIc9ti2c9qA7YAw53cU0yzfEcWNVeb8"
+              "Ref": "DeleteItemLambdaVersionVb3CtxaTPxaok92oeftbP7z9zAvrdIXgvlrKDUI"
             },
             "Export": {
               "Name": "sls-threemay-dev-DeleteItemLambdaFunctionQualifiedArn"
@@ -1574,7 +1574,7 @@
           "GetSingleItemLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetSingleItemLambdaVersionikAKK4gSSR8KbCrElqVVLses1e64MAAW8WFrIdLRE"
+              "Ref": "GetSingleItemLambdaVersionNNi64bqN2bPB9PEpAhr7ETlJHC3tXra8roBl6OtOeY"
             },
             "Export": {
               "Name": "sls-threemay-dev-GetSingleItemLambdaFunctionQualifiedArn"
@@ -1583,7 +1583,7 @@
           "UpdateItemLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "UpdateItemLambdaVersionFYZaGkKt7csPXpdxbTKKYGBHupg698MSTtMMRr15s"
+              "Ref": "UpdateItemLambdaVersionhlDgPmL7RkKAv4l3J67obuhJbCqVQeicD6oZLKpwU"
             },
             "Export": {
               "Name": "sls-threemay-dev-UpdateItemLambdaFunctionQualifiedArn"
@@ -1592,7 +1592,7 @@
           "SearchItemsLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "SearchItemsLambdaVersionxBUPuzWOaAhPpBXTbQ8JRzSxyUOfRe7YSzwznn3Eaw"
+              "Ref": "SearchItemsLambdaVersiong9wB4oOH1jXPmwaZU3i1TgsfblAuOBNTmtMecdqxrs"
             },
             "Export": {
               "Name": "sls-threemay-dev-SearchItemsLambdaFunctionQualifiedArn"
@@ -1601,7 +1601,7 @@
           "AddUserLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "AddUserLambdaVersiong21Rn2HQhJ4zA9jT18vY04ndai5OVnhUhsNFgH9W4"
+              "Ref": "AddUserLambdaVersionHGchsEz8lQvEcLY5XMjzeNX4ghKMIftqnnVDLz9Qjfc"
             },
             "Export": {
               "Name": "sls-threemay-dev-AddUserLambdaFunctionQualifiedArn"
@@ -1610,7 +1610,7 @@
           "GetUserLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetUserLambdaVersionzlGQOYIVD4svfBfRNVJytsN6Hww7dGMKx5kebO6X3g"
+              "Ref": "GetUserLambdaVersiongkcbznpOm3aIBweSLQVZ5DY3fsL49R91FvlG0nOQ"
             },
             "Export": {
               "Name": "sls-threemay-dev-GetUserLambdaFunctionQualifiedArn"
@@ -1619,7 +1619,7 @@
           "DeleteUserLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "DeleteUserLambdaVersionJQVHiDMCydQ7ofltb09b0tOoZcLPe7BavKAIbd62QJ0"
+              "Ref": "DeleteUserLambdaVersionqLBfvlFOJGbx1F0ZDAWdP3ASNrObMNeoy42mW2RY"
             },
             "Export": {
               "Name": "sls-threemay-dev-DeleteUserLambdaFunctionQualifiedArn"
@@ -1628,7 +1628,7 @@
           "UpdateUserLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "UpdateUserLambdaVersionGdTHtHlz8QCYBdvCLnqxnLWXqRhaGMabxJk0fW2S0"
+              "Ref": "UpdateUserLambdaVersionsJXrgyF56Sm1CO6SpY1dEhpENOmJB9CCMECUWcizm0"
             },
             "Export": {
               "Name": "sls-threemay-dev-UpdateUserLambdaFunctionQualifiedArn"
@@ -1821,7 +1821,7 @@
         "timeout": 30,
         "runtime": "nodejs20.x",
         "vpc": {},
-        "versionLogicalId": "PostItemLambdaVersionGHKKQt8mh7G7X5gKowUPS9X4jvXFMlkAjc53LPjjb8M"
+        "versionLogicalId": "PostItemLambdaVersionKTXo7EKEsyEUIk7wG4qK4vO9QceVtIIkh0R4nhwlV24"
       },
       "GetItems": {
         "handler": "handlers/api/items/get-items/index.handler",
@@ -1841,7 +1841,7 @@
         "timeout": 30,
         "runtime": "nodejs20.x",
         "vpc": {},
-        "versionLogicalId": "GetItemsLambdaVersionz50CUgCfsyDzP10qvVUewRjbQIV3hUKq4t1LWjuo"
+        "versionLogicalId": "GetItemsLambdaVersionOEgjuGHLYGTO3SmKWWdZsG5eWX6o3wwTjoIhcSUEkE"
       },
       "DeleteItem": {
         "handler": "handlers/api/items/delete-item/index.handler",
@@ -1861,7 +1861,7 @@
         "timeout": 30,
         "runtime": "nodejs20.x",
         "vpc": {},
-        "versionLogicalId": "DeleteItemLambdaVersionyoKgOre25KSIc9ti2c9qA7YAw53cU0yzfEcWNVeb8"
+        "versionLogicalId": "DeleteItemLambdaVersionVb3CtxaTPxaok92oeftbP7z9zAvrdIXgvlrKDUI"
       },
       "GetSingleItem": {
         "handler": "handlers/api/items/get-item/index.handler",
@@ -1881,7 +1881,7 @@
         "timeout": 30,
         "runtime": "nodejs20.x",
         "vpc": {},
-        "versionLogicalId": "GetSingleItemLambdaVersionikAKK4gSSR8KbCrElqVVLses1e64MAAW8WFrIdLRE"
+        "versionLogicalId": "GetSingleItemLambdaVersionNNi64bqN2bPB9PEpAhr7ETlJHC3tXra8roBl6OtOeY"
       },
       "UpdateItem": {
         "handler": "handlers/api/items/update-item/index.handler",
@@ -1901,7 +1901,7 @@
         "timeout": 30,
         "runtime": "nodejs20.x",
         "vpc": {},
-        "versionLogicalId": "UpdateItemLambdaVersionFYZaGkKt7csPXpdxbTKKYGBHupg698MSTtMMRr15s"
+        "versionLogicalId": "UpdateItemLambdaVersionhlDgPmL7RkKAv4l3J67obuhJbCqVQeicD6oZLKpwU"
       },
       "SearchItems": {
         "handler": "handlers/api/items/search-items/index.handler",
@@ -1921,7 +1921,7 @@
         "timeout": 30,
         "runtime": "nodejs20.x",
         "vpc": {},
-        "versionLogicalId": "SearchItemsLambdaVersionxBUPuzWOaAhPpBXTbQ8JRzSxyUOfRe7YSzwznn3Eaw"
+        "versionLogicalId": "SearchItemsLambdaVersiong9wB4oOH1jXPmwaZU3i1TgsfblAuOBNTmtMecdqxrs"
       },
       "AddUser": {
         "handler": "handlers/api/users/add-user/index.handler",
@@ -1944,7 +1944,7 @@
         "timeout": 30,
         "runtime": "nodejs20.x",
         "vpc": {},
-        "versionLogicalId": "AddUserLambdaVersiong21Rn2HQhJ4zA9jT18vY04ndai5OVnhUhsNFgH9W4"
+        "versionLogicalId": "AddUserLambdaVersionHGchsEz8lQvEcLY5XMjzeNX4ghKMIftqnnVDLz9Qjfc"
       },
       "GetUser": {
         "handler": "handlers/api/users/get-user/index.handler",
@@ -1964,7 +1964,7 @@
         "timeout": 30,
         "runtime": "nodejs20.x",
         "vpc": {},
-        "versionLogicalId": "GetUserLambdaVersionzlGQOYIVD4svfBfRNVJytsN6Hww7dGMKx5kebO6X3g"
+        "versionLogicalId": "GetUserLambdaVersiongkcbznpOm3aIBweSLQVZ5DY3fsL49R91FvlG0nOQ"
       },
       "DeleteUser": {
         "handler": "handlers/api/users/delete-user/index.handler",
@@ -1984,7 +1984,7 @@
         "timeout": 30,
         "runtime": "nodejs20.x",
         "vpc": {},
-        "versionLogicalId": "DeleteUserLambdaVersionJQVHiDMCydQ7ofltb09b0tOoZcLPe7BavKAIbd62QJ0"
+        "versionLogicalId": "DeleteUserLambdaVersionqLBfvlFOJGbx1F0ZDAWdP3ASNrObMNeoy42mW2RY"
       },
       "UpdateUser": {
         "handler": "handlers/api/users/update-user/index.handler",
@@ -2004,7 +2004,7 @@
         "timeout": 30,
         "runtime": "nodejs20.x",
         "vpc": {},
-        "versionLogicalId": "UpdateUserLambdaVersionGdTHtHlz8QCYBdvCLnqxnLWXqRhaGMabxJk0fW2S0"
+        "versionLogicalId": "UpdateUserLambdaVersionsJXrgyF56Sm1CO6SpY1dEhpENOmJB9CCMECUWcizm0"
       }
     },
     "resources": {
@@ -2099,7 +2099,7 @@
     "isDashboardMonitoringPreconfigured": false
   },
   "package": {
-    "artifactDirectoryName": "serverless/threemay/dev/1715673893466-2024-05-14T08:04:53.466Z",
+    "artifactDirectoryName": "serverless/threemay/dev/1715716571378-2024-05-14T19:56:11.378Z",
     "artifact": "threemay.zip"
   }
 }

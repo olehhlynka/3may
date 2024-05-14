@@ -10,6 +10,7 @@ import {
   dbConnection,
 } from '@/middlewares/database-connection-middleware';
 import { ITEMS_COLLECTION } from '@/common/constants/database-constants';
+import doNotWaitForEmptyEventLoop from '@middy/do-not-wait-for-empty-event-loop';
 
 const main = getHandler(postNewItemContract, { ajv })(async (
   event,
@@ -35,6 +36,7 @@ const main = getHandler(postNewItemContract, { ajv })(async (
 });
 
 export const handler = middy(main)
+  .use(doNotWaitForEmptyEventLoop())
   .use(cors())
   .use(dbConnection())
   .use(errorHandlingMiddleware());

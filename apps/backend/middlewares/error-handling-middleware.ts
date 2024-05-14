@@ -5,6 +5,7 @@ import { Context } from 'aws-lambda';
 const errorHandlingMiddleware = (): middy.MiddlewareObj => {
   return {
     onError: (request: Request<unknown, unknown, Error, Context>) => {
+      console.log('jfdklsajfdsjafldjsfjlks');
       if (request.error) {
         console.error('Error', request.error);
 

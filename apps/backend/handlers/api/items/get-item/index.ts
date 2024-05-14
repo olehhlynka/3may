@@ -11,6 +11,7 @@ import {
 } from '@/middlewares/database-connection-middleware';
 import { ObjectId } from 'mongodb';
 import { ITEMS_COLLECTION } from '@/common/constants/database-constants';
+import doNotWaitForEmptyEventLoop from '@middy/do-not-wait-for-empty-event-loop';
 
 const main = getHandler(getSingleItemContract, { ajv })(async (
   event,
@@ -31,6 +32,7 @@ const main = getHandler(getSingleItemContract, { ajv })(async (
 });
 
 export const handler = middy(main)
+  .use(doNotWaitForEmptyEventLoop())
   .use(cors())
   .use(dbConnection())
   .use(errorHandlingMiddleware());
