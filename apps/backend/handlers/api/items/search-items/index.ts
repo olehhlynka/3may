@@ -74,6 +74,10 @@ const main = getHandler(searchItemsContract, { ajv })(async (
     });
   }
 
+  const itemsSkip =
+    (limit ? Number(limit) : DEFAULT_LIMIT) * (page ? Number(page) - 1 : 0);
+  const itemsLimit = limit ? Number(limit) : DEFAULT_LIMIT;
+
   const items = await db
     .collection<ItemType>(ITEMS_COLLECTION)
     .aggregate([
@@ -98,8 +102,8 @@ const main = getHandler(searchItemsContract, { ajv })(async (
         }),
       },
     ])
-    .skip(limit ? Number(limit) * (page ? Number(page) - 1 : 0) : DEFAULT_LIMIT)
-    .limit(limit ? Number(limit) : DEFAULT_LIMIT)
+    .skip(itemsSkip)
+    .limit(itemsLimit)
     .toArray();
 
   return httpResponse({ items });
