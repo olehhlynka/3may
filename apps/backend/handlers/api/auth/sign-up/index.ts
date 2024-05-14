@@ -5,11 +5,7 @@ import { getHandler } from '@swarmion/serverless-contracts';
 import { httpResponse } from '@/common/http';
 import { ajv } from '@/common/ajv';
 import { errorHandlingMiddleware } from '@/middlewares/error-handling-middleware';
-import {
-  DbConnectionContext,
-  dbConnection,
-} from '@/middlewares/database-connection-middleware';
-import { USERS_COLLECTION } from '@/common/constants/database-constants';
+import { dbConnection } from '@/middlewares/database-connection-middleware';
 import {
   CognitoIdentityProviderClient,
   SignUpCommand,
@@ -17,7 +13,7 @@ import {
 
 const client = new CognitoIdentityProviderClient({});
 
-const main = getHandler(signUpContract, { ajv })(async (event, context) => {
+const main = getHandler(signUpContract, { ajv })(async (event) => {
   const { username, password, email } = event.body;
 
   await client.send(
