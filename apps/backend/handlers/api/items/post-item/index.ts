@@ -26,7 +26,7 @@ const main = getHandler(postNewItemContract, { ajv })(async (
     status: status,
     location: { type: 'Point', coordinates: [lng, lat] },
     photo,
-    date,
+    date: new Date(date),
     tags,
     createdAt: new Date(),
     updatedAt: new Date(),

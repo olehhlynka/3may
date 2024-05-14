@@ -6,16 +6,19 @@ import { commentSchema } from './comment-schema';
 export const itemSchema = {
   type: 'object',
   properties: {
-    _id: { type: 'string' },
+    _id: { type: 'object' },
     title: { type: 'string' },
     status: { type: 'string', enum: Object.values(ItemStatus) },
     description: { type: 'string' },
     photo: { type: 'string' },
     location: locationSchema,
     user: { type: 'string' },
-    date: { type: 'string' },
-    tags: { type: 'array', items: { type: 'string' } },
+    date: { type: 'object' },
+    //tags: { type: 'array', items: { type: 'string' } },
+    tags: { type: 'null' },
     comments: { type: 'array', items: commentSchema },
+    createdAt: { type: 'object' },
+    updatedAt: { type: 'object' },
   },
   additionalProperties: false,
   required: [
@@ -24,8 +27,10 @@ export const itemSchema = {
     'description',
     'date',
     'status',
-    'user',
+    //'user',
     'location',
+    'createdAt',
+    'updatedAt',
   ],
 } as const satisfies JSONSchema;
 
