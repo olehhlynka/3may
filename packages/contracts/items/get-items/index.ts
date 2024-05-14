@@ -4,8 +4,8 @@ import {
 } from '@swarmion/serverless-contracts';
 
 import { JSONSchema } from 'json-schema-to-ts';
-import { errorSchema } from '@/schemas/error-schema';
-import { itemSchema } from '@/schemas/item-schema';
+import { errorSchema } from '../../schemas/error-schema';
+import { itemSchema } from '../../schemas/item-schema';
 
 const queryStringParametersSchema = {
   type: 'object',

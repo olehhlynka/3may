@@ -1,4 +1,4 @@
-import { errorSchema } from '@/schemas/error-schema';
+import { errorSchema } from '../../schemas/error-schema';
 import {
   ApiGatewayContract,
   HttpStatusCodes,
