@@ -89,6 +89,30 @@ functions:
           path: /user/{userId}
           method: PUT
 
+  SignUp:
+    handler: handlers/api/auth/sign-up/index.handler
+    name: ${self:custom.servicePrefix}-sign-up
+    events:
+      - httpApi:
+          path: /signup
+          method: POST
+
+  SignIn:
+    handler: handlers/api/auth/sign-in/index.handler
+    name: ${self:custom.servicePrefix}-sign-in
+    events:
+      - httpApi:
+          path: /signin
+          method: POST
+
+  ConfirmSignUp:
+    handler: handlers/api/auth/confirm/index.handler
+    name: ${self:custom.servicePrefix}-confirm-sign-up
+    events:
+      - httpApi:
+          path: /confirm
+          method: POST
+
 provider:
   name: aws
   runtime: nodejs20.x

@@ -17,28 +17,32 @@ const client = new CognitoIdentityProviderClient({});
 const main = getHandler(signInContract, { ajv })(async (event) => {
   const { username, password } = event.body;
 
-  const result = await client.send(
-    new InitiateAuthCommand({
-      AuthFlow: 'USER_PASSWORD_AUTH',
-      ClientId: process.env.USER_POOL_CLIENT_ID!,
-      AuthParameters: {
-        USERNAME: username,
-        PASSWORD: password,
-      },
-    }),
-  );
+  try {
+    const result = await client.send(
+      new InitiateAuthCommand({
+        AuthFlow: 'USER_PASSWORD_AUTH',
+        ClientId: process.env.USER_POOL_CLIENT_ID!,
+        AuthParameters: {
+          USERNAME: username,
+          PASSWORD: password,
+        },
+      }),
+    );
 
-  const token = result.AuthenticationResult?.IdToken;
+    const token = result.AuthenticationResult?.IdToken;
 
-  if (token === undefined) {
+    if (token === undefined) {
+      throw new Error('Unauthorized', { cause: HttpStatusCodes.UNAUTHORIZED });
+    }
+
+    return httpResponse({ token });
+  } catch (error) {
     throw new Error('Unauthorized', { cause: HttpStatusCodes.UNAUTHORIZED });
   }
-
-  return httpResponse({ token });
 });
 
 export const handler = middy(main)
+  .use(errorHandlingMiddleware())
   .use(doNotWaitForEmptyEventLoop())
   .use(cors())
-  .use(dbConnection())
-  .use(errorHandlingMiddleware());
+  .use(dbConnection());

@@ -11,12 +11,11 @@ export const signUpContract = new ApiGatewayContract({
   bodySchema: {
     type: 'object',
     properties: {
-      username: { type: 'string' },
       password: { type: 'string' },
       email: { type: 'string' },
     },
     additionalProperties: false,
-    required: ['username', 'password', 'email'],
+    required: ['password', 'email'],
   } as const,
   outputSchemas: {
     [HttpStatusCodes.OK]: {

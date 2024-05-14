@@ -33,7 +33,7 @@ const main = getHandler(confirmContract, { ajv })(async (event, context) => {
 
   const response = await client.send(
     new AdminGetUserCommand({
-      UserPoolId: process.env.USER_POOL_CLIENT_ID!,
+      UserPoolId: process.env.USER_POOL_ID!,
       Username: username,
     }),
   );
