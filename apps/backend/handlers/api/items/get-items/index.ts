@@ -57,8 +57,9 @@ const main = getHandler(getItemsContract, { ajv })(async (event, context) => {
     });
   }
 
-  console.log(getDistanceInRadians(dist));
-  console.log(Number(lng), '     ', Number(lat));
+  const itemsSkip =
+    (limit ? Number(limit) : DEFAULT_LIMIT) * (page ? Number(page) - 1 : 0);
+  const itemsLimit = limit ? Number(limit) : DEFAULT_LIMIT;
 
   const items = await db
     .collection<ItemType>(ITEMS_COLLECTION)
@@ -72,10 +73,9 @@ const main = getHandler(getItemsContract, { ajv })(async (event, context) => {
         },
       },
     })
+    .skip(itemsSkip)
+    .limit(itemsLimit)
     .toArray();
-  // .skip(limit ? Number(limit) * (page ? Number(page) - 1 : 0) : DEFAULT_LIMIT)
-  // .limit(limit ? Number(limit) : DEFAULT_LIMIT)
-  // .toArray();
 
   return httpResponse({ items });
 });
