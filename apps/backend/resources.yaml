@@ -1,0 +1,29 @@
+Resources:
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: ${self:custom.servicePrefix}-user-pool
+      UsernameAttributes:
+        - email
+      AutoVerifiedAttributes:
+        - email
+
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: ${self:custom.servicePrefix}-user-pool-client
+      UserPoolId:
+        Ref: UserPool
+      ExplicitAuthFlows:
+        - ALLOW_USER_PASSWORD_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
+
+Outputs:
+  UserPoolId:
+    Value: !Ref UserPool
+    Export:
+      Name: !Join ['-', [!Ref 'AWS::StackName', 'user-pool-id']]
+  UserPoolClientId:
+    Value: !Ref UserPoolClient
+    Export:
+      Name: !Join ['-', [!Ref 'AWS::StackName', 'user-pool-client-id']]

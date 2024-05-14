@@ -8,6 +8,7 @@
   "dependencies": {
     "@3may/contracts": "workspace:^",
     "@3may/types": "workspace:^",
+    "@aws-sdk/client-cognito-identity-provider": "^3.575.0",
     "@middy/core": "^5.3.3",
     "@middy/http-cors": "^5.3.3",
     "@swarmion/serverless-contracts": "^0.31.3",

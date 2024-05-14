@@ -1,6 +1,7 @@
 import { ItemStatus } from '@3may/types';
 import { FromSchema, JSONSchema } from 'json-schema-to-ts';
 import { locationSchema } from './location-schema';
+import { commentSchema } from './comment-schema';
 
 export const itemSchema = {
   type: 'object',
@@ -11,9 +12,10 @@ export const itemSchema = {
     description: { type: 'string' },
     photo: { type: 'string' },
     location: locationSchema,
-    user: { type: 'object' }, //TODO: provide context
+    user: { type: 'string' },
     date: { type: 'string' },
     tags: { type: 'array', items: { type: 'string' } },
+    comments: { type: 'array', items: commentSchema },
   },
   additionalProperties: false,
   required: [

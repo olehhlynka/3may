@@ -4,24 +4,7 @@ useDotenv: true
 plugins:
   - serverless-esbuild
 
-provider:
-  name: aws
-  runtime: nodejs20.x
-  region: eu-central-1
-  stage: ${opt:stage, 'dev'}
-  memorySize: 256
-  timeout: 30
-  environment:
-    MONGO_URL: ${env:MONGO_URL}
-    STAGE: ${self:provider.stage}
-
-custom:
-  servicePrefix: ${self:service}-${self:provider.stage}
-  customVariable1: Hello, World!
-  esbuild:
-    bundle: true
-    minify: true
-    packager: pnpm
+resources: ${file(./resources.yaml)}
 
 functions:
   PostItem:
@@ -37,7 +20,7 @@ functions:
     name: ${self:custom.servicePrefix}-get-items
     events:
       - httpApi:
-          path: /items/{status}
+          path: /items
           method: GET
 
   DeleteItem:
@@ -79,6 +62,8 @@ functions:
       - httpApi:
           path: /users
           method: POST
+          authorizer:
+            name: ApiGatewayAuthorizer
 
   GetUser:
     handler: handlers/api/users/get-user/index.handler
@@ -97,9 +82,49 @@ functions:
           method: DELETE
 
   UpdateUser:
-    handler: handlers/api/user/update-user/index.handler
+    handler: handlers/api/users/update-user/index.handler
     name: ${self:custom.servicePrefix}-update-user
     events:
       - httpApi:
           path: /user/{userId}
           method: PUT
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: eu-central-1
+  stage: ${opt:stage, 'dev'}
+  memorySize: 256
+  timeout: 30
+  environment:
+    USER_POOL_CLIENT_ID:
+      Ref: UserPoolClient
+    USER_POOL_ID:
+      Ref: UserPool
+    MONGO_URL: ${env:MONGO_URL}
+    STAGE: ${self:provider.stage}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - cognito-idp:*
+          Resource: '*'
+  httpApi:
+    authorizers:
+      ApiGatewayAuthorizer:
+        type: jwt
+        identitySource: $request.header.Authorization
+        issuerUrl:
+          Fn::Sub:
+            - 'https://cognito-idp.${aws:region}.amazonaws.com/${UserPoolId}'
+            - UserPoolId: !Ref UserPool
+        audience:
+          - Ref: UserPoolClient
+
+custom:
+  servicePrefix: ${self:service}-${self:provider.stage}
+  esbuild:
+    bundle: true
+    minify: true
+    packager: pnpm
