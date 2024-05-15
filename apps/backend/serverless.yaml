@@ -14,6 +14,8 @@ functions:
       - httpApi:
           path: /items/{status}
           method: POST
+          authorizer:
+            name: ApiGatewayAuthorizer
 
   GetItems:
     handler: handlers/api/items/get-items/index.handler
@@ -135,6 +137,7 @@ provider:
             - cognito-idp:*
           Resource: '*'
   httpApi:
+    cors: true
     authorizers:
       ApiGatewayAuthorizer:
         type: jwt

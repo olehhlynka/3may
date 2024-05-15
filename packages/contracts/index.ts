@@ -15,3 +15,4 @@ export * from './schemas/error-schema';
 export * from './schemas/item-schema';
 export * from './schemas/location-schema';
 export * from './schemas/user-schema';
+export * from './schemas/request-context-schema';

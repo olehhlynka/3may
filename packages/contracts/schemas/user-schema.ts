@@ -11,8 +11,8 @@ export const userSchema = {
     createdAt: { type: 'string' },
     updatedAt: { type: 'string' },
   },
-  additionalProperties: false,
-  required: ['_id', 'name', 'rating', 'photo'],
+  //additionalProperties: false,
+  //required: ['_id', 'name', 'rating', 'photo'],
 } as const satisfies JSONSchema;
 
 export type UserType = FromSchema<typeof userSchema>;

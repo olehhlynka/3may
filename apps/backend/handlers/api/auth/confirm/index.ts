@@ -54,6 +54,7 @@ const main = getHandler(confirmContract, { ajv })(async (event, context) => {
   const insertResult = await db.collection(USERS_COLLECTION).insertOne({
     username,
     email,
+    cognitoId: response.Username,
     createdAt: new Date(),
     updatedAt: new Date(),
   });

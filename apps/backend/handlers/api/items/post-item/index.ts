@@ -1,7 +1,7 @@
 import cors from '@middy/http-cors';
 import middy from '@middy/core';
 import { postNewItemContract } from '@3may/contracts';
-import { getHandler } from '@swarmion/serverless-contracts';
+import { HttpStatusCodes, getHandler } from '@swarmion/serverless-contracts';
 import { httpResponse } from '@/common/http';
 import { ajv } from '@/common/ajv';
 import { errorHandlingMiddleware } from '@/middlewares/error-handling-middleware';
@@ -9,7 +9,10 @@ import {
   DbConnectionContext,
   dbConnection,
 } from '@/middlewares/database-connection-middleware';
-import { ITEMS_COLLECTION } from '@/common/constants/database-constants';
+import {
+  ITEMS_COLLECTION,
+  USERS_COLLECTION,
+} from '@/common/constants/database-constants';
 import doNotWaitForEmptyEventLoop from '@middy/do-not-wait-for-empty-event-loop';
 
 const main = getHandler(postNewItemContract, { ajv })(async (
@@ -19,6 +22,13 @@ const main = getHandler(postNewItemContract, { ajv })(async (
   const { db } = context as DbConnectionContext;
   const { title, description, photo, lng, lat, date, tags } = event.body;
   const { status } = event.pathParameters;
+  const { sub: cognitoId } = event.requestContext.authorizer.claims;
+
+  const user = await db.collection(USERS_COLLECTION).findOne({ cognitoId });
+
+  if (!user) {
+    throw new Error('User not found', { cause: HttpStatusCodes.NOT_FOUND });
+  }
 
   const insertResult = await db.collection(ITEMS_COLLECTION).insertOne({
     title,
@@ -27,6 +37,7 @@ const main = getHandler(postNewItemContract, { ajv })(async (
     location: { type: 'Point', coordinates: [lng, lat] },
     photo,
     date: new Date(date),
+    user: user._id,
     tags,
     createdAt: new Date(),
     updatedAt: new Date(),
