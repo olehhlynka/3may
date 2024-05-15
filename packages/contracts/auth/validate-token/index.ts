@@ -1,8 +1,15 @@
+import { JSONSchema } from 'json-schema-to-ts';
 import { requestContextSchemaCustom } from '../../schemas/request-context-schema';
 import {
   ApiGatewayContract,
   HttpStatusCodes,
 } from '@swarmion/serverless-contracts';
+
+const headersSchema = {
+  type: 'object',
+  properties: { Authorization: { type: 'string' } },
+  required: ['Authorization'],
+} as const satisfies JSONSchema;
 
 export const validateTokenContract = new ApiGatewayContract({
   id: 'validateToken',
@@ -11,6 +18,7 @@ export const validateTokenContract = new ApiGatewayContract({
   integrationType: 'restApi',
   authorizerType: 'cognito',
   requestContextSchema: requestContextSchemaCustom,
+  headersSchema,
   outputSchemas: {
     [HttpStatusCodes.OK]: {
       type: 'object',
