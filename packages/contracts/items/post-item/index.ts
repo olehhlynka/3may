@@ -1,3 +1,4 @@
+import { JSONSchema } from 'json-schema-to-ts';
 import { errorSchema } from '../../schemas/error-schema';
 import { requestContextSchemaCustom } from '../../schemas/request-context-schema';
 import {
@@ -5,12 +6,19 @@ import {
   HttpStatusCodes,
 } from '@swarmion/serverless-contracts';
 
+const headersSchema = {
+  type: 'object',
+  properties: { Authorization: { type: 'string' } },
+  required: ['Authorization'],
+} as const satisfies JSONSchema;
+
 export const postNewItemContract = new ApiGatewayContract({
   id: 'postNewItem',
   path: '/items/{status}',
   method: 'POST',
   integrationType: 'restApi',
   authorizerType: 'cognito',
+  headersSchema,
   requestContextSchema: requestContextSchemaCustom,
   bodySchema: {
     type: 'object',
