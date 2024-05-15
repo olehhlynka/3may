@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setToken(storedToken);
 
     setLoading(false);
-  }, []);
+  }, [isLoggedIn]);
 
   return (
     <AuthContext.Provider

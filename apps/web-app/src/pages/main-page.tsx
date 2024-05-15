@@ -61,10 +61,11 @@ const MainPage = () => {
   };
 
   useEffect(() => {
+    console.log(isLocationAllowed, loading, token);
     if (isLocationAllowed && !loading) {
       syncUsers();
     }
-  }, [isLocationAllowed, loading]);
+  }, [isLocationAllowed, loading, token]);
 
   return (
     <main>
