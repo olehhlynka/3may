@@ -21,6 +21,7 @@ export const deleteItemContract = new ApiGatewayContract({
   method: 'DELETE',
   integrationType: 'restApi',
   pathParametersSchema,
+  authorizerType: 'cognito',
   requestContextSchema,
   outputSchemas: {
     [HttpStatusCodes.OK]: itemSchema,

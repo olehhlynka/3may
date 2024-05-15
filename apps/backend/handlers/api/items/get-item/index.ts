@@ -10,7 +10,10 @@ import {
   dbConnection,
 } from '@/middlewares/database-connection-middleware';
 import { ObjectId } from 'mongodb';
-import { ITEMS_COLLECTION } from '@/common/constants/database-constants';
+import {
+  ITEMS_COLLECTION,
+  USERS_COLLECTION,
+} from '@/common/constants/database-constants';
 import doNotWaitForEmptyEventLoop from '@middy/do-not-wait-for-empty-event-loop';
 
 const main = getHandler(getSingleItemContract, { ajv })(async (
@@ -19,6 +22,13 @@ const main = getHandler(getSingleItemContract, { ajv })(async (
 ) => {
   const { db } = context as DbConnectionContext;
   const { itemId } = event.pathParameters;
+  const { sub: cognitoId } = event.requestContext.authorizer.claims;
+
+  const user = await db.collection(USERS_COLLECTION).findOne({ cognitoId });
+
+  if (!user) {
+    throw new Error('User not found', { cause: HttpStatusCodes.NOT_FOUND });
+  }
 
   const item = await db
     .collection(ITEMS_COLLECTION)

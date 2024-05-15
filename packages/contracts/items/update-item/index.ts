@@ -11,13 +11,8 @@ export const updateItemContract = new ApiGatewayContract({
   path: '/items/{itemId}',
   method: 'PUT',
   integrationType: 'restApi',
-  requestContextSchema: {
-    type: 'object',
-    properties: {
-      id: { type: 'string' },
-    },
-    required: ['id'],
-  } as const,
+  authorizerType: 'cognito',
+  requestContextSchema,
   bodySchema: {
     type: 'object',
     properties: {

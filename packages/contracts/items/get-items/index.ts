@@ -39,6 +39,7 @@ export const getItemsContract = new ApiGatewayContract({
   method: 'GET',
   integrationType: 'restApi',
   queryStringParametersSchema,
+  authorizerType: 'cognito',
   requestContextSchema,
   outputSchemas: {
     [HttpStatusCodes.OK]: successSchema,

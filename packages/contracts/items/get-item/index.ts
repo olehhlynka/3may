@@ -21,6 +21,7 @@ export const getSingleItemContract = new ApiGatewayContract({
   path: '/items/{itemId}',
   method: 'GET',
   integrationType: 'restApi',
+  authorizerType: 'cognito',
   pathParametersSchema,
   requestContextSchema,
   outputSchemas: {

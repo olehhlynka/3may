@@ -9,7 +9,10 @@ import {
   DbConnectionContext,
   dbConnection,
 } from '@/middlewares/database-connection-middleware';
-import { ITEMS_COLLECTION } from '@/common/constants/database-constants';
+import {
+  ITEMS_COLLECTION,
+  USERS_COLLECTION,
+} from '@/common/constants/database-constants';
 import doNotWaitForEmptyEventLoop from '@middy/do-not-wait-for-empty-event-loop';
 
 const DEFAULT_DISTANCE_M = 5_000;
@@ -32,6 +35,13 @@ function getDistanceInRadians(distance?: string | number) {
 const main = getHandler(getItemsContract, { ajv })(async (event, context) => {
   const { db } = context as DbConnectionContext;
   const { lat, lng, dist, page, limit } = event.queryStringParameters;
+  const { sub: cognitoId } = event.requestContext.authorizer.claims;
+
+  const user = await db.collection(USERS_COLLECTION).findOne({ cognitoId });
+
+  if (!user) {
+    throw new Error('User not found', { cause: HttpStatusCodes.NOT_FOUND });
+  }
 
   if (!areValidCoordinates(Number(lng), Number(lat))) {
     throw new Error('Provided coordinates are not valid', {

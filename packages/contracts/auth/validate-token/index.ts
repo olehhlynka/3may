@@ -9,6 +9,7 @@ export const validateTokenContract = new ApiGatewayContract({
   path: '/token',
   method: 'GET',
   integrationType: 'restApi',
+  authorizerType: 'cognito',
   requestContextSchema,
   outputSchemas: {
     [HttpStatusCodes.OK]: {

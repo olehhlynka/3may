@@ -29,6 +29,14 @@ const main = getHandler(updateItemContract, { ajv })(async (event, context) => {
     throw new Error('User not found', { cause: HttpStatusCodes.NOT_FOUND });
   }
 
+  const existingItem = await db
+    .collection(ITEMS_COLLECTION)
+    .findOne({ _id: new ObjectId(itemId) });
+
+  if (!existingItem || existingItem.user !== user._id) {
+    throw new Error('Unauthorized', { cause: HttpStatusCodes.UNAUTHORIZED });
+  }
+
   const insertResult = await db.collection(ITEMS_COLLECTION).findOneAndUpdate(
     { _id: new ObjectId(itemId) },
     {
