@@ -23,8 +23,8 @@ function Copyright(props: TypographyProps) {
       {...props}
     >
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
+      <Link color="inherit" target={"_blank"} href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&themeRefresh=1">
+        3may
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
