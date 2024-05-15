@@ -9,7 +9,10 @@ import {
   DbConnectionContext,
   dbConnection,
 } from '@/middlewares/database-connection-middleware';
-import { ITEMS_COLLECTION } from '@/common/constants/database-constants';
+import {
+  ITEMS_COLLECTION,
+  USERS_COLLECTION,
+} from '@/common/constants/database-constants';
 import { ObjectId } from 'mongodb';
 import doNotWaitForEmptyEventLoop from '@middy/do-not-wait-for-empty-event-loop';
 
@@ -18,6 +21,13 @@ const main = getHandler(updateItemContract, { ajv })(async (event, context) => {
   const { itemId } = event.pathParameters;
   const { title, description, photo, lng, lat, date, tags, status } =
     event.body;
+  const { sub: cognitoId } = event.requestContext.authorizer.claims;
+
+  const user = await db.collection(USERS_COLLECTION).findOne({ cognitoId });
+
+  if (!user) {
+    throw new Error('User not found', { cause: HttpStatusCodes.NOT_FOUND });
+  }
 
   const insertResult = await db.collection(ITEMS_COLLECTION).findOneAndUpdate(
     { _id: new ObjectId(itemId) },

@@ -11,6 +11,7 @@ export * from './users/update-user';
 export * from './auth/sign-up';
 export * from './auth/sign-in';
 export * from './auth/confirm';
+export * from './auth/validate-token';
 export * from './schemas/error-schema';
 export * from './schemas/item-schema';
 export * from './schemas/location-schema';

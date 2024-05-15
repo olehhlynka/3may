@@ -5,7 +5,7 @@ import {
 
 import { JSONSchema } from 'json-schema-to-ts';
 import { errorSchema } from '../../schemas/error-schema';
-import { itemSchema } from '../..';
+import { itemSchema, requestContextSchema } from '../..';
 
 const pathParametersSchema = {
   type: 'object',
@@ -22,6 +22,7 @@ export const getSingleItemContract = new ApiGatewayContract({
   method: 'GET',
   integrationType: 'restApi',
   pathParametersSchema,
+  requestContextSchema,
   outputSchemas: {
     [HttpStatusCodes.OK]: itemSchema,
     [HttpStatusCodes.BAD_GATEWAY]: errorSchema,

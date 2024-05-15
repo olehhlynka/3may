@@ -6,6 +6,7 @@ import {
 import { JSONSchema } from 'json-schema-to-ts';
 import { errorSchema } from '../../schemas/error-schema';
 import { itemSchema } from '../../schemas/item-schema';
+import { requestContextSchema } from '../../schemas/request-context-schema';
 
 const queryStringParametersSchema = {
   type: 'object',
@@ -38,6 +39,7 @@ export const getItemsContract = new ApiGatewayContract({
   method: 'GET',
   integrationType: 'restApi',
   queryStringParametersSchema,
+  requestContextSchema,
   outputSchemas: {
     [HttpStatusCodes.OK]: successSchema,
     [HttpStatusCodes.BAD_GATEWAY]: errorSchema,

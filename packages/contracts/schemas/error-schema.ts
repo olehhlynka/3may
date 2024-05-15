@@ -6,5 +6,4 @@ export const errorSchema = {
     message: { type: 'string' },
   },
   required: ['message'],
-  additionalProperties: false,
 } as const satisfies JSONSchema;

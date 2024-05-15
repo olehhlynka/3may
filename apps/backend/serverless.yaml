@@ -24,6 +24,8 @@ functions:
       - httpApi:
           path: /items
           method: GET
+          authorizer:
+            name: ApiGatewayAuthorizer
 
   DeleteItem:
     handler: handlers/api/items/delete-item/index.handler
@@ -32,6 +34,8 @@ functions:
       - httpApi:
           path: /items/{itemId}
           method: DELETE
+          authorizer:
+            name: ApiGatewayAuthorizer
 
   GetSingleItem:
     handler: handlers/api/items/get-item/index.handler
@@ -40,6 +44,8 @@ functions:
       - httpApi:
           path: /items/{itemId}
           method: GET
+          authorizer:
+            name: ApiGatewayAuthorizer
 
   UpdateItem:
     handler: handlers/api/items/update-item/index.handler
@@ -48,6 +54,8 @@ functions:
       - httpApi:
           path: /items/{itemId}
           method: PUT
+          authorizer:
+            name: ApiGatewayAuthorizer
 
   SearchItems:
     handler: handlers/api/items/search-items/index.handler
@@ -56,16 +64,18 @@ functions:
       - httpApi:
           path: /items/search
           method: GET
-
-  AddUser:
-    handler: handlers/api/users/add-user/index.handler
-    name: ${self:custom.servicePrefix}-add-user
-    events:
-      - httpApi:
-          path: /users
-          method: POST
           authorizer:
             name: ApiGatewayAuthorizer
+
+  # AddUser:
+  #   handler: handlers/api/users/add-user/index.handler
+  #   name: ${self:custom.servicePrefix}-add-user
+  #   events:
+  #     - httpApi:
+  #         path: /users
+  #         method: POST
+  #         authorizer:
+  #           name: ApiGatewayAuthorizer
 
   GetUser:
     handler: handlers/api/users/get-user/index.handler
@@ -74,6 +84,8 @@ functions:
       - httpApi:
           path: /users/{userId}
           method: GET
+          authorizer:
+            name: ApiGatewayAuthorizer
 
   DeleteUser:
     handler: handlers/api/users/delete-user/index.handler
@@ -82,6 +94,8 @@ functions:
       - httpApi:
           path: /users/{userId}
           method: DELETE
+          authorizer:
+            name: ApiGatewayAuthorizer
 
   UpdateUser:
     handler: handlers/api/users/update-user/index.handler
@@ -90,6 +104,8 @@ functions:
       - httpApi:
           path: /user/{userId}
           method: PUT
+          authorizer:
+            name: ApiGatewayAuthorizer
 
   SignUp:
     handler: handlers/api/auth/sign-up/index.handler
@@ -114,6 +130,16 @@ functions:
       - httpApi:
           path: /confirm
           method: POST
+
+  ValidateToken:
+    handler: handlers/api/auth/validate-token/index.handler
+    name: ${self:custom.servicePrefix}-validate-token
+    events:
+      - httpApi:
+          path: /token
+          method: GET
+          authorizer:
+            name: ApiGatewayAuthorizer
 
 provider:
   name: aws
