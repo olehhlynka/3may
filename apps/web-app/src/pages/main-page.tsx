@@ -119,7 +119,7 @@ const MainPage = () => {
                   <CardMedia
                     component="img"
                     sx={{ width: 160, display: { xs: 'none', sm: 'block' } }}
-                    image={`https://source.unsplash.com/random?index=${index}`}
+                    image={`https://source.unsplash.com/random?keys,wallet,phone,glasses,remote,umbrella,hat,gloves,jewelry,pen,book,bottle,card,headphones,document,clothing,charger,flashdrive,toy,controller&index=${index}`}
                     alt={post.title}
                   />
                 </Card>
