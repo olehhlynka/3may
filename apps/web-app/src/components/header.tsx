@@ -10,8 +10,8 @@ const Header = () => {
     name: 'Home',
     link: '/'
   }, {
-    name: 'About',
-    link: '/about'
+    name: 'Create',
+    link: '/create-post'
   }, {
     name: 'Contact',
     link: '/contact'

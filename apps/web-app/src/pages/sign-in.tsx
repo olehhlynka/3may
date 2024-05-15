@@ -13,12 +13,23 @@ import { getFetchRequest } from '@swarmion/serverless-contracts';
 import { signInContract } from '@3may/contracts';
 import { useNavigate } from 'react-router-dom';
 import { Snackbar } from '@mui/material';
+import { useEffect } from 'react';
+import { useAuth } from '../providers/auth.provider.tsx';
 
 function Copyright(props: TypographyProps) {
   return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
+    <Typography
+      variant="body2"
+      color="text.secondary"
+      align="center"
+      {...props}
+    >
       {'Copyright © '}
-      <Link color="inherit" target={"_blank"} href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&themeRefresh=1">
+      <Link
+        color="inherit"
+        target={'_blank'}
+        href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&themeRefresh=1"
+      >
         3may
       </Link>{' '}
       {new Date().getFullYear()}
@@ -28,52 +39,72 @@ function Copyright(props: TypographyProps) {
 }
 
 export default function SignIn() {
-
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
+  const [signedIn, setSignedIn] = React.useState(false);
 
   const navigate = useNavigate();
 
+  const { setIsLoggedIn } = useAuth();
+
   const signIn = async () => {
     try {
-      await getFetchRequest(signInContract, fetch, {
-        baseUrl: import.meta.env.VITE_SWARMION_API_URL,
-        body: {
-          username: email,
-          password,
+      const { body, statusCode } = await getFetchRequest(
+        signInContract,
+        fetch,
+        {
+          baseUrl: import.meta.env.VITE_SWARMION_API_URL,
+          body: {
+            username: email,
+            password,
+          },
         },
-      })
-      navigate('/')
+      );
+      if (statusCode > 400) {
+        throw new Error('Invalid credentials');
+      }
+      localStorage.setItem('token', body.token);
+      setIsLoggedIn(true);
+      setSignedIn(true);
     } catch (error) {
       console.error(error);
       setErrorMessage((error as Error).message);
       setOpenSnackbar(true);
     }
-  }
+  };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    signIn()
+    signIn();
   };
+
+  useEffect(() => {
+    if (!signedIn) return;
+    navigate('/');
+  }, [signedIn]);
 
   return (
     <main>
-      <Container component="main" maxWidth="xs" sx={{
-        margin: '0 auto',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
+      <Container
+        component="main"
+        maxWidth="xs"
+        sx={{
+          margin: '0 auto',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         <CssBaseline />
         <Box
           sx={{
             marginTop: 8,
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center'
+            alignItems: 'center',
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
@@ -82,7 +113,12 @@ export default function SignIn() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{ mt: 1 }}
+          >
             <TextField
               margin="normal"
               required
@@ -118,7 +154,7 @@ export default function SignIn() {
             <Grid container>
               <Grid item>
                 <Link href="/sign-up" variant="body2">
-                  {'Don\'t have an account? Sign Up'}
+                  {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
             </Grid>

@@ -16,6 +16,8 @@ import { getFetchRequest } from '@swarmion/serverless-contracts';
 import { postNewItemContract } from '@3may/contracts';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { useNavigate } from 'react-router-dom';
+import { withAuth } from '../hocs/withAuth.tsx';
+import { useAuth } from '../providers/auth.provider.tsx';
 
 const CreatePost = () => {
   const [title, setTitle] = useState('');
@@ -29,8 +31,13 @@ const CreatePost = () => {
 
   const navigate = useNavigate();
 
+  const { token, loading } = useAuth();
+
   const setPost = async () => {
     try {
+      if (!token) {
+        throw new Error('Unauthorized');
+      }
       await getFetchRequest(postNewItemContract, fetch, {
         baseUrl: import.meta.env.VITE_SWARMION_API_URL,
         body: {
@@ -43,8 +50,12 @@ const CreatePost = () => {
         pathParameters: {
           status: itemStatus,
         },
+        headers: {
+          Authorization: token,
+        },
       });
-      navigate('/');
+      navigate('/')
+      window.scrollTo(0, 0)
     } catch (error) {
       console.error(error);
       setErrorMessage((error as Error).message);
@@ -54,7 +65,7 @@ const CreatePost = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('submitted');
+    if (loading) return;
     setPost();
   };
 
@@ -186,4 +197,4 @@ const CreatePost = () => {
   );
 };
 
-export default CreatePost;
+export default withAuth(CreatePost);

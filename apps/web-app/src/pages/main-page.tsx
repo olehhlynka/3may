@@ -7,6 +7,8 @@ import { useEffect, useState } from 'react';
 // import { posts } from '../../mock/posts-data.ts';
 import { getFetchRequest } from '@swarmion/serverless-contracts';
 import { getItemsContract, ItemType } from '@3may/contracts';
+import { withAuth } from '../hocs/withAuth.tsx';
+import { useAuth } from '../providers/auth.provider.tsx';
 
 const MainPage = () => {
   const [isLocationAllowed, setIsLocationAllowed] = useState(false);
@@ -16,7 +18,10 @@ const MainPage = () => {
   const [lng, setLng] = useState(0);
   const [postItems, setPostItems] = useState<ItemType[]>([]);
 
+  const { token, loading } = useAuth();
+
   useEffect(() => {
+    console.log('getting location');
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setIsLocationAllowed(true);
@@ -36,30 +41,30 @@ const MainPage = () => {
   }, []);
 
   const syncUsers = async () => {
+    if (!token) {
+      throw new Error('Unauthorized');
+    }
     const { body } = await getFetchRequest(getItemsContract, fetch, {
       baseUrl: import.meta.env.VITE_SWARMION_API_URL,
       queryStringParameters: {
         lat: String(lat),
         lng: String(lng),
       },
+      headers: {
+        Authorization: token,
+      },
     });
 
-    console.log(body);
-
     if ('items' in body) {
-      setPostItems(body.items);
+      setPostItems(body.items as unknown as ItemType[]);
     }
   };
 
   useEffect(() => {
-    console.log(
-      import.meta.env.VITE_SWARMION_API_URL,
-      'process.env.NEXT_PUBLIC_SWARMION_API_URL',
-    );
-    if (isLocationAllowed) {
+    if (isLocationAllowed && !loading) {
       syncUsers();
     }
-  }, [isLocationAllowed]);
+  }, [isLocationAllowed, loading]);
 
   return (
     <main>
@@ -125,4 +130,5 @@ const MainPage = () => {
   );
 };
 
-export default MainPage;
+// export default MainPage;
+export default withAuth(MainPage);

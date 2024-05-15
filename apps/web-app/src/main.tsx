@@ -6,6 +6,7 @@ import MainPage from './pages/main-page.tsx';
 import SignIn from './pages/sign-in.tsx';
 import CreatePost from './pages/create-post.tsx';
 import SignUp from './pages/sign-up.tsx';
+import { AuthProvider } from './providers/auth.provider.tsx';
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>
 );

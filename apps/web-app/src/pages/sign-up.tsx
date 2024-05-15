@@ -68,7 +68,7 @@ export default function SignUp() {
           username: email,
         },
       });
-      navigate('/');
+      navigate('/sign-in');
     } catch (error) {
       console.error(error);
       setErrorMessage((error as Error).message);
