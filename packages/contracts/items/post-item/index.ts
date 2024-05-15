@@ -18,7 +18,7 @@ export const postNewItemContract = new ApiGatewayContract({
   method: 'POST',
   integrationType: 'restApi',
   authorizerType: 'cognito',
-  headersSchema,
+  //headersSchema,
   requestContextSchema: requestContextSchemaCustom,
   bodySchema: {
     type: 'object',

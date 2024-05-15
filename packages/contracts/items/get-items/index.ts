@@ -8,11 +8,11 @@ import { errorSchema } from '../../schemas/error-schema';
 import { itemSchema } from '../../schemas/item-schema';
 import { requestContextSchemaCustom } from '../../schemas/request-context-schema';
 
-const headersSchema = {
-  type: 'object',
-  properties: { Authorization: { type: 'string' } },
-  required: ['Authorization'],
-} as const satisfies JSONSchema;
+// const headersSchema = {
+//   type: 'object',
+//   properties: { Authorization: { type: 'string' } },
+//   required: ['Authorization'],
+// } as const satisfies JSONSchema;
 
 const queryStringParametersSchema = {
   type: 'object',
@@ -46,7 +46,7 @@ export const getItemsContract = new ApiGatewayContract({
   integrationType: 'restApi',
   queryStringParametersSchema,
   authorizerType: 'cognito',
-  headersSchema,
+  //headersSchema,
   requestContextSchema: requestContextSchemaCustom,
   outputSchemas: {
     [HttpStatusCodes.OK]: successSchema,

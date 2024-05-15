@@ -18,7 +18,7 @@ export const validateTokenContract = new ApiGatewayContract({
   integrationType: 'restApi',
   authorizerType: 'cognito',
   requestContextSchema: requestContextSchemaCustom,
-  headersSchema,
+  //headersSchema,
   outputSchemas: {
     [HttpStatusCodes.OK]: {
       type: 'object',

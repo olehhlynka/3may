@@ -12,7 +12,7 @@ export const itemSchema = {
     description: { type: 'string' },
     photo: { type: 'string' },
     location: locationSchema,
-    user: { type: 'string' },
+    user: { type: 'object' },
     date: { type: 'object' },
     //tags: { type: 'array', items: { type: 'string' } },
     tags: { type: 'null' },
