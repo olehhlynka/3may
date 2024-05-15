@@ -22,7 +22,7 @@ const main = getHandler(getSingleItemContract, { ajv })(async (
 ) => {
   const { db } = context as DbConnectionContext;
   const { itemId } = event.pathParameters;
-  const { sub: cognitoId } = event.requestContext.authorizer.claims;
+  const { sub: cognitoId } = event.requestContext.authorizer.jwt.claims;
 
   const user = await db.collection(USERS_COLLECTION).findOne({ cognitoId });
 

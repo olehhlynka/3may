@@ -9,7 +9,7 @@ const claimsSchema = {
   required: ['sub', 'email'],
 } as const satisfies JSONSchema;
 
-export const authroizerSchema = {
+const jwtSchema = {
   type: 'object',
   properties: {
     claims: claimsSchema,
@@ -17,7 +17,15 @@ export const authroizerSchema = {
   required: ['claims'],
 } as const satisfies JSONSchema;
 
-export const requestContextSchema = {
+const authroizerSchema = {
+  type: 'object',
+  properties: {
+    jwt: jwtSchema,
+  },
+  required: ['jwt'],
+} as const satisfies JSONSchema;
+
+export const requestContextSchemaCustom = {
   type: 'object',
   properties: {
     authorizer: authroizerSchema,

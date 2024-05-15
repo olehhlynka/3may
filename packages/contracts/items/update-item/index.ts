@@ -4,7 +4,7 @@ import {
   ApiGatewayContract,
   HttpStatusCodes,
 } from '@swarmion/serverless-contracts';
-import { itemSchema, requestContextSchema } from '../..';
+import { itemSchema, requestContextSchemaCustom } from '../..';
 
 export const updateItemContract = new ApiGatewayContract({
   id: 'updateItem',
@@ -12,7 +12,7 @@ export const updateItemContract = new ApiGatewayContract({
   method: 'PUT',
   integrationType: 'restApi',
   authorizerType: 'cognito',
-  requestContextSchema,
+  requestContextSchema: requestContextSchemaCustom,
   bodySchema: {
     type: 'object',
     properties: {

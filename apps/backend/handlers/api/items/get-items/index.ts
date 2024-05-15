@@ -35,7 +35,7 @@ function getDistanceInRadians(distance?: string | number) {
 const main = getHandler(getItemsContract, { ajv })(async (event, context) => {
   const { db } = context as DbConnectionContext;
   const { lat, lng, dist, page, limit } = event.queryStringParameters;
-  const { sub: cognitoId } = event.requestContext.authorizer.claims;
+  const { sub: cognitoId } = event.requestContext.authorizer.jwt.claims;
 
   const user = await db.collection(USERS_COLLECTION).findOne({ cognitoId });
 

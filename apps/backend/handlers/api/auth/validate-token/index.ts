@@ -10,7 +10,7 @@ import doNotWaitForEmptyEventLoop from '@middy/do-not-wait-for-empty-event-loop'
 
 const main = getHandler(validateTokenContract, { ajv })(async (event) => {
   return httpResponse({
-    username: event.requestContext.authorizer.claims.email,
+    username: event.requestContext.authorizer.jwt.claims.email,
   });
 });
 

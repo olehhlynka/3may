@@ -21,7 +21,7 @@ const main = getHandler(updateItemContract, { ajv })(async (event, context) => {
   const { itemId } = event.pathParameters;
   const { title, description, photo, lng, lat, date, tags, status } =
     event.body;
-  const { sub: cognitoId } = event.requestContext.authorizer.claims;
+  const { sub: cognitoId } = event.requestContext.authorizer.jwt.claims;
 
   const user = await db.collection(USERS_COLLECTION).findOne({ cognitoId });
 

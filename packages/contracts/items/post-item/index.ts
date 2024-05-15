@@ -1,5 +1,5 @@
 import { errorSchema } from '../../schemas/error-schema';
-import { requestContextSchema } from '../../schemas/request-context-schema';
+import { requestContextSchemaCustom } from '../../schemas/request-context-schema';
 import {
   ApiGatewayContract,
   HttpStatusCodes,
@@ -11,7 +11,7 @@ export const postNewItemContract = new ApiGatewayContract({
   method: 'POST',
   integrationType: 'restApi',
   authorizerType: 'cognito',
-  requestContextSchema,
+  requestContextSchema: requestContextSchemaCustom,
   bodySchema: {
     type: 'object',
     properties: {

@@ -19,7 +19,7 @@ import doNotWaitForEmptyEventLoop from '@middy/do-not-wait-for-empty-event-loop'
 const main = getHandler(deleteItemContract, { ajv })(async (event, context) => {
   const { db } = context as DbConnectionContext;
   const { itemId } = event.pathParameters;
-  const { sub: cognitoId } = event.requestContext.authorizer.claims;
+  const { sub: cognitoId } = event.requestContext.authorizer.jwt.claims;
 
   const user = await db.collection(USERS_COLLECTION).findOne({ cognitoId });
 

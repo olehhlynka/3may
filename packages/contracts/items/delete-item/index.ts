@@ -4,7 +4,7 @@ import {
   HttpStatusCodes,
 } from '@swarmion/serverless-contracts';
 import { JSONSchema } from 'json-schema-to-ts';
-import { itemSchema, requestContextSchema } from '../..';
+import { itemSchema, requestContextSchemaCustom } from '../..';
 
 const pathParametersSchema = {
   type: 'object',
@@ -22,7 +22,7 @@ export const deleteItemContract = new ApiGatewayContract({
   integrationType: 'restApi',
   pathParametersSchema,
   authorizerType: 'cognito',
-  requestContextSchema,
+  requestContextSchema: requestContextSchemaCustom,
   outputSchemas: {
     [HttpStatusCodes.OK]: itemSchema,
     [HttpStatusCodes.BAD_REQUEST]: errorSchema,

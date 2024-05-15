@@ -22,7 +22,7 @@ const main = getHandler(postNewItemContract, { ajv })(async (
   const { db } = context as DbConnectionContext;
   const { title, description, photo, lng, lat, date, tags } = event.body;
   const { status } = event.pathParameters;
-  const { sub: cognitoId } = event.requestContext.authorizer.claims;
+  const { sub: cognitoId } = event.requestContext.authorizer.jwt.claims;
 
   const user = await db.collection(USERS_COLLECTION).findOne({ cognitoId });
 

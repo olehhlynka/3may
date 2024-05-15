@@ -5,7 +5,7 @@ import {
 
 import { JSONSchema } from 'json-schema-to-ts';
 import { errorSchema } from '../../schemas/error-schema';
-import { itemSchema, requestContextSchema } from '../..';
+import { itemSchema, requestContextSchemaCustom } from '../..';
 
 const pathParametersSchema = {
   type: 'object',
@@ -23,7 +23,7 @@ export const getSingleItemContract = new ApiGatewayContract({
   integrationType: 'restApi',
   authorizerType: 'cognito',
   pathParametersSchema,
-  requestContextSchema,
+  requestContextSchema: requestContextSchemaCustom,
   outputSchemas: {
     [HttpStatusCodes.OK]: itemSchema,
     [HttpStatusCodes.BAD_GATEWAY]: errorSchema,
