@@ -2,9 +2,7 @@ import { useEffect, useState } from 'react';
 import { getFetchRequest } from '@swarmion/serverless-contracts';
 import {
   getSingleItemContract,
-  getUserContract,
   ItemType,
-  UserType,
 } from '@3may/contracts';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../providers/auth.provider.tsx';
@@ -18,7 +16,6 @@ import Avatar from '@mui/material/Avatar';
 
 const SinglePost = () => {
   const [post, setPost] = useState<ItemType>();
-  const [author, setAuthor] = useState<UserType>();
 
   const { token, loading } = useAuth();
   const [isPostLoading, setIsPostLoading] = useState(true);
@@ -164,19 +161,32 @@ const SinglePost = () => {
               }}>
                 <Box sx={{
                   display: 'flex',
-                  gap: '1rem',
+                  justifyContent: 'space-between',
                   alignItems: 'center',
                   marginBottom: '1rem',
                 }}>
-                  <Avatar sx={{ width: 24, height: 24 }} src={comment.user.photoUrl} />
+                  <Box sx={{
+                    display: 'flex',
+                    gap: '1rem',
+                    alignItems: 'center',
+                  }}>
+                    <Avatar sx={{ width: 24, height: 24 }} src={comment.user.photoUrl} />
+                    <Typography
+                      sx={{
+                        fontSize: '1.2rem'
+                      }}
+                    >
+                      <b>{comment.user.name}</b>
+                    </Typography>
+                  </Box>
                   <Typography
                     sx={{
-                      fontSize: '1.2rem'
+                      fontSize: '1rem',
+                      color: 'gray',
                     }}
                   >
-                    <b>{comment.user.name}</b>
+                    {format(new Date(comment.commentedAt as unknown as string), 'MMMM dd, yyyy')}
                   </Typography>
-
                 </Box>
                 <Typography>{comment.text}</Typography>
               </Box>
