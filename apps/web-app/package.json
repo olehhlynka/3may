@@ -17,6 +17,7 @@
     "@mui/material": "^5.15.17",
     "@swarmion/serverless-contracts": "^0.31.3",
     "common": "workspace:*",
+    "date-fns": "^3.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.1"

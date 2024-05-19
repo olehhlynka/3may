@@ -20,7 +20,7 @@ const Header = () => {
   return (
     <Box component={"header"} sx={{
       position: 'fixed',
-      backgroundColor: 'white',
+      backgroundColor: '#ffc689',
       width: '100%',
       top: 0,
       left: 0,

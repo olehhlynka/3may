@@ -7,24 +7,33 @@ import SignIn from './pages/sign-in.tsx';
 import CreatePost from './pages/create-post.tsx';
 import SignUp from './pages/sign-up.tsx';
 import { AuthProvider } from './providers/auth.provider.tsx';
+import SinglePost from './pages/single-post.tsx';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <MainPage />
+    element: <MainPage />,
   },
   {
     path: 'sign-in',
-    element: <SignIn />
+    element: <SignIn />,
   },
   {
     path: 'sign-up',
-    element: <SignUp />
+    element: <SignUp />,
   },
   {
     path: 'create-post',
-    element: <CreatePost />
-  }
+    element: <CreatePost />,
+  },
+  {
+    path: 'post/:id',
+    element: <SinglePost />,
+  },
+  {
+    path: '*',
+    element: <div>Not Found</div>,
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -32,5 +41,5 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <AuthProvider>
       <RouterProvider router={router} />
     </AuthProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

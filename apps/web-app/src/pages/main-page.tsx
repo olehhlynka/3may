@@ -50,6 +50,7 @@ const MainPage = () => {
         lat: String(lat),
         lng: String(lng),
       },
+      // @ts-expect-error headers are not defined
       headers: {
         Authorization: token,
       },
@@ -61,7 +62,6 @@ const MainPage = () => {
   };
 
   useEffect(() => {
-    console.log(isLocationAllowed, loading, token);
     if (isLocationAllowed && !loading) {
       syncUsers();
     }
@@ -103,7 +103,7 @@ const MainPage = () => {
               key={index + 'post'}
               sx={{ width: '100%' }}
             >
-              <CardActionArea component="a" href="#">
+              <CardActionArea component="a" href={`/post/${post._id}`}>
                 <Card sx={{ display: 'flex' }}>
                   <CardContent sx={{ flex: 1 }}>
                     <Typography component="h2" variant="h5">
