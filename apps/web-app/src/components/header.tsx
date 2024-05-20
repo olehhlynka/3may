@@ -64,8 +64,18 @@ const Header = ({username}: IProps) => {
         }}
       >
         <Typography variant="h6" sx={{ my: 2, color: 'black' }}>
-          <Link href="/" color="inherit" underline="none">
-            3may
+          <Link href="/" color="inherit" underline="none" sx={{
+            height: "40px",
+            width: "40px",
+            display: "flex",
+            "& img": {
+              height: "100%",
+              width: "100%",
+              objectFit: "contain",
+              transform: "scale(1.8)"
+            },
+          }}>
+            <img src={"3may-logo.png"} alt={"3may"}/>
           </Link>
         </Typography>
         <Divider />

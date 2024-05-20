@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getFetchRequest } from '@swarmion/serverless-contracts';
-import {
-  getSingleItemContract,
-  ItemType,
-} from '@3may/contracts';
+import { getSingleItemContract, ItemType } from '@3may/contracts';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../providers/auth.provider.tsx';
 import Header from '../components/header.tsx';
@@ -13,12 +10,13 @@ import Box from '@mui/material/Box';
 import { format } from 'date-fns';
 import { Chip, Divider } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
+import CommentForm from '../components/comment-form.tsx';
 
 interface IProps {
   username?: string;
 }
 
-const SinglePost = ({username}: IProps) => {
+const SinglePost = ({ username }: IProps) => {
   const [post, setPost] = useState<ItemType>();
 
   const { token, loading } = useAuth();
@@ -26,36 +24,36 @@ const SinglePost = ({username}: IProps) => {
 
   const { id: postId } = useParams();
 
+  const fetchPost = async () => {
+    try {
+      if (!token) {
+        throw new Error('Unauthorized');
+      }
+      if (!postId) {
+        throw new Error('No post id');
+      }
+      const { body } = await getFetchRequest(getSingleItemContract, fetch, {
+        baseUrl: import.meta.env.VITE_SWARMION_API_URL,
+        pathParameters: {
+          itemId: postId,
+        },
+        // @ts-expect-error headers are not defined
+        headers: {
+          Authorization: token,
+        },
+      });
+      console.log(body);
+      if (!('message' in body)) {
+        setPost(body);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    setIsPostLoading(false);
+  };
+
   useEffect(() => {
     if (!loading) {
-      const fetchPost = async () => {
-        try {
-          if (!token) {
-            throw new Error('Unauthorized');
-          }
-          if (!postId) {
-            throw new Error('No post id');
-          }
-          const { body } = await getFetchRequest(getSingleItemContract, fetch, {
-            baseUrl: import.meta.env.VITE_SWARMION_API_URL,
-            pathParameters: {
-              itemId: postId,
-            },
-            // @ts-expect-error headers are not defined
-            headers: {
-              Authorization: token,
-            },
-          });
-          console.log(body);
-          if (!('message' in body)) {
-            setPost(body);
-          }
-        } catch (error) {
-          console.error(error);
-        }
-        setIsPostLoading(false);
-      };
-
       fetchPost();
     }
   }, [loading, postId, token]);
@@ -142,62 +140,92 @@ const SinglePost = ({username}: IProps) => {
             {post.user && (
               <>
                 <i>Author: </i>
-                {post.user.email && <b>{post.user.email as unknown as string}</b>}
+                {post.user.email && (
+                  <b>{post.user.email as unknown as string}</b>
+                )}
               </>
             )}
           </Typography>
           <Divider />
           <Box>
-            <Typography component="h2" sx={{
-              fontSize: '1.5rem',
-              marginTop: '2rem',
-              marginBottom: '1rem',
-              fontWeight: 'bold',
-            }}>
+            <Typography
+              component="h2"
+              sx={{
+                fontSize: '1.5rem',
+                marginTop: '2rem',
+                marginBottom: '1rem',
+                fontWeight: 'bold',
+              }}
+            >
               Comment section:
             </Typography>
-            {post.comments ? post.comments.map((comment, index) => (
-              <Box key={index} sx={{
-                padding: '1rem',
-                border: '1px solid #ccc',
-                borderRadius: '8px',
-                marginBottom: '1rem',
-              }}>
-                <Box sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginBottom: '1rem',
-                }}>
-                  <Box sx={{
-                    display: 'flex',
-                    gap: '1rem',
-                    alignItems: 'center',
-                  }}>
-                    <Avatar sx={{ width: 24, height: 24 }} src={comment.user.photoUrl} />
-                    <Typography
-                      sx={{
-                        fontSize: '1.2rem'
-                      }}
-                    >
-                      <b>{comment.user.name}</b>
-                    </Typography>
-                  </Box>
-                  <Typography
+            {post.comments ? (
+              <>
+                {post.comments.map((comment, index) => (
+                  <Box
+                    key={index}
                     sx={{
-                      fontSize: '1rem',
-                      color: 'gray',
+                      padding: '1rem',
+                      border: '1px solid #ccc',
+                      borderRadius: '8px',
+                      marginBottom: '1rem',
                     }}
                   >
-                    {format(new Date(comment.commentedAt as unknown as string), 'MMMM dd, yyyy')}
-                  </Typography>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: '1rem',
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          gap: '1rem',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <Avatar
+                          sx={{ width: 24, height: 24 }}
+                          src={comment.user.photoUrl}
+                        />
+                        <Typography
+                          sx={{
+                            fontSize: '1.2rem',
+                          }}
+                        >
+                          <b>{comment.user.name}</b>
+                        </Typography>
+                      </Box>
+                      <Typography
+                        sx={{
+                          fontSize: '1rem',
+                          color: 'gray',
+                        }}
+                      >
+                        {format(
+                          new Date(comment.createdAt as unknown as string),
+                          'MMMM dd, yyyy',
+                        )}
+                      </Typography>
+                    </Box>
+                    <Typography>{comment.text}</Typography>
+                  </Box>
+                ))}
+                <Box
+                  sx={{
+                    padding: '1rem',
+                    border: '1px solid #ccc',
+                    borderRadius: '8px',
+                    marginBottom: '1rem',
+                  }}
+                >
+                  {postId && <CommentForm onSubmit={fetchPost} token={token} postId={postId} />}
                 </Box>
-                <Typography>{comment.text}</Typography>
-              </Box>
-            )) : (
-              <Typography>
-                There is no comments yet
-              </Typography>
+              </>
+            ) : (
+              <Typography>There is no comments yet</Typography>
             )}
           </Box>
         </Container>
