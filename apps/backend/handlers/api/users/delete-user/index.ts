@@ -9,7 +9,6 @@ import {
   DbConnectionContext,
   dbConnection,
 } from '@/middlewares/database-connection-middleware';
-import { ObjectId } from 'mongodb';
 import { USERS_COLLECTION } from '@/common/constants/database-constants';
 import doNotWaitForEmptyEventLoop from '@middy/do-not-wait-for-empty-event-loop';
 
