@@ -75,7 +75,7 @@ const Header = ({username}: IProps) => {
               transform: "scale(1.8)"
             },
           }}>
-            <img src={"3may-logo.png"} alt={"3may"}/>
+            <img src={"/3may-logo.png"} alt={"3may"}/>
           </Link>
         </Typography>
         <Divider />

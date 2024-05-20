@@ -1,5 +1,12 @@
 import Grid from '@mui/material/Grid';
-import { Card, CardActionArea, CardContent, CardMedia } from '@mui/material';
+import {
+  Badge,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Chip,
+} from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Header from '../components/header.tsx';
@@ -105,14 +112,41 @@ const MainPage = () => {
             >
               <CardActionArea component="a" href={`/post/${post._id}`}>
                 <Card sx={{ display: 'flex' }}>
-                  <CardContent sx={{ flex: 1 }}>
-                    <Typography component="h2" variant="h5">
+                  <CardContent
+                    sx={{
+                      flex: 1,
+                      minWidth: 0,
+                      paddingRight: '4rem',
+                    }}
+                  >
+                    {post.status === 'lost' ? (
+                      <Chip label="lost" color="error" variant="outlined" />
+                    ) : (
+                      <Chip label="found" color="primary" variant="outlined" />
+                    )}
+                    <Typography
+                      component="h2"
+                      variant="h5"
+                      sx={{
+                        marginTop: '1rem',
+                      }}
+                    >
                       {post.title}
                     </Typography>
                     <Typography variant="subtitle1" color="text.secondary">
                       {new Date(post.date as unknown as Date).toDateString()}
                     </Typography>
-                    <Typography variant="subtitle1" paragraph>
+                    <Typography
+                      variant="subtitle1"
+                      paragraph
+                      sx={{
+                        // truncate string
+                        overflow: 'hidden',
+                        width: '100%',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
                       {post.description}
                     </Typography>
                   </CardContent>
