@@ -14,7 +14,11 @@ import { format } from 'date-fns';
 import { Chip, Divider } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 
-const SinglePost = () => {
+interface IProps {
+  username?: string;
+}
+
+const SinglePost = ({username}: IProps) => {
   const [post, setPost] = useState<ItemType>();
 
   const { token, loading } = useAuth();
@@ -66,7 +70,7 @@ const SinglePost = () => {
 
   return (
     <div>
-      <Header />
+      <Header username={username} />
       <main>
         <Container
           sx={{

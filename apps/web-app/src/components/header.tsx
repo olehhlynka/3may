@@ -1,58 +1,129 @@
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import { Divider, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
+import {
+  Divider,
+  IconButton,
+  Menu,
+  MenuItem,
+} from '@mui/material';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
+import { useState } from 'react';
+import Avatar from '@mui/material/Avatar';
 
-const Header = () => {
+interface IProps {
+  username?: string
+}
 
-  const navItems = [{
-    name: 'Home',
-    link: '/'
-  }, {
-    name: 'Create',
-    link: '/create-post'
-  }, {
-    name: 'Contact',
-    link: '/contact'
-  }];
+const Header = ({username}: IProps) => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const isMenuOpen = Boolean(anchorEl);
+
+  const navItems = [
+    {
+      name: 'Home',
+      link: '/',
+    },
+    {
+      name: 'Create',
+      link: '/create-post',
+    },
+    {
+      name: 'Contact',
+      link: '/contact',
+    },
+  ];
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
-    <Box component={"header"} sx={{
-      position: 'fixed',
-      backgroundColor: '#ffc689',
-      width: '100%',
-      top: 0,
-      left: 0,
-      boxShadow: '0 0 5px rgba(0, 0, 0, 0.1)',
-      zIndex: 1000,
-      padding: 0
-    }}>
-      <Container sx={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '0 1rem'
-      }}>
-        <Typography variant="h6" sx={{ my: 2, color: "black" }}>
-          3may
+    <Box
+      component={'header'}
+      sx={{
+        position: 'fixed',
+        backgroundColor: '#ffc689',
+        width: '100%',
+        top: 0,
+        left: 0,
+        boxShadow: '0 0 5px rgba(0, 0, 0, 0.1)',
+        zIndex: 1000,
+        padding: 0,
+      }}
+    >
+      <Container
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '0 1rem',
+        }}
+      >
+        <Typography variant="h6" sx={{ my: 2, color: 'black' }}>
+          <Link href="/" color="inherit" underline="none">
+            3may
+          </Link>
         </Typography>
         <Divider />
-        <List sx={{
-          display: 'flex',
-          gap: '1rem',
-          padding: 0
-        }}>
-          {navItems.map(({name, link}) => (
-            <ListItem key={name} disablePadding>
-              <Link href={link}>
-                <ListItemButton sx={{ textAlign: 'center' }}>
-                  <ListItemText primary={name} />
-                </ListItemButton>
+        <IconButton
+          aria-haspopup="true"
+          aria-expanded={isMenuOpen ? 'true' : undefined}
+          onClick={handleClick}
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            padding: '0.5rem',
+          }}
+        >
+          <Avatar sx={{ width: 32, height: 32 }} alt={username}></Avatar>
+        </IconButton>
+        <Menu
+          anchorEl={anchorEl}
+          id="account-menu"
+          open={isMenuOpen}
+          onClose={handleClose}
+          onClick={handleClose}
+          transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+          PaperProps={{
+            sx: {
+              overflow: 'visible',
+              filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+              mt: 1.5,
+              '& .MuiAvatar-root': {
+                width: 32,
+                height: 32,
+                ml: -0.5,
+                mr: 1,
+              },
+              '&::before': {
+                content: '""',
+                display: 'block',
+                position: 'absolute',
+                top: 0,
+                right: 14,
+                width: 10,
+                height: 10,
+                bgcolor: 'background.paper',
+                transform: 'translateY(-50%) rotate(45deg)',
+                zIndex: 0,
+              },
+            },
+          }}
+        >
+          {navItems.map(({ name, link }) => (
+            <MenuItem key={name} onClick={() => setIsMenuOpen(false)}>
+              <Link href={link} color="inherit">
+                {name}
               </Link>
-            </ListItem>
+            </MenuItem>
           ))}
-        </List>
+        </Menu>
       </Container>
     </Box>
   );

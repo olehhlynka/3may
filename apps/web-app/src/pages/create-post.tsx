@@ -50,6 +50,7 @@ const CreatePost = () => {
         pathParameters: {
           status: itemStatus,
         },
+        // @ts-expect-error headers are not defined
         headers: {
           Authorization: token,
         },
@@ -171,7 +172,7 @@ const CreatePost = () => {
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"
               defaultValue="female"
-              onChange={(e) => setItemStatus(e.target.value as any)}
+              onChange={(e) => setItemStatus(e.target.value as 'lost' | 'found')}
               value={itemStatus}
               name="radio-buttons-group"
               sx={{

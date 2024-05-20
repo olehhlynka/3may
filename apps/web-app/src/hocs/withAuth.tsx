@@ -10,6 +10,7 @@ export function withAuth<P extends React.JSX.IntrinsicAttributes = {}>(
 ) {
   return (props: P) => {
     const [isLoading, setIsLoading] = React.useState(true);
+    const [user, setUser] = React.useState<string>();
 
     const navigate = useNavigate();
 
@@ -24,6 +25,7 @@ export function withAuth<P extends React.JSX.IntrinsicAttributes = {}>(
       try {
         const body = await getFetchRequest(validateTokenContract, fetch, {
           baseUrl: import.meta.env.VITE_SWARMION_API_URL,
+          // @ts-expect-error headers are not defined
           headers: {
             authorization: `Bearer ${token}`,
           },
@@ -34,6 +36,7 @@ export function withAuth<P extends React.JSX.IntrinsicAttributes = {}>(
         }
 
         setIsLoggedIn(true);
+        setUser(body.body.username);
       } catch (error) {
         console.error(error);
         console.log('Token is invalid');
@@ -67,6 +70,6 @@ export function withAuth<P extends React.JSX.IntrinsicAttributes = {}>(
       );
     }
 
-    return <Component {...props} />;
+    return <Component {...props} username={user} />;
   };
 }
