@@ -5,13 +5,13 @@ import {
   HttpStatusCodes,
 } from '@swarmion/serverless-contracts';
 import { JSONSchema } from 'json-schema-to-ts';
+import { requestContextSchemaCustom } from '../../schemas/request-context-schema';
 
 const bodySchema = {
   type: 'object',
   properties: {
-    name: { type: 'string', maxLength: 60, minLength: 5 },
+    name: { type: 'string', maxLength: 60, minLength: 2 },
     photo: { type: 'string', maxLength: 100 },
-    email: { type: 'string', maxLength: 20 },
   },
   additionalProperties: false,
 } as const satisfies JSONSchema;
@@ -30,8 +30,9 @@ export const updateUserContract = new ApiGatewayContract({
   path: '/users/{userId}',
   method: 'PUT',
   integrationType: 'restApi',
+  authorizerType: 'cognito',
+  requestContextSchema: requestContextSchemaCustom,
   bodySchema,
-  pathParametersSchema,
   outputSchemas: {
     [HttpStatusCodes.OK]: userSchema,
     [HttpStatusCodes.BAD_GATEWAY]: errorSchema,

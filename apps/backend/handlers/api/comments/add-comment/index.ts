@@ -1,6 +1,6 @@
 import cors from '@middy/http-cors';
 import middy from '@middy/core';
-import { UserType, postNewItemContract } from '@3may/contracts';
+import { UserType, addNewCommentContract } from '@3may/contracts';
 import { HttpStatusCodes, getHandler } from '@swarmion/serverless-contracts';
 import { httpResponse } from '@/common/http';
 import { ajv } from '@/common/ajv';
@@ -14,43 +14,51 @@ import {
   USERS_COLLECTION,
 } from '@/common/constants/database-constants';
 import doNotWaitForEmptyEventLoop from '@middy/do-not-wait-for-empty-event-loop';
+import { ObjectId } from 'mongodb';
 
-const main = getHandler(postNewItemContract, { ajv })(async (
+const main = getHandler(addNewCommentContract, { ajv })(async (
   event,
   context,
 ) => {
   const { db } = context as DbConnectionContext;
-  const { title, description, photo, lng, lat, date, tags } = event.body;
-  const { status } = event.pathParameters;
+  const { text } = event.body;
+  const { itemId } = event.pathParameters;
   const { sub: cognitoId } = event.requestContext.authorizer.jwt.claims;
 
-  const user = await db.collection(USERS_COLLECTION).findOne({ cognitoId });
+  const user = await db
+    .collection<UserType>(USERS_COLLECTION)
+    .findOne({ cognitoId });
 
   if (!user) {
-    throw new Error('User not found', { cause: HttpStatusCodes.NOT_FOUND });
+    throw new Error('User not found', { cause: HttpStatusCodes.FORBIDDEN });
   }
 
-  const userTyped = user as unknown as UserType;
-
-  const insertResult = await db.collection(ITEMS_COLLECTION).insertOne({
-    title,
-    description,
-    status: status,
-    location: { type: 'Point', coordinates: [lng, lat] },
-    photo: 'https://source.unsplash.com/random',
-    date: new Date(date),
+  const comment = {
+    _id: new ObjectId(),
     user: {
-      _id: user._id,
-      name: userTyped.name,
-      email: userTyped.email,
-      photoUrl: userTyped.photoUrl,
+      userId: new ObjectId(user._id),
+      name: user.name,
+      photoUrl: user.photo,
     },
-    tags: tags ?? [],
+    text: text,
     createdAt: new Date(),
     updatedAt: new Date(),
-  });
+  };
 
-  return httpResponse({ id: insertResult.insertedId.toString() });
+  const updateResult = await db.collection(ITEMS_COLLECTION).findOneAndUpdate(
+    { _id: new ObjectId(itemId) },
+    {
+      $addToSet: {
+        comments: comment,
+      },
+    },
+  );
+
+  if (!updateResult) {
+    throw new Error('Item not found', { cause: HttpStatusCodes.NOT_FOUND });
+  }
+
+  return httpResponse({ id: comment._id.toString() });
 });
 
 export const handler = middy(main)

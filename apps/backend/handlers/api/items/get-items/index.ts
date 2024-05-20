@@ -32,63 +32,65 @@ function getDistanceInRadians(distance?: string | number) {
   return (distance ? Number(distance) : DEFAULT_DISTANCE_M) / EARTH_RADIUS_M;
 }
 
-const main = getHandler(getItemsContract, { ajv })(async (event, context) => {
-  const { db } = context as DbConnectionContext;
-  const { lat, lng, dist, page, limit } = event.queryStringParameters;
-  const { sub: cognitoId } = event.requestContext.authorizer.jwt.claims;
+const main = getHandler(getItemsContract, { ajv, validateOutput: false })(
+  async (event, context) => {
+    const { db } = context as DbConnectionContext;
+    const { lat, lng, dist, page, limit } = event.queryStringParameters;
+    const { sub: cognitoId } = event.requestContext.authorizer.jwt.claims;
 
-  const user = await db.collection(USERS_COLLECTION).findOne({ cognitoId });
+    const user = await db.collection(USERS_COLLECTION).findOne({ cognitoId });
 
-  if (!user) {
-    throw new Error('User not found', { cause: HttpStatusCodes.NOT_FOUND });
-  }
+    if (!user) {
+      throw new Error('User not found', { cause: HttpStatusCodes.NOT_FOUND });
+    }
 
-  if (!areValidCoordinates(Number(lng), Number(lat))) {
-    throw new Error('Provided coordinates are not valid', {
-      cause: HttpStatusCodes.BAD_REQUEST,
-    });
-  }
+    if (!areValidCoordinates(Number(lng), Number(lat))) {
+      throw new Error('Provided coordinates are not valid', {
+        cause: HttpStatusCodes.BAD_REQUEST,
+      });
+    }
 
-  if (dist && Number(dist) < 0) {
-    throw new Error('Provided distance is not valid', {
-      cause: HttpStatusCodes.BAD_REQUEST,
-    });
-  }
+    if (dist && Number(dist) < 0) {
+      throw new Error('Provided distance is not valid', {
+        cause: HttpStatusCodes.BAD_REQUEST,
+      });
+    }
 
-  if (limit && Number(limit) < 0) {
-    throw new Error('Provided distance is not valid', {
-      cause: HttpStatusCodes.BAD_REQUEST,
-    });
-  }
+    if (limit && Number(limit) < 0) {
+      throw new Error('Provided distance is not valid', {
+        cause: HttpStatusCodes.BAD_REQUEST,
+      });
+    }
 
-  if (page && Number(page) < 1) {
-    throw new Error('Provided distance is not valid', {
-      cause: HttpStatusCodes.BAD_REQUEST,
-    });
-  }
+    if (page && Number(page) < 1) {
+      throw new Error('Provided distance is not valid', {
+        cause: HttpStatusCodes.BAD_REQUEST,
+      });
+    }
 
-  const itemsSkip =
-    (limit ? Number(limit) : DEFAULT_LIMIT) * (page ? Number(page) - 1 : 0);
-  const itemsLimit = limit ? Number(limit) : DEFAULT_LIMIT;
+    const itemsSkip =
+      (limit ? Number(limit) : DEFAULT_LIMIT) * (page ? Number(page) - 1 : 0);
+    const itemsLimit = limit ? Number(limit) : DEFAULT_LIMIT;
 
-  const items = await db
-    .collection<ItemType>(ITEMS_COLLECTION)
-    .find({
-      location: {
-        $geoWithin: {
-          $centerSphere: [
-            [Number(lng), Number(lat)],
-            getDistanceInRadians(dist),
-          ],
+    const items = await db
+      .collection<ItemType>(ITEMS_COLLECTION)
+      .find({
+        location: {
+          $geoWithin: {
+            $centerSphere: [
+              [Number(lng), Number(lat)],
+              getDistanceInRadians(dist),
+            ],
+          },
         },
-      },
-    })
-    .skip(itemsSkip)
-    .limit(itemsLimit)
-    .toArray();
+      })
+      .skip(itemsSkip)
+      .limit(itemsLimit)
+      .toArray();
 
-  return httpResponse({ items });
-});
+    return httpResponse({ items });
+  },
+);
 
 export const handler = middy(main)
   .use(doNotWaitForEmptyEventLoop())

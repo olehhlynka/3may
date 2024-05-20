@@ -7,6 +7,36 @@ plugins:
 resources: ${file(./resources.yaml)}
 
 functions:
+  AddComment:
+    handler: handlers/api/comments/add-comment/index.handler
+    name: ${self:custom.servicePrefix}-add-comment
+    events:
+      - httpApi:
+          path: /items/{itemId}/comment
+          method: POST
+          authorizer:
+            name: ApiGatewayAuthorizer
+
+  DeleteComment:
+    handler: handlers/api/comments/delete-comment/index.handler
+    name: ${self:custom.servicePrefix}-delete-comment
+    events:
+      - httpApi:
+          path: /items/{itemId}/comment/{commentId}
+          method: DELETE
+          authorizer:
+            name: ApiGatewayAuthorizer
+
+  UpdateComment:
+    handler: handlers/api/comments/update-comment/index.handler
+    name: ${self:custom.servicePrefix}-update-comment
+    events:
+      - httpApi:
+          path: /items/{itemId}/comment/{commentId}
+          method: PUT
+          authorizer:
+            name: ApiGatewayAuthorizer
+
   PostItem:
     handler: handlers/api/items/post-item/index.handler
     name: ${self:custom.servicePrefix}-post-item
@@ -66,16 +96,6 @@ functions:
           method: GET
           authorizer:
             name: ApiGatewayAuthorizer
-
-  # AddUser:
-  #   handler: handlers/api/users/add-user/index.handler
-  #   name: ${self:custom.servicePrefix}-add-user
-  #   events:
-  #     - httpApi:
-  #         path: /users
-  #         method: POST
-  #         authorizer:
-  #           name: ApiGatewayAuthorizer
 
   GetUser:
     handler: handlers/api/users/get-user/index.handler

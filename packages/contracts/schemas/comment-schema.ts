@@ -1,11 +1,25 @@
-import { JSONSchema } from 'json-schema-to-ts';
+import { FromSchema, JSONSchema } from 'json-schema-to-ts';
 
 export const commentSchema = {
   type: 'object',
   properties: {
-    user: { type: 'string' },
+    _id: { type: 'object' },
+    user: {
+      type: 'object',
+      properties: {
+        userId: { type: 'object' },
+        name: { type: 'string' },
+        photoUrl: { type: 'string' },
+      },
+      additionalProperties: false,
+      required: ['userId'],
+    },
     text: { type: 'string' },
+    createdAt: { type: 'object' },
+    updatedAt: { type: 'object' },
   },
   additionalProperties: false,
-  required: ['user', 'text'],
+  required: ['user', 'text', 'createdAt', 'updatedAt', '_id'],
 } as const satisfies JSONSchema;
+
+export type CommentType = FromSchema<typeof commentSchema>;

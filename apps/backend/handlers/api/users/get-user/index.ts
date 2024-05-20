@@ -9,20 +9,17 @@ import {
   DbConnectionContext,
   dbConnection,
 } from '@/middlewares/database-connection-middleware';
-import { ObjectId } from 'mongodb';
 import { USERS_COLLECTION } from '@/common/constants/database-constants';
 import doNotWaitForEmptyEventLoop from '@middy/do-not-wait-for-empty-event-loop';
 
 const main = getHandler(getUserContract, { ajv })(async (event, context) => {
   const { db } = context as DbConnectionContext;
-  const { userId } = event.pathParameters;
+  const { sub: cognitoId } = event.requestContext.authorizer.jwt.claims;
 
-  const user = await db
-    .collection(USERS_COLLECTION)
-    .findOne({ _id: new ObjectId(userId) });
+  const user = await db.collection(USERS_COLLECTION).findOne({ cognitoId });
 
   if (!user) {
-    throw new Error('User not found', { cause: HttpStatusCodes.NOT_FOUND });
+    throw new Error('Forbidden', { cause: HttpStatusCodes.FORBIDDEN });
   }
 
   return httpResponse(user as unknown as UserType);

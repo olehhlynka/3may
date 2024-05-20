@@ -1,30 +1,33 @@
 import { errorSchema } from '../../schemas/error-schema';
-import { userSchema } from '../../schemas/user-schema';
-import { requestContextSchemaCustom } from '../../schemas/request-context-schema';
 import {
   ApiGatewayContract,
   HttpStatusCodes,
 } from '@swarmion/serverless-contracts';
 import { JSONSchema } from 'json-schema-to-ts';
+import { requestContextSchemaCustom } from '../..';
+import { commentSchema } from '../../schemas/comment-schema';
 
 const pathParametersSchema = {
   type: 'object',
   properties: {
-    userId: { type: 'string' },
+    itemId: { type: 'string' },
+    commentId: { type: 'string' },
   },
   additionalProperties: false,
-  required: ['userId'],
+  required: ['itemId', 'commentId'],
 } as const satisfies JSONSchema;
 
-export const deleteUserContract = new ApiGatewayContract({
-  id: 'deleteUser',
-  path: '/users/{userId}',
+export const deleteCommentContract = new ApiGatewayContract({
+  id: 'deleteItem',
+  path: '/items/{itemId}/comment/{commentId}',
   method: 'DELETE',
   integrationType: 'restApi',
+  pathParametersSchema,
   authorizerType: 'cognito',
   requestContextSchema: requestContextSchemaCustom,
   outputSchemas: {
-    [HttpStatusCodes.OK]: userSchema,
+    [HttpStatusCodes.OK]: commentSchema,
+    [HttpStatusCodes.BAD_REQUEST]: errorSchema,
     [HttpStatusCodes.BAD_GATEWAY]: errorSchema,
   } as const,
 });

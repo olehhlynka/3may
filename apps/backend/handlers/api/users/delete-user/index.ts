@@ -15,11 +15,11 @@ import doNotWaitForEmptyEventLoop from '@middy/do-not-wait-for-empty-event-loop'
 
 const main = getHandler(deleteUserContract, { ajv })(async (event, context) => {
   const { db } = context as DbConnectionContext;
-  const { userId } = event.pathParameters;
+  const { sub: cognitoId } = event.requestContext.authorizer.jwt.claims;
 
   const deletedItem = await db
     .collection(USERS_COLLECTION)
-    .findOneAndDelete({ _id: new ObjectId(userId) });
+    .findOneAndDelete({ cognitoId });
 
   if (!deletedItem) {
     throw new Error('User not found', { cause: HttpStatusCodes.NOT_FOUND });

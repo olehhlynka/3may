@@ -6,6 +6,7 @@ import {
 import { JSONSchema } from 'json-schema-to-ts';
 import { errorSchema } from '../../schemas/error-schema';
 import { userSchema } from '../../schemas/user-schema';
+import { requestContextSchemaCustom } from '../../schemas/request-context-schema';
 
 const pathParametersSchema = {
   type: 'object',
@@ -21,7 +22,8 @@ export const getUserContract = new ApiGatewayContract({
   path: '/users/{userId}',
   method: 'GET',
   integrationType: 'restApi',
-  pathParametersSchema,
+  authorizerType: 'cognito',
+  requestContextSchema: requestContextSchemaCustom,
   outputSchemas: {
     [HttpStatusCodes.OK]: userSchema,
     [HttpStatusCodes.BAD_GATEWAY]: errorSchema,
