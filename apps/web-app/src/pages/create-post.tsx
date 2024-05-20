@@ -10,7 +10,7 @@ import {
   Snackbar,
   Stack,
 } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Button from '@mui/material/Button';
 import { getFetchRequest } from '@swarmion/serverless-contracts';
 import { postNewItemContract } from '@3may/contracts';
@@ -18,20 +18,53 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { useNavigate } from 'react-router-dom';
 import { withAuth } from '../hocs/withAuth.tsx';
 import { useAuth } from '../providers/auth.provider.tsx';
+import { Marker } from 'react-leaflet';
+import { MarkerClusterer } from '@googlemaps/markerclusterer';
+import {
+  AdvancedMarker,
+  Map,
+  MapCameraChangedEvent,
+  useMap,
+} from '@vis.gl/react-google-maps';
 
 const CreatePost = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
-  const [lat, setLat] = useState('');
-  const [lng, setLng] = useState('');
+  const [lat, setLat] = useState('49.825291415855844');
+  const [lng, setLng] = useState('24.0117430876972');
   const [itemStatus, setItemStatus] = useState<'lost' | 'found'>('lost');
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [markers, setMarkers] = useState<{ [key: string]: typeof Marker }>({});
+
+  const clusterer = useRef<MarkerClusterer | null>(null);
 
   const navigate = useNavigate();
 
   const { token, loading } = useAuth();
+
+  const map = useMap();
+
+  useEffect(() => {
+    console.log('getting location');
+    navigator.geolocation.getCurrentPosition((position) => {
+      setLat(String(position.coords.latitude));
+      setLng(String(position.coords.longitude));
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!map) return;
+    if (!clusterer.current) {
+      clusterer.current = new MarkerClusterer({ map });
+    }
+  }, [map]);
+
+  useEffect(() => {
+    clusterer.current?.clearMarkers();
+    clusterer.current?.addMarkers(Object.values(markers));
+  }, [markers]);
 
   const setPost = async () => {
     try {
@@ -55,8 +88,8 @@ const CreatePost = () => {
           Authorization: token,
         },
       });
-      navigate('/')
-      window.scrollTo(0, 0)
+      navigate('/');
+      window.scrollTo(0, 0);
     } catch (error) {
       console.error(error);
       setErrorMessage((error as Error).message);
@@ -165,6 +198,35 @@ const CreatePost = () => {
               fullWidth
             />
           </Stack>
+          <Map
+            style={{
+              height: '400px',
+            }}
+            mapId={'6515e20e255c704b'}
+            defaultZoom={13}
+            defaultCenter={{ lat: +lat, lng: +lng }}
+            onCameraChanged={(ev: MapCameraChangedEvent) =>
+              console.log(
+                'camera changed:',
+                ev.detail.center,
+                'zoom:',
+                ev.detail.zoom,
+              )
+            }
+            onClick={(e) => {
+              console.log(e);
+              if (
+                !e.detail.latLng ||
+                !e.detail.latLng.lat ||
+                !e.detail.latLng.lng
+              )
+                return;
+              setLng('' + e.detail.latLng.lng);
+              setLat('' + e.detail.latLng.lat);
+            }}
+          >
+            <AdvancedMarker position={{ lat: +lat, lng: +lng }} />
+          </Map>
           <FormControl>
             <FormLabel id="demo-radio-buttons-group-label">
               Is the thing found or was lost?
@@ -172,7 +234,9 @@ const CreatePost = () => {
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"
               defaultValue="female"
-              onChange={(e) => setItemStatus(e.target.value as 'lost' | 'found')}
+              onChange={(e) =>
+                setItemStatus(e.target.value as 'lost' | 'found')
+              }
               value={itemStatus}
               name="radio-buttons-group"
               sx={{
@@ -190,7 +254,7 @@ const CreatePost = () => {
             </RadioGroup>
           </FormControl>
           <Button variant="outlined" color="secondary" type="submit">
-            Register
+            Submit
           </Button>
         </form>
       </Container>

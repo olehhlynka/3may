@@ -8,6 +8,7 @@ import CreatePost from './pages/create-post.tsx';
 import SignUp from './pages/sign-up.tsx';
 import { AuthProvider } from './providers/auth.provider.tsx';
 import SinglePost from './pages/single-post.tsx';
+import { APIProvider } from '@vis.gl/react-google-maps';
 
 const router = createBrowserRouter([
   {
@@ -39,7 +40,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <AuthProvider>
-      <RouterProvider router={router} />
+      <APIProvider apiKey={import.meta.env.VITE_GOOGLE_API_KEY}>
+        <RouterProvider router={router} />
+      </APIProvider>
     </AuthProvider>
   </React.StrictMode>,
 );

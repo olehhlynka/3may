@@ -28,7 +28,6 @@ const MainPage = () => {
   const { token, loading } = useAuth();
 
   useEffect(() => {
-    console.log('getting location');
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setIsLocationAllowed(true);
