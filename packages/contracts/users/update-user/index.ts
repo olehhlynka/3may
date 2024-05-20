@@ -16,18 +16,9 @@ const bodySchema = {
   additionalProperties: false,
 } as const satisfies JSONSchema;
 
-const pathParametersSchema = {
-  type: 'object',
-  properties: {
-    userId: { type: 'string' },
-  },
-  additionalProperties: false,
-  required: ['userId'],
-} as const satisfies JSONSchema;
-
 export const updateUserContract = new ApiGatewayContract({
   id: 'updateUser',
-  path: '/users/{userId}',
+  path: '/users',
   method: 'PUT',
   integrationType: 'restApi',
   authorizerType: 'cognito',

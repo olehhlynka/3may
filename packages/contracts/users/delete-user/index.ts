@@ -5,20 +5,10 @@ import {
   ApiGatewayContract,
   HttpStatusCodes,
 } from '@swarmion/serverless-contracts';
-import { JSONSchema } from 'json-schema-to-ts';
-
-const pathParametersSchema = {
-  type: 'object',
-  properties: {
-    userId: { type: 'string' },
-  },
-  additionalProperties: false,
-  required: ['userId'],
-} as const satisfies JSONSchema;
 
 export const deleteUserContract = new ApiGatewayContract({
   id: 'deleteUser',
-  path: '/users/{userId}',
+  path: '/users',
   method: 'DELETE',
   integrationType: 'restApi',
   authorizerType: 'cognito',

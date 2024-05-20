@@ -112,7 +112,7 @@ functions:
     name: ${self:custom.servicePrefix}-delete-user
     events:
       - httpApi:
-          path: /users/{userId}
+          path: /users
           method: DELETE
           authorizer:
             name: ApiGatewayAuthorizer
@@ -122,7 +122,7 @@ functions:
     name: ${self:custom.servicePrefix}-update-user
     events:
       - httpApi:
-          path: /user/{userId}
+          path: /user
           method: PUT
           authorizer:
             name: ApiGatewayAuthorizer
