@@ -12,7 +12,10 @@ import {
 import { USERS_COLLECTION } from '@/common/constants/database-constants';
 import doNotWaitForEmptyEventLoop from '@middy/do-not-wait-for-empty-event-loop';
 
-const main = getHandler(getUserContract, { ajv })(async (event, context) => {
+const main = getHandler(getUserContract, { ajv, validateOutput: false })(async (
+  event,
+  context,
+) => {
   const { db } = context as DbConnectionContext;
   const { sub: cognitoId } = event.requestContext.authorizer.jwt.claims;
 

@@ -27,9 +27,9 @@ functions:
           authorizer:
             name: ApiGatewayAuthorizer
 
-  UpdateComment:
-    handler: handlers/api/comments/update-comment/index.handler
-    name: ${self:custom.servicePrefix}-update-comment
+  EditComment:
+    handler: handlers/api/comments/edit-comment/index.handler
+    name: ${self:custom.servicePrefix}-edit-comment
     events:
       - httpApi:
           path: /items/{itemId}/comment/{commentId}
@@ -102,7 +102,7 @@ functions:
     name: ${self:custom.servicePrefix}-get-user
     events:
       - httpApi:
-          path: /users/{userId}
+          path: /users
           method: GET
           authorizer:
             name: ApiGatewayAuthorizer
