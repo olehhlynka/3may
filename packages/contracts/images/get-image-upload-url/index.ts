@@ -44,8 +44,40 @@ export const getImageUploadUrlContract = new ApiGatewayContract({
       type: 'object',
       properties: {
         url: { type: 'string' },
+        presignedPost: {
+          type: 'object',
+          properties: {
+            url: { type: 'string' },
+            field: {
+              type: 'object',
+              properties: {
+                key: {
+                  type: 'string',
+                },
+                bucket: { type: 'string' },
+                'X-Amz-Algorithm': { type: 'string' },
+                'X-Amz-Credential': { type: 'string' },
+                'X-Amz-Date': { type: 'string' },
+                'X-Amz-Security-Token': { type: 'string' },
+                Policy: { type: 'string' },
+                'X-Amz-Signature': { type: 'string' },
+              },
+              required: [
+                'key',
+                'bucket',
+                'X-Amz-Algorithm',
+                'X-Amz-Credential',
+                'X-Amz-Date',
+                'X-Amz-Security-Token',
+                'Policy',
+                'X-Amz-Signature',
+              ],
+              additionalProperties: false,
+            },
+          },
+        },
       },
-      required: ['url'],
+      required: ['url', 'presignedPost'],
       additionalProperties: false,
     } as const,
     [HttpStatusCodes.BAD_GATEWAY]: errorSchema,
