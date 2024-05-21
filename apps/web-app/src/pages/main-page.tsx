@@ -6,6 +6,7 @@ import {
   CardContent,
   CardMedia,
   Chip,
+  Pagination,
 } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
@@ -16,14 +17,19 @@ import { getFetchRequest } from '@swarmion/serverless-contracts';
 import { getItemsContract, ItemType } from '@3may/contracts';
 import { withAuth } from '../hocs/withAuth.tsx';
 import { useAuth } from '../providers/auth.provider.tsx';
+import Box from '@mui/material/Box';
 
 const MainPage = () => {
+  const PAGE_LIMIT = 10;
+
   const [isLocationAllowed, setIsLocationAllowed] = useState(false);
   const [isLocationDenied, setIsLocationDenied] = useState(false);
   const [isLocationError, setIsLocationError] = useState(false);
   const [lat, setLat] = useState(0);
   const [lng, setLng] = useState(0);
   const [postItems, setPostItems] = useState<ItemType[]>([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
 
   const { token, loading } = useAuth();
 
@@ -46,7 +52,7 @@ const MainPage = () => {
     );
   }, []);
 
-  const syncUsers = async () => {
+  const syncUsers = async (page: number) => {
     if (!token) {
       throw new Error('Unauthorized');
     }
@@ -55,6 +61,8 @@ const MainPage = () => {
       queryStringParameters: {
         lat: String(lat),
         lng: String(lng),
+        page: String(page),
+        limit: String(PAGE_LIMIT),
       },
       // @ts-expect-error headers are not defined
       headers: {
@@ -64,14 +72,15 @@ const MainPage = () => {
 
     if ('items' in body) {
       setPostItems(body.items as unknown as ItemType[]);
+      setTotalPages(body.total as unknown as number);
     }
   };
 
   useEffect(() => {
     if (isLocationAllowed && !loading) {
-      syncUsers();
+      syncUsers(page);
     }
-  }, [isLocationAllowed, loading, token]);
+  }, [isLocationAllowed, loading, token, page]);
 
   return (
     <main>
@@ -159,6 +168,20 @@ const MainPage = () => {
               </CardActionArea>
             </Grid>
           ))}
+        <Box
+          sx={{
+            padding: '1rem 0 2rem',
+          }}
+        >
+          {totalPages &&
+            <Pagination
+              // get pages count from totalCount (items count) and limit
+              count={Math.ceil(totalPages / PAGE_LIMIT)}
+              page={page}
+              onChange={(_, page) => setPage(page)}
+            />
+          }
+        </Box>
       </Container>
     </main>
   );
