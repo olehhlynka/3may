@@ -21,6 +21,14 @@ const pathParametersSchema = {
   required: ['fileName'],
 } as const satisfies JSONSchema;
 
+const queryStringParametersSchema = {
+  type: 'object',
+  properties: {
+    profile: { type: 'string' },
+  },
+  additionalProperties: false,
+} as const satisfies JSONSchema;
+
 export const getImageUploadUrlContract = new ApiGatewayContract({
   id: 'getImageUploadUrl',
   path: '/images/{fileName}',
@@ -30,6 +38,7 @@ export const getImageUploadUrlContract = new ApiGatewayContract({
   //headersSchema,
   requestContextSchema: requestContextSchemaCustom,
   pathParametersSchema,
+  queryStringParametersSchema,
   outputSchemas: {
     [HttpStatusCodes.OK]: {
       type: 'object',

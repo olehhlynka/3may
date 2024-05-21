@@ -26,6 +26,7 @@ const main = getHandler(getImageUploadUrlContract, {
 })(async (event, context) => {
   const { db } = context as DbConnectionContext;
   const { fileName } = event.pathParameters;
+  const { profile } = event.queryStringParameters;
   const { sub: cognitoId } = event.requestContext.authorizer.jwt.claims;
 
   const user = await db
@@ -44,7 +45,7 @@ const main = getHandler(getImageUploadUrlContract, {
     });
   }
 
-  const key = `${user._id}/${uuidv4()}${extension}`;
+  const key = `${user._id}/${profile ? 'profile/' : ''}${uuidv4()}${extension}`;
   const imageUrl = `https://${IMAGES_BUCKET_NAME}.s3.amazonaws.com/${key}`;
 
   const presignedPost = await createPresignedPost(client, {

@@ -37,7 +37,7 @@ const main = getHandler(addNewCommentContract, { ajv })(async (
     _id: new ObjectId(),
     user: {
       userId: new ObjectId(user._id),
-      name: user.name,
+      name: user.username,
       photoUrl: user.photo,
     },
     text: text,
