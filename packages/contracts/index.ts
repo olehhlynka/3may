@@ -20,3 +20,4 @@ export * from './auth/validate-token';
 export * from './comments/add-comment';
 export * from './comments/delete-comment';
 export * from './comments/edit-comment';
+export * from './images/get-image-upload-url';

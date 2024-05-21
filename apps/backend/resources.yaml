@@ -18,6 +18,42 @@ Resources:
         - ALLOW_USER_PASSWORD_AUTH
         - ALLOW_REFRESH_TOKEN_AUTH
 
+  ImagesBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: ${self:custom.servicePrefix}-images
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders: ['*']
+            AllowedMethods: [POST, GET, PUT, HEAD, DELETE]
+            AllowedOrigins: ['*']
+
+  BucketPolicy:
+    Type: 'AWS::S3::BucketPolicy'
+    Properties:
+      Bucket:
+        Ref: ImagesBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: 'PublicListObjects'
+            Effect: 'Allow'
+            Principal: '*'
+            Action: 's3:ListBucket'
+            Resource:
+              Fn::GetAtt: ImagesBucket.Arn
+          - Sid: 'PublicReadForObjects'
+            Effect: 'Allow'
+            Principal: '*'
+            Action: 's3:GetObject'
+            Resource:
+              Fn::Join: ['', [Fn::GetAtt: ImagesBucket.Arn, '/*']]
+
 Outputs:
   UserPoolId:
     Value: !Ref UserPool

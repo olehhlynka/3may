@@ -175,12 +175,15 @@ provider:
       Ref: UserPool
     MONGO_URL: ${env:MONGO_URL}
     STAGE: ${self:provider.stage}
+    IMAGES_BUCKET_NAME:
+      Ref: ImagesBucket
   iam:
     role:
       statements:
         - Effect: Allow
           Action:
             - cognito-idp:*
+            - s3:*
           Resource: '*'
   httpApi:
     cors: true
