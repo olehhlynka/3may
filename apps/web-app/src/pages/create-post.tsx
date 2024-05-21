@@ -92,6 +92,7 @@ const CreatePost = () => {
             })
             .catch(() => {
               console.error('There is image uploading error');
+              throw new Error('There is image uploading error');
             });
         }
       }
