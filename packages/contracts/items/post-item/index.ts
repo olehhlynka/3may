@@ -25,7 +25,7 @@ export const postNewItemContract = new ApiGatewayContract({
     properties: {
       title: { type: 'string' },
       description: { type: 'string' },
-      photo: { type: 'string', maxLength: 100 },
+      photo: { type: 'string', minLength: 10 },
       lng: { type: 'number', minimum: -180, maximum: 180 },
       lat: { type: 'number', minimum: -90, maximum: 90 },
       date: { type: 'string' },

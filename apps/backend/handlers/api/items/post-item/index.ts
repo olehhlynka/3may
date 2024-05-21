@@ -37,7 +37,7 @@ const main = getHandler(postNewItemContract, { ajv })(async (
     description,
     status: status,
     location: { type: 'Point', coordinates: [lng, lat] },
-    photo: 'https://source.unsplash.com/random',
+    photo,
     date: new Date(date),
     user: {
       _id: user._id,

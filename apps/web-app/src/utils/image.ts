@@ -35,7 +35,6 @@ export const uploadImage = (data: UploadInfo, file: File) => {
     'X-Amz-Algorithm',
     data.presignedPost.fields['X-Amz-Algorithm'],
   );
-  // formData.append('X-Amz-Meta-Coordinates', JSON.stringify(cropData));
   formData.append(
     'X-Amz-Credential',
     data.presignedPost.fields['X-Amz-Credential'],
@@ -50,16 +49,10 @@ export const uploadImage = (data: UploadInfo, file: File) => {
     data.presignedPost.fields['X-Amz-Signature'],
   );
   formData.append('Policy', data.presignedPost.fields.Policy);
-  formData.append('acl', data.presignedPost.fields.acl);
   formData.append('file', file);
 
-  // return axios.post(data.presignedPost.url, formData, { headers });
   return fetch(data.presignedPost.url, {
     method: 'POST',
     body: formData,
-    headers: {
-      // content type
-      'Content-Type': 'multipart/form-data',
-    },
   });
 };

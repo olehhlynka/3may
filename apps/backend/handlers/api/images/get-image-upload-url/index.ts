@@ -54,7 +54,6 @@ const main = getHandler(getImageUploadUrlContract, {
     Conditions: [
       { bucket: IMAGES_BUCKET_NAME! },
       ['content-length-range', 1024, 5242880],
-      ['starts-with', '$Content-Type', 'image/'],
     ],
     Fields: { key },
     Expires: 300,
