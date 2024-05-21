@@ -173,7 +173,7 @@ const MainPage = () => {
             padding: '1rem 0 2rem',
           }}
         >
-          {totalPages &&
+          {totalPages !== 0 &&
             <Pagination
               // get pages count from totalCount (items count) and limit
               count={Math.ceil(totalPages / PAGE_LIMIT)}
