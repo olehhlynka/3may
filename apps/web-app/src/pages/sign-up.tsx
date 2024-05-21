@@ -23,7 +23,11 @@ function Copyright(props: TypographyProps) {
       {...props}
     >
       {'Copyright © '}
-      <Link color="inherit" target={"_blank"} href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&themeRefresh=1">
+      <Link
+        color="inherit"
+        target={'_blank'}
+        href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&themeRefresh=1"
+      >
         3may
       </Link>{' '}
       {new Date().getFullYear()}
@@ -39,6 +43,7 @@ export default function SignUp() {
   const [confirmPassword, setConfirmPassword] = React.useState('');
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
+  const [login, setLogin] = React.useState('');
 
   const navigate = useNavigate();
 
@@ -49,6 +54,7 @@ export default function SignUp() {
         body: {
           email,
           password,
+          login,
         },
       });
       setIsCredentialsSent(true);
@@ -66,6 +72,7 @@ export default function SignUp() {
         body: {
           code: confirmPassword,
           username: email,
+          login,
         },
       });
       navigate('/sign-in');
@@ -152,6 +159,18 @@ export default function SignUp() {
                   margin="normal"
                   required
                   fullWidth
+                  id="login"
+                  label="Login"
+                  name="login"
+                  autoComplete="login"
+                  onChange={(e) => setLogin(e.target.value)}
+                  value={login}
+                  autoFocus
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
                   name="password"
                   label="Password"
                   type="password"
@@ -168,7 +187,7 @@ export default function SignUp() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Sign Up
             </Button>
             <Grid container>
               <Grid item>
