@@ -127,7 +127,7 @@ const Header = ({username}: IProps) => {
           }}
         >
           {navItems.map(({ name, link }) => (
-            <MenuItem key={name} onClick={() => setIsMenuOpen(false)}>
+            <MenuItem key={name}>
               <Link href={link} color="inherit">
                 {name}
               </Link>

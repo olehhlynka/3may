@@ -10,7 +10,7 @@ import {
   Snackbar,
   Stack,
 } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Button from '@mui/material/Button';
 import { getFetchRequest } from '@swarmion/serverless-contracts';
 import { postNewItemContract } from '@3may/contracts';
@@ -26,17 +26,23 @@ import {
   MapCameraChangedEvent,
   useMap,
 } from '@vis.gl/react-google-maps';
+import Box from '@mui/material/Box';
+import PostImageInput from '../components/post-image-input.tsx';
+import { getUploadImageUrl, uploadImage } from '../utils/image.ts';
+import { UploadInfo } from '../types.ts';
 
 const CreatePost = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState(new Date().toISOString());
   const [lat, setLat] = useState('49.825291415855844');
   const [lng, setLng] = useState('24.0117430876972');
   const [itemStatus, setItemStatus] = useState<'lost' | 'found'>('lost');
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [markers, setMarkers] = useState<{ [key: string]: typeof Marker }>({});
+  const [photoUrl, setPhotoUrl] = useState<string>('');
+  const [file, setFile] = React.useState<File | null>(null);
 
   const clusterer = useRef<MarkerClusterer | null>(null);
 
@@ -71,6 +77,25 @@ const CreatePost = () => {
       if (!token) {
         throw new Error('Unauthorized');
       }
+
+      let imageUrl: string | undefined = undefined;
+
+      if (file) {
+        const imageUrlData = await getUploadImageUrl(file.name || 'image', false, token);
+
+        console.log(imageUrlData);
+
+        if (imageUrlData && !('message' in imageUrlData)) {
+          await uploadImage(imageUrlData as UploadInfo, file)
+            .then(() => {
+              imageUrl = imageUrlData.url as string;
+            })
+            .catch(() => {
+              console.error('There is image uploading error');
+            });
+        }
+      }
+      
       await getFetchRequest(postNewItemContract, fetch, {
         baseUrl: import.meta.env.VITE_SWARMION_API_URL,
         body: {
@@ -79,6 +104,7 @@ const CreatePost = () => {
           lat: Number(lat),
           date,
           description,
+          photo: imageUrl
         },
         pathParameters: {
           status: itemStatus,
@@ -198,6 +224,11 @@ const CreatePost = () => {
               fullWidth
             />
           </Stack>
+          <Box sx={{
+            padding: '1rem 0',
+          }}>
+            <PostImageInput token={token} filePath={photoUrl} setFilePath={setPhotoUrl} file={file} setFile={setFile}/>
+          </Box>
           <Map
             style={{
               height: '400px',
