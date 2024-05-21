@@ -72,9 +72,8 @@ const main = getHandler(getItemsContract, { ajv, validateOutput: false })(
       (limit ? Number(limit) : DEFAULT_LIMIT) * (page ? Number(page) - 1 : 0);
     const itemsLimit = limit ? Number(limit) : DEFAULT_LIMIT;
 
-    const items = await db
-      .collection<ItemType>(ITEMS_COLLECTION)
-      .find({
+    const [total, items] = await Promise.all([
+      db.collection(ITEMS_COLLECTION).countDocuments({
         location: {
           $geoWithin: {
             $centerSphere: [
@@ -83,12 +82,25 @@ const main = getHandler(getItemsContract, { ajv, validateOutput: false })(
             ],
           },
         },
-      })
-      .skip(itemsSkip)
-      .limit(itemsLimit)
-      .toArray();
+      }),
+      db
+        .collection<ItemType>(ITEMS_COLLECTION)
+        .find({
+          location: {
+            $geoWithin: {
+              $centerSphere: [
+                [Number(lng), Number(lat)],
+                getDistanceInRadians(dist),
+              ],
+            },
+          },
+        })
+        .skip(itemsSkip)
+        .limit(itemsLimit)
+        .toArray(),
+    ]);
 
-    return httpResponse({ items });
+    return httpResponse({ items, total });
   },
 );
 

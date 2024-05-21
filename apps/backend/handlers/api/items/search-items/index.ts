@@ -78,9 +78,9 @@ const main = getHandler(searchItemsContract, { ajv })(async (
     (limit ? Number(limit) : DEFAULT_LIMIT) * (page ? Number(page) - 1 : 0);
   const itemsLimit = limit ? Number(limit) : DEFAULT_LIMIT;
 
-  const items = await db
-    .collection<ItemType>(ITEMS_COLLECTION)
-    .aggregate([
+  const queryResult = await db
+    .collection(ITEMS_COLLECTION)
+    .aggregate<{ paginatedResults: ItemType[]; total: number }>([
       {
         $geoNear: {
           near: { type: 'Point', coordinates: [Number(lng), Number(lat)] },
@@ -101,12 +101,22 @@ const main = getHandler(searchItemsContract, { ajv })(async (
           },
         }),
       },
+      {
+        $facet: {
+          paginatedResults: [{ $skip: itemsSkip }, { $limit: itemsLimit }],
+          totalCount: [{ $count: 'count' }],
+        },
+      },
     ])
-    .skip(itemsSkip)
-    .limit(itemsLimit)
     .toArray();
 
-  return httpResponse({ items });
+  if (!queryResult[0]) {
+    return httpResponse({ items: [], total: 0 });
+  }
+
+  const { paginatedResults: items, total } = queryResult[0];
+
+  return httpResponse({ items, total });
 });
 
 export const handler = middy(main)

@@ -34,9 +34,10 @@ const successSchema = {
       type: 'array',
       items: itemSchema,
     },
+    total: { type: 'number' },
   },
   additionalProperties: false,
-  required: ['items'],
+  required: ['items', 'total'],
 } as const satisfies JSONSchema;
 
 export const getItemsContract = new ApiGatewayContract({
