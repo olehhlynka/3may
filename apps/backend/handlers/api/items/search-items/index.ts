@@ -44,7 +44,6 @@ const main = getHandler(searchItemsContract, { ajv })(async (
     type,
     dateFrom,
     dateTo,
-    title,
     description,
     order,
     sortBy,
@@ -87,8 +86,12 @@ const main = getHandler(searchItemsContract, { ajv })(async (
           maxDistance: dist ? Number(dist) : DEFAULT_DISTANCE_M,
           query: {
             ...(type && { status: type }),
-            ...(title && { title: new RegExp(title, 'ig') }),
-            ...(description && { title: new RegExp(description, 'ig') }),
+            ...(description && {
+              $or: [
+                { title: new RegExp(description, 'ig') },
+                { description: new RegExp(description, 'ig') },
+              ],
+            }),
             ...(dateFrom && { date: { $gte: new Date(dateFrom) } }),
             ...(dateTo && { date: { $lte: new Date(dateTo) } }),
           },
