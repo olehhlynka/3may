@@ -15,7 +15,7 @@ import doNotWaitForEmptyEventLoop from '@middy/do-not-wait-for-empty-event-loop'
 const client = new CognitoIdentityProviderClient({});
 
 const main = getHandler(signUpContract, { ajv })(async (event) => {
-  const { password, email } = event.body;
+  const { password, email, login } = event.body;
 
   await client.send(
     new SignUpCommand({
@@ -26,7 +26,7 @@ const main = getHandler(signUpContract, { ajv })(async (event) => {
     }),
   );
 
-  return httpResponse({ message: 'User created' });
+  return httpResponse({ login });
 });
 
 export const handler = middy(main)

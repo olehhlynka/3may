@@ -13,17 +13,18 @@ export const signUpContract = new ApiGatewayContract({
     properties: {
       password: { type: 'string' },
       email: { type: 'string' },
+      login: { type: 'string' },
     },
     additionalProperties: false,
-    required: ['password', 'email'],
+    required: ['password', 'email', 'login'],
   } as const,
   outputSchemas: {
     [HttpStatusCodes.OK]: {
       type: 'object',
       properties: {
-        message: { type: 'string' },
+        login: { type: 'string' },
       },
-      required: ['message'],
+      required: ['login'],
       additionalProperties: false,
     } as const,
   } as const,

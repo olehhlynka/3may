@@ -13,9 +13,10 @@ export const confirmContract = new ApiGatewayContract({
     properties: {
       username: { type: 'string' },
       code: { type: 'string' },
+      login: { type: 'string' },
     },
     additionalProperties: false,
-    required: ['username', 'code'],
+    required: ['username', 'code', 'login'],
   } as const,
   outputSchemas: {
     [HttpStatusCodes.OK]: {

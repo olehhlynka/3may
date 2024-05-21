@@ -23,7 +23,7 @@ const pathParametersSchema = {
 
 export const getImageUploadUrlContract = new ApiGatewayContract({
   id: 'getImageUploadUrl',
-  path: '/image/{fileName}',
+  path: '/images/{fileName}',
   method: 'POST',
   integrationType: 'restApi',
   authorizerType: 'cognito',

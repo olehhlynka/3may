@@ -21,7 +21,7 @@ const client = new CognitoIdentityProviderClient({});
 
 const main = getHandler(confirmContract, { ajv })(async (event, context) => {
   const { db } = context as DbConnectionContext;
-  const { username, code } = event.body;
+  const { username, code, login } = event.body;
 
   await client.send(
     new ConfirmSignUpCommand({
@@ -52,7 +52,7 @@ const main = getHandler(confirmContract, { ajv })(async (event, context) => {
   }
 
   const insertResult = await db.collection(USERS_COLLECTION).insertOne({
-    username,
+    username: login,
     email,
     cognitoId: response.Username,
     createdAt: new Date(),

@@ -7,6 +7,16 @@ plugins:
 resources: ${file(./resources.yaml)}
 
 functions:
+  GetImageUploadLink:
+    handler: handlers/api/images/get-image-upload-url/index.handler
+    name: ${self:custom.servicePrefix}-get-image-upload-link
+    events:
+      - httpApi:
+          path: /images/{fileName}
+          method: POST
+          authorizer:
+            name: ApiGatewayAuthorizer
+
   AddComment:
     handler: handlers/api/comments/add-comment/index.handler
     name: ${self:custom.servicePrefix}-add-comment
