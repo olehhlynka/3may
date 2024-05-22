@@ -5,6 +5,7 @@ import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
+import { useNavigate } from 'react-router-dom';
 
 interface IProps {
   username?: string;
@@ -13,6 +14,13 @@ interface IProps {
 const Header = ({ username }: IProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
+
+  const navigate = useNavigate();
+
+  const logOut = () => {
+    localStorage.removeItem('token');
+    navigate('/sign-in');
+  }
 
   const navItems = [
     {
@@ -27,6 +35,10 @@ const Header = ({ username }: IProps) => {
       name: 'Profile',
       link: '/profile',
     },
+    {
+      name: 'Log Out',
+      onClick: logOut,
+    }
   ];
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -34,7 +46,7 @@ const Header = ({ username }: IProps) => {
   };
   const handleClose = () => {
     setAnchorEl(null);
-  };
+  }
 
   return (
     <Box
@@ -126,18 +138,29 @@ const Header = ({ username }: IProps) => {
             },
           }}
         >
-          {navItems.map(({ name, link }) => (
-            <Link
-              key={name}
-              href={link}
-              color="inherit"
-              style={{
-                textDecoration: 'none',
-              }}
-            >
-              <MenuItem>{name}</MenuItem>
-            </Link>
-          ))}
+          {navItems.map(({ name, link, onClick }) => {
+
+            if (onClick) {
+              return (
+                <MenuItem key={name} onClick={onClick}>
+                  {name}
+                </MenuItem>
+              )
+            }
+
+            return (
+              <Link
+                key={name}
+                href={link}
+                color="inherit"
+                style={{
+                  textDecoration: 'none',
+                }}
+              >
+                <MenuItem>{name}</MenuItem>
+              </Link>
+            )
+          })}
         </Menu>
       </Container>
     </Box>
