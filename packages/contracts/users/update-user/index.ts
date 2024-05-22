@@ -11,7 +11,7 @@ const bodySchema = {
   type: 'object',
   properties: {
     name: { type: 'string', maxLength: 60, minLength: 2 },
-    photo: { type: 'string', maxLength: 100 },
+    photo: { type: 'string' },
   },
   additionalProperties: false,
 } as const satisfies JSONSchema;
