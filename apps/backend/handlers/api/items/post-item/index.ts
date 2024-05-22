@@ -41,7 +41,7 @@ const main = getHandler(postNewItemContract, { ajv })(async (
     date: new Date(date),
     user: {
       _id: user._id,
-      name: userTyped.name,
+      name: userTyped.username,
       email: userTyped.email,
       photoUrl: userTyped.photoUrl,
     },

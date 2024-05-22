@@ -6,7 +6,6 @@ export const userSchema = {
     _id: { type: 'string' },
     username: { type: 'string' },
     cognitoId: { type: 'string' },
-    name: { type: 'string' },
     email: { type: 'string' },
     rating: { type: 'number' },
     photoUrl: { type: 'string' },

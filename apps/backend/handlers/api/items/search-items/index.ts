@@ -11,11 +11,12 @@ import {
 } from '@/middlewares/database-connection-middleware';
 import { ITEMS_COLLECTION } from '@/common/constants/database-constants';
 import doNotWaitForEmptyEventLoop from '@middy/do-not-wait-for-empty-event-loop';
+import { Document } from 'mongodb';
 
 const DEFAULT_DISTANCE_M = 5_000;
 
 const DEFAULT_LIMIT = 10;
-const DEFAUL_ORDER = -1;
+const DEFAULT_ORDER = -1;
 
 const orderMap: Record<string, number> = {
   ['desc']: -1,
@@ -30,59 +31,56 @@ function areValidCoordinates(longitude: number, latitude: number) {
   return true;
 }
 
-const main = getHandler(searchItemsContract, { ajv })(async (
-  event,
-  context,
-) => {
-  const { db } = context as DbConnectionContext;
-  const {
-    lat,
-    lng,
-    dist,
-    page,
-    limit,
-    type,
-    dateFrom,
-    dateTo,
-    description,
-    order,
-    sortBy,
-  } = event.queryStringParameters;
+const main = getHandler(searchItemsContract, { ajv, validateOutput: false })(
+  async (event, context) => {
+    const { db } = context as DbConnectionContext;
+    const {
+      lat,
+      lng,
+      dist,
+      page,
+      limit,
+      type,
+      dateFrom,
+      dateTo,
+      description,
+      order,
+      sortBy,
+    } = event.queryStringParameters;
 
-  if (!areValidCoordinates(Number(lng), Number(lat))) {
-    throw new Error('Provided coordinates are not valid', {
-      cause: HttpStatusCodes.BAD_REQUEST,
-    });
-  }
+    if (!areValidCoordinates(Number(lng), Number(lat))) {
+      throw new Error('Provided coordinates are not valid', {
+        cause: HttpStatusCodes.BAD_REQUEST,
+      });
+    }
 
-  if (dist && Number(dist) < 0) {
-    throw new Error('Provided distance is not valid', {
-      cause: HttpStatusCodes.BAD_REQUEST,
-    });
-  }
+    if (dist && Number(dist) < 0) {
+      throw new Error('Provided distance is not valid', {
+        cause: HttpStatusCodes.BAD_REQUEST,
+      });
+    }
 
-  if (limit && Number(limit) < 0) {
-    throw new Error('Provided distance is not valid', {
-      cause: HttpStatusCodes.BAD_REQUEST,
-    });
-  }
+    if (limit && Number(limit) < 0) {
+      throw new Error('Provided distance is not valid', {
+        cause: HttpStatusCodes.BAD_REQUEST,
+      });
+    }
 
-  if (page && Number(page) < 1) {
-    throw new Error('Provided distance is not valid', {
-      cause: HttpStatusCodes.BAD_REQUEST,
-    });
-  }
+    if (page && Number(page) < 1) {
+      throw new Error('Provided distance is not valid', {
+        cause: HttpStatusCodes.BAD_REQUEST,
+      });
+    }
 
-  const itemsSkip =
-    (limit ? Number(limit) : DEFAULT_LIMIT) * (page ? Number(page) - 1 : 0);
-  const itemsLimit = limit ? Number(limit) : DEFAULT_LIMIT;
+    const itemsSkip =
+      (limit ? Number(limit) : DEFAULT_LIMIT) * (page ? Number(page) - 1 : 0);
+    const itemsLimit = limit ? Number(limit) : DEFAULT_LIMIT;
 
-  const queryResult = await db
-    .collection(ITEMS_COLLECTION)
-    .aggregate<{ paginatedResults: ItemType[]; total: number }>([
+    const pipe: Document[] = [
       {
         $geoNear: {
           near: { type: 'Point', coordinates: [Number(lng), Number(lat)] },
+          distanceField: 'dist',
           maxDistance: dist ? Number(dist) : DEFAULT_DISTANCE_M,
           query: {
             ...(type && { status: type }),
@@ -97,30 +95,37 @@ const main = getHandler(searchItemsContract, { ajv })(async (
           },
         },
       },
-      {
-        ...(sortBy && {
-          $sort: {
-            [sortBy]: order ? orderMap[order] : DEFAUL_ORDER,
-          },
-        }),
-      },
-      {
-        $facet: {
-          paginatedResults: [{ $skip: itemsSkip }, { $limit: itemsLimit }],
-          totalCount: [{ $count: 'count' }],
+    ];
+
+    if (sortBy) {
+      pipe.push({
+        $sort: {
+          [sortBy]: order ? orderMap[order] : DEFAULT_ORDER,
         },
+      });
+    }
+
+    pipe.push({
+      $facet: {
+        paginatedResults: [{ $skip: itemsSkip }, { $limit: itemsLimit }],
+        totalCount: [{ $count: 'count' }],
       },
-    ])
-    .toArray();
+    });
 
-  if (!queryResult[0]) {
-    return httpResponse({ items: [], total: 0 });
-  }
+    const queryResult = await db
+      .collection(ITEMS_COLLECTION)
+      .aggregate<{ paginatedResults: ItemType[]; total: number }>(pipe)
+      .toArray();
 
-  const { paginatedResults: items, total } = queryResult[0];
+    if (!queryResult[0]) {
+      return httpResponse({ items: [], total: 0 });
+    }
 
-  return httpResponse({ items, total });
-});
+    const { paginatedResults: items, total } = queryResult[0];
+
+    return httpResponse({ items, total });
+  },
+);
 
 export const handler = middy(main)
   .use(doNotWaitForEmptyEventLoop())

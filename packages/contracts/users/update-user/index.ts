@@ -25,7 +25,7 @@ export const updateUserContract = new ApiGatewayContract({
   requestContextSchema: requestContextSchemaCustom,
   bodySchema,
   outputSchemas: {
-    [HttpStatusCodes.OK]: userSchema,
+    [HttpStatusCodes.OK]: { type: 'object', properties: { user: userSchema } },
     [HttpStatusCodes.BAD_GATEWAY]: errorSchema,
   } as const,
 });
