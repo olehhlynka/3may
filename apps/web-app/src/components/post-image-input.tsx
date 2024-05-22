@@ -10,9 +10,10 @@ interface IProps {
   token: string | null;
   file: File | null;
   setFile: (val: File | null) => void;
+  isSubmitting?: boolean
 }
 
-const PostImageInput: React.FC<IProps> = ({ setFile, file }) => {
+const PostImageInput: React.FC<IProps> = ({ setFile, file, isSubmitting }) => {
 
 
   const setFileImageHandler = React.useCallback((file: File) => {
@@ -42,6 +43,7 @@ const PostImageInput: React.FC<IProps> = ({ setFile, file }) => {
       'image/png': ['.png'],
     },
     multiple: false,
+    disabled: isSubmitting
   });
 
   const imageReset = React.useCallback(() => {

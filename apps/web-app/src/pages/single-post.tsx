@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getFetchRequest } from '@swarmion/serverless-contracts';
-import { getSingleItemContract, ItemType } from '@3may/contracts';
+import { getSingleItemContract, getUserContract, ItemType, UserType } from '@3may/contracts';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../providers/auth.provider.tsx';
 import Header from '../components/header.tsx';
@@ -11,6 +11,8 @@ import { format } from 'date-fns';
 import { Chip, Divider } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import CommentForm from '../components/comment-form.tsx';
+import Button from '@mui/material/Button';
+import Link from '@mui/material/Link';
 
 interface IProps {
   username?: string;
@@ -18,6 +20,7 @@ interface IProps {
 
 const SinglePost = ({ username }: IProps) => {
   const [post, setPost] = useState<ItemType>();
+  const [user, setUser] = useState<UserType | null>(null);
 
   const { token, loading } = useAuth();
   const [isPostLoading, setIsPostLoading] = useState(true);
@@ -52,6 +55,30 @@ const SinglePost = ({ username }: IProps) => {
     setIsPostLoading(false);
   };
 
+  const getUser = async () => {
+    try {
+      const { body } = await getFetchRequest(getUserContract, fetch, {
+        baseUrl: import.meta.env.VITE_SWARMION_API_URL,
+        // @ts-expect-error headers are not defined
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      if (!('message' in body)) {
+        setUser(body);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    if (!loading && token) {
+      getUser();
+    }
+  }, [token, loading]);
+
   useEffect(() => {
     if (!loading) {
       fetchPost();
@@ -76,17 +103,28 @@ const SinglePost = ({ username }: IProps) => {
             color: 'black',
           }}
         >
-          <Typography
-            component={'h1'}
-            sx={{
-              fontSize: '1.7rem',
-              marginBottom: '1rem',
-              fontWeight: 'bold',
-              textAlign: 'center',
-            }}
-          >
-            {post?.title}
-          </Typography>
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
+            <Typography
+              component={'h1'}
+              sx={{
+                fontSize: '1.7rem',
+                marginBottom: '1rem',
+                fontWeight: 'bold',
+                textAlign: 'center',
+              }}
+            >
+              {post?.title}
+            </Typography>
+            {post.user._id === user?._id && (
+              <Link href={`/create-post?id=${post._id}`}>
+                Edit
+              </Link>
+            )}
+          </Box>
           <Box
             sx={{
               display: 'flex',
@@ -213,20 +251,21 @@ const SinglePost = ({ username }: IProps) => {
                     <Typography>{comment.text}</Typography>
                   </Box>
                 ))}
-                <Box
-                  sx={{
-                    padding: '1rem',
-                    border: '1px solid #ccc',
-                    borderRadius: '8px',
-                    marginBottom: '1rem',
-                  }}
-                >
-                  {postId && <CommentForm onSubmit={fetchPost} token={token} postId={postId} />}
-                </Box>
               </>
             ) : (
               <Typography>There is no comments yet</Typography>
             )}
+            <Box
+              sx={{
+                padding: '1rem',
+                marginTop: '1rem',
+                border: '1px solid #ccc',
+                borderRadius: '8px',
+                marginBottom: '1rem',
+              }}
+            >
+              {postId && <CommentForm onSubmit={fetchPost} token={token} postId={postId} />}
+            </Box>
           </Box>
         </Container>
       </main>

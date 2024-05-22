@@ -1,21 +1,16 @@
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import {
-  Divider,
-  IconButton,
-  Menu,
-  MenuItem,
-} from '@mui/material';
+import { Divider, IconButton, Menu, MenuItem } from '@mui/material';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 
 interface IProps {
-  username?: string
+  username?: string;
 }
 
-const Header = ({username}: IProps) => {
+const Header = ({ username }: IProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
 
@@ -29,8 +24,8 @@ const Header = ({username}: IProps) => {
       link: '/create-post',
     },
     {
-      name: 'Contact',
-      link: '/contact',
+      name: 'Profile',
+      link: '/profile',
     },
   ];
 
@@ -64,18 +59,23 @@ const Header = ({username}: IProps) => {
         }}
       >
         <Typography variant="h6" sx={{ my: 2, color: 'black' }}>
-          <Link href="/" color="inherit" underline="none" sx={{
-            height: "40px",
-            width: "40px",
-            display: "flex",
-            "& img": {
-              height: "100%",
-              width: "100%",
-              objectFit: "contain",
-              transform: "scale(1.8)"
-            },
-          }}>
-            <img src={"/3may-logo.png"} alt={"3may"}/>
+          <Link
+            href="/"
+            color="inherit"
+            underline="none"
+            sx={{
+              height: '40px',
+              width: '40px',
+              display: 'flex',
+              '& img': {
+                height: '100%',
+                width: '100%',
+                objectFit: 'contain',
+                transform: 'scale(1.8)',
+              },
+            }}
+          >
+            <img src={'/3may-logo.png'} alt={'3may'} />
           </Link>
         </Typography>
         <Divider />
@@ -127,11 +127,16 @@ const Header = ({username}: IProps) => {
           }}
         >
           {navItems.map(({ name, link }) => (
-            <MenuItem key={name}>
-              <Link href={link} color="inherit">
-                {name}
-              </Link>
-            </MenuItem>
+            <Link
+              key={name}
+              href={link}
+              color="inherit"
+              style={{
+                textDecoration: 'none',
+              }}
+            >
+              <MenuItem>{name}</MenuItem>
+            </Link>
           ))}
         </Menu>
       </Container>

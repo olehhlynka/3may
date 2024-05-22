@@ -13,9 +13,13 @@ import {
 import React, { useEffect, useRef, useState } from 'react';
 import Button from '@mui/material/Button';
 import { getFetchRequest } from '@swarmion/serverless-contracts';
-import { postNewItemContract } from '@3may/contracts';
+import {
+  getSingleItemContract,
+  postNewItemContract,
+  updateItemContract,
+} from '@3may/contracts';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { withAuth } from '../hocs/withAuth.tsx';
 import { useAuth } from '../providers/auth.provider.tsx';
 import { Marker } from 'react-leaflet';
@@ -43,10 +47,13 @@ const CreatePost = () => {
   const [markers, setMarkers] = useState<{ [key: string]: typeof Marker }>({});
   const [photoUrl, setPhotoUrl] = useState<string>('');
   const [file, setFile] = React.useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const clusterer = useRef<MarkerClusterer | null>(null);
 
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const id = searchParams.get('id');
 
   const { token, loading } = useAuth();
 
@@ -55,6 +62,7 @@ const CreatePost = () => {
   useEffect(() => {
     console.log('getting location');
     navigator.geolocation.getCurrentPosition((position) => {
+      if (id) return;
       setLat(String(position.coords.latitude));
       setLng(String(position.coords.longitude));
     });
@@ -72,7 +80,37 @@ const CreatePost = () => {
     clusterer.current?.addMarkers(Object.values(markers));
   }, [markers]);
 
-  const setPost = async () => {
+  console.log(date);
+
+  useEffect(() => {
+    if (!id) return;
+    const getSinglePost = async () => {
+      try {
+        const { body } = await getFetchRequest(getSingleItemContract, fetch, {
+          baseUrl: import.meta.env.VITE_SWARMION_API_URL,
+          pathParameters: {
+            itemId: id,
+          },
+          // @ts-expect-error headers are not defined
+          headers: {
+            Authorization: token,
+          },
+        });
+        setLng(body.location?.coordinates[0]);
+        setLat(body.location?.coordinates[1]);
+        setTitle(body.title as string);
+        setDescription(body.description as string);
+        setDate(body.date?.split('T')[0] as string);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    getSinglePost();
+  }, []);
+
+  const setPost = async (shouldUpdate: boolean) => {
+    setIsSubmitting(true);
     try {
       if (!token) {
         throw new Error('Unauthorized');
@@ -81,9 +119,11 @@ const CreatePost = () => {
       let imageUrl: string | undefined = undefined;
 
       if (file) {
-        const imageUrlData = await getUploadImageUrl(file.name || 'image', false, token);
-
-        console.log(imageUrlData);
+        const imageUrlData = await getUploadImageUrl(
+          file.name || 'image',
+          false,
+          token,
+        );
 
         if (imageUrlData && !('message' in imageUrlData)) {
           await uploadImage(imageUrlData as UploadInfo, file)
@@ -96,38 +136,62 @@ const CreatePost = () => {
             });
         }
       }
-      
-      await getFetchRequest(postNewItemContract, fetch, {
-        baseUrl: import.meta.env.VITE_SWARMION_API_URL,
-        body: {
-          title,
-          lng: Number(lng),
-          lat: Number(lat),
-          date,
-          description,
-          photo: imageUrl
-        },
-        pathParameters: {
-          status: itemStatus,
-        },
-        // @ts-expect-error headers are not defined
-        headers: {
-          Authorization: token,
-        },
-      });
-      navigate('/');
-      window.scrollTo(0, 0);
+
+      if (!shouldUpdate) {
+        await getFetchRequest(postNewItemContract, fetch, {
+          baseUrl: import.meta.env.VITE_SWARMION_API_URL,
+          body: {
+            title,
+            lng: Number(lng),
+            lat: Number(lat),
+            date,
+            description,
+            photo: imageUrl,
+          },
+          pathParameters: {
+            status: itemStatus,
+          },
+          // @ts-expect-error headers are not defined
+          headers: {
+            Authorization: token,
+          },
+        });
+        navigate('/');
+        window.scrollTo(0, 0);
+      } else {
+        await getFetchRequest(updateItemContract, fetch, {
+          baseUrl: import.meta.env.VITE_SWARMION_API_URL,
+          body: {
+            title,
+            lng: Number(lng),
+            lat: Number(lat),
+            // date,
+            description,
+            photo: imageUrl,
+          },
+          pathParameters: {
+            itemId: id || "",
+          },
+          // @ts-expect-error headers are not defined
+          headers: {
+            Authorization: token,
+          },
+        });
+        navigate('/');
+        window.scrollTo(0, 0);
+      }
     } catch (error) {
       console.error(error);
       setErrorMessage((error as Error).message);
       setOpenSnackbar(true);
     }
+    setIsSubmitting(false);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (loading) return;
-    setPost();
+    setPost(!!id);
   };
 
   return (
@@ -173,6 +237,7 @@ const CreatePost = () => {
           }}
         >
           <TextField
+            disabled={isSubmitting}
             type="text"
             variant="outlined"
             color="secondary"
@@ -183,6 +248,7 @@ const CreatePost = () => {
             required
           />
           <TextField
+            disabled={isSubmitting}
             type="text"
             variant="outlined"
             color="secondary"
@@ -195,6 +261,7 @@ const CreatePost = () => {
             required
           />
           <TextField
+            disabled={isSubmitting}
             type="date"
             variant="outlined"
             color="secondary"
@@ -205,6 +272,7 @@ const CreatePost = () => {
           />
           <Stack direction="row" spacing={2}>
             <TextField
+              disabled={isSubmitting}
               type={'number'}
               variant="outlined"
               color="secondary"
@@ -215,6 +283,7 @@ const CreatePost = () => {
               fullWidth
             />
             <TextField
+              disabled={isSubmitting}
               type={'number'}
               variant="outlined"
               color="secondary"
@@ -225,11 +294,6 @@ const CreatePost = () => {
               fullWidth
             />
           </Stack>
-          <Box sx={{
-            padding: '1rem 0',
-          }}>
-            <PostImageInput token={token} filePath={photoUrl} setFilePath={setPhotoUrl} file={file} setFile={setFile}/>
-          </Box>
           <Map
             style={{
               height: '400px',
@@ -245,6 +309,7 @@ const CreatePost = () => {
                 ev.detail.zoom,
               )
             }
+            disableDefaultUI={isSubmitting}
             onClick={(e) => {
               console.log(e);
               if (
@@ -259,6 +324,20 @@ const CreatePost = () => {
           >
             <AdvancedMarker position={{ lat: +lat, lng: +lng }} />
           </Map>
+          <Box
+            sx={{
+              padding: '1rem 0',
+            }}
+          >
+            <PostImageInput
+              isSubmitting={isSubmitting}
+              token={token}
+              filePath={photoUrl}
+              setFilePath={setPhotoUrl}
+              file={file}
+              setFile={setFile}
+            />
+          </Box>
           <FormControl>
             <FormLabel id="demo-radio-buttons-group-label">
               Is the thing found or was lost?
@@ -277,15 +356,16 @@ const CreatePost = () => {
                 gap: '1rem',
               }}
             >
-              <FormControlLabel value="lost" control={<Radio />} label="Lost" />
+              <FormControlLabel disabled={isSubmitting} value="lost" control={<Radio />} label="Lost" />
               <FormControlLabel
+                disabled={isSubmitting}
                 value="found"
                 control={<Radio />}
                 label="Found"
               />
             </RadioGroup>
           </FormControl>
-          <Button variant="outlined" color="secondary" type="submit">
+          <Button variant="outlined" disabled={isSubmitting} color="secondary" type="submit">
             Submit
           </Button>
         </form>
