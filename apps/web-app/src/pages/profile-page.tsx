@@ -96,38 +96,46 @@ const ProfilePage = () => {
 
     let imageUrl: string | undefined = undefined;
 
-    if (file && profileImageUrl) {
-      const imageUrlData = await getUploadImageUrl(
-        file.name || 'image',
-        false,
-        token,
-      );
+    try {
 
-      console.log(imageUrlData);
+      if (file && profileImageUrl) {
+        const imageUrlData = await getUploadImageUrl(
+          file.name || 'image',
+          false,
+          token,
+        );
 
-      if (imageUrlData && !('message' in imageUrlData)) {
-        await uploadImage(imageUrlData as UploadInfo, file)
-          .then(() => {
-            imageUrl = imageUrlData.url as string;
-          })
-          .catch(() => {
-            console.error('There is image uploading error');
-            throw new Error('There is image uploading error');
-          });
+        console.log(imageUrlData);
+
+        if (imageUrlData && !('message' in imageUrlData)) {
+          await uploadImage(imageUrlData as UploadInfo, file)
+            .then(() => {
+              imageUrl = imageUrlData.url as string;
+            })
+            .catch(() => {
+              console.error('There is image uploading error');
+              throw new Error('There is image uploading error');
+            });
+        }
       }
-    }
 
-    await getFetchRequest(updateUserContract, fetch, {
-      baseUrl: import.meta.env.VITE_SWARMION_API_URL,
-      body: {
-        name,
-        photo: imageUrl,
-      },
-      // @ts-expect-error headers are not defined
-      headers: {
-        Authorization: token,
-      },
-    });
+      await getFetchRequest(updateUserContract, fetch, {
+        baseUrl: import.meta.env.VITE_SWARMION_API_URL,
+        body: {
+          name,
+          photo: imageUrl,
+        },
+        // @ts-expect-error headers are not defined
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      setIsEditing(false);
+      getUser();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -194,8 +202,8 @@ const ProfilePage = () => {
                 // src={profileImageUrl || (user?.photo as string)}
                 src={
                   isEditing
-                    ? profileImageUrl || (user?.photo as string)
-                    : (user?.photo as string)
+                    ? profileImageUrl || (user?.photoUrl as string)
+                    : (user?.photoUrl as string)
                 }
                 alt={user?.name}
               />
