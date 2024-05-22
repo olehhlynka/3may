@@ -40,6 +40,7 @@ export default function SignUp() {
   const [isCredentialsSent, setIsCredentialsSent] = React.useState(false);
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [checkPassword, setCheckPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
@@ -85,6 +86,11 @@ export default function SignUp() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (password !== checkPassword) {
+      setErrorMessage('Passwords do not match');
+      setOpenSnackbar(true);
+      return;
+    }
 
     if (isCredentialsSent) {
       confirmHandler();
@@ -124,7 +130,6 @@ export default function SignUp() {
           <Box
             component="form"
             onSubmit={handleSubmit}
-            noValidate
             sx={{ mt: 1 }}
           >
             {isCredentialsSent ? (
@@ -178,6 +183,17 @@ export default function SignUp() {
                   autoComplete="current-password"
                   onChange={(e) => setPassword(e.target.value)}
                   value={password}
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="confirmPassword"
+                  label="Check Password"
+                  type="password"
+                  id="checkPassword"
+                  onChange={(e) => setCheckPassword(e.target.value)}
+                  value={checkPassword}
                 />
               </>
             )}
