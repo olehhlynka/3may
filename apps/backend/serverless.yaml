@@ -132,7 +132,7 @@ functions:
     name: ${self:custom.servicePrefix}-update-user
     events:
       - httpApi:
-          path: /user
+          path: /users
           method: PUT
           authorizer:
             name: ApiGatewayAuthorizer
