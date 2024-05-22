@@ -9,6 +9,7 @@ import SignUp from './pages/sign-up.tsx';
 import { AuthProvider } from './providers/auth.provider.tsx';
 import SinglePost from './pages/single-post.tsx';
 import { APIProvider } from '@vis.gl/react-google-maps';
+import ProfilePage from './pages/profile-page.tsx';
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
   {
     path: 'post/:id',
     element: <SinglePost />,
+  },
+  {
+    path: "/profile",
+    element: <ProfilePage />,
   },
   {
     path: '*',
