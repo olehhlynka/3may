@@ -1,7 +1,7 @@
 import Header from '../components/header.tsx';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import { getUserContract, updateUserContract, UserType } from '@3may/contracts';
+import { deleteUserContract, getUserContract, updateUserContract, UserType } from '@3may/contracts';
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../providers/auth.provider.tsx';
 import { getFetchRequest } from '@swarmion/serverless-contracts';
@@ -15,6 +15,8 @@ import { getUploadImageUrl, uploadImage } from '../utils/image.ts';
 import { UploadInfo } from '../types.ts';
 import { Checkbox } from '@mui/material';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import { useNavigate } from 'react-router-dom';
+import DeleteAccountModal from '../components/delete-account-modal.tsx';
 
 const ProfilePage = () => {
   const [user, setUser] = useState<UserType | null>(null);
@@ -45,7 +47,7 @@ const ProfilePage = () => {
     (acceptedFiles: Array<File>) => {
       setFileImageHandler(acceptedFiles[0]);
     },
-    [setFileImageHandler],
+    [setFileImageHandler]
   );
 
   const { getRootProps, getInputProps, open } = useDropzone({
@@ -53,9 +55,9 @@ const ProfilePage = () => {
     onDrop: imageDropHandler,
     accept: {
       'image/jpeg': ['.jpg'],
-      'image/png': ['.png'],
+      'image/png': ['.png']
     },
-    multiple: false,
+    multiple: false
   });
 
   const getUser = async () => {
@@ -64,8 +66,8 @@ const ProfilePage = () => {
         baseUrl: import.meta.env.VITE_SWARMION_API_URL,
         // @ts-expect-error headers are not defined
         headers: {
-          Authorization: token,
-        },
+          Authorization: token
+        }
       });
 
       if (!('message' in body)) {
@@ -102,7 +104,7 @@ const ProfilePage = () => {
         const imageUrlData = await getUploadImageUrl(
           file.name || 'image',
           false,
-          token,
+          token
         );
 
         console.log(imageUrlData);
@@ -123,12 +125,12 @@ const ProfilePage = () => {
         baseUrl: import.meta.env.VITE_SWARMION_API_URL,
         body: {
           name,
-          photo: imageUrl,
+          photo: imageUrl
         },
         // @ts-expect-error headers are not defined
         headers: {
-          Authorization: token,
-        },
+          Authorization: token
+        }
       });
 
       setIsEditing(false);
@@ -148,7 +150,7 @@ const ProfilePage = () => {
             justifyContent: 'space-between',
             alignItems: 'center',
             marginTop: '6rem',
-            marginBottom: '2rem',
+            marginBottom: '2rem'
           }}
         >
           <Typography
@@ -156,7 +158,7 @@ const ProfilePage = () => {
             sx={{
               color: 'black',
               fontSize: '2rem',
-              fontWeight: 'bold',
+              fontWeight: 'bold'
             }}
           >
             Profile
@@ -171,7 +173,7 @@ const ProfilePage = () => {
           sx={{
             border: '1px dashed gray',
             padding: '1.5rem',
-            borderRadius: '2rem',
+            borderRadius: '2rem'
           }}
         >
           <Box>
@@ -181,7 +183,7 @@ const ProfilePage = () => {
                 color: 'black',
                 fontSize: '1rem',
                 fontWeight: 'bold',
-                marginBottom: '1rem',
+                marginBottom: '1rem'
               }}
             >
               Profile Image
@@ -191,13 +193,13 @@ const ProfilePage = () => {
                 paddingBottom: '2rem',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '1rem',
+                gap: '1rem'
               }}
             >
               <Avatar
                 sx={{
                   height: '120px',
-                  width: '120px',
+                  width: '120px'
                 }}
                 // src={profileImageUrl || (user?.photo as string)}
                 src={
@@ -224,7 +226,7 @@ const ProfilePage = () => {
                 color: 'black',
                 fontSize: '1rem',
                 fontWeight: 'bold',
-                marginBottom: '1rem',
+                marginBottom: '1rem'
               }}
             >
               Name
@@ -241,7 +243,7 @@ const ProfilePage = () => {
                 sx={{
                   color: 'black',
                   fontSize: '1.5rem',
-                  fontWeight: 'bold',
+                  fontWeight: 'bold'
                 }}
               >
                 {user?.username}
@@ -251,10 +253,10 @@ const ProfilePage = () => {
           {isEditing && (
             <FormControlLabel
               sx={{
-                color: "black",
-                padding: "1rem 0",
-                display: "flex",
-                alignItems: "center",
+                color: 'black',
+                padding: '1rem 0',
+                display: 'flex',
+                alignItems: 'center'
               }}
               control={
                 <Checkbox
@@ -268,10 +270,11 @@ const ProfilePage = () => {
               label="Allow Notifications"
             />
           )}
+          <DeleteAccountModal token={token} />
         </Box>
       </Container>
     </div>
-  );
+);
 };
 
 export default withAuth(ProfilePage);
