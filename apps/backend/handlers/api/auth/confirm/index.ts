@@ -57,6 +57,7 @@ const main = getHandler(confirmContract, { ajv })(async (event, context) => {
     cognitoId: response.Username,
     createdAt: new Date(),
     updatedAt: new Date(),
+    allowNotifications: false,
   });
 
   return httpResponse({ id: insertResult.insertedId.toString() });

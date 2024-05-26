@@ -12,20 +12,23 @@ import {
 import { USERS_COLLECTION } from '@/common/constants/database-constants';
 import doNotWaitForEmptyEventLoop from '@middy/do-not-wait-for-empty-event-loop';
 
-const main = getHandler(addNewUserContract, { ajv })(async (event, context) => {
-  const { db } = context as DbConnectionContext;
-  const { name, email, photo } = event.body;
+const main = getHandler(addNewUserContract, { ajv, validateOutput: false })(
+  async (event, context) => {
+    const { db } = context as DbConnectionContext;
+    const { name, email, photo } = event.body;
 
-  const insertResult = await db.collection(USERS_COLLECTION).insertOne({
-    name,
-    email,
-    photo,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  });
+    const insertResult = await db.collection(USERS_COLLECTION).insertOne({
+      name,
+      email,
+      photo,
+      allowNotifications: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
 
-  return httpResponse({ id: insertResult.insertedId.toString() });
-});
+    return httpResponse({ id: insertResult.insertedId.toString() });
+  },
+);
 
 export const handler = middy(main)
   .use(doNotWaitForEmptyEventLoop())

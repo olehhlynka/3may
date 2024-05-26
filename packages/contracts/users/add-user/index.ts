@@ -24,7 +24,14 @@ export const addNewUserContract = new ApiGatewayContract({
   integrationType: 'restApi',
   bodySchema,
   outputSchemas: {
-    [HttpStatusCodes.OK]: userSchema,
+    [HttpStatusCodes.OK]: {
+      type: 'object',
+      properties: {
+        id: { type: 'string' },
+      },
+      additionalProperties: false,
+      required: ['id'],
+    } as const,
     [HttpStatusCodes.BAD_GATEWAY]: errorSchema,
   } as const,
 });
