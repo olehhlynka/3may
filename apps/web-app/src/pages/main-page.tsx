@@ -1,6 +1,5 @@
 import Grid from '@mui/material/Grid';
 import {
-  Badge,
   Card,
   CardActionArea,
   CardContent,
@@ -12,7 +11,6 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Header from '../components/header.tsx';
 import { useEffect, useState } from 'react';
-// import { posts } from '../../mock/posts-data.ts';
 import { getFetchRequest } from '@swarmion/serverless-contracts';
 import {
   getItemsContract,
@@ -32,6 +30,7 @@ const MainPage = () => {
   const [isLocationError, setIsLocationError] = useState(false);
   const [lat, setLat] = useState(0);
   const [lng, setLng] = useState(0);
+  const [distance, setDistance] = useState(5000);
   const [postItems, setPostItems] = useState<ItemType[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -71,6 +70,7 @@ const MainPage = () => {
             lng: String(lng),
             page: String(page),
             limit: String(PAGE_LIMIT),
+            dist: String(distance)
           },
           // @ts-expect-error headers are not defined
           headers: {
@@ -97,7 +97,8 @@ const MainPage = () => {
           lng: String(lng),
           description: query,
           sortBy: "date",
-          order: "desc"
+          order: "desc",
+          dist: String(distance),
         },
         // @ts-expect-error headers are not defined
         headers: {
@@ -159,7 +160,7 @@ const MainPage = () => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-              <SearchBar query={query} onSubmit={onSearchSubmit} setQuery={setQuery} />
+              <SearchBar query={query} onSubmit={onSearchSubmit} setQuery={setQuery} distance={distance} lat={lat} setDistance={setDistance} setLat={setLat} lng={lng} setLng={setLng} />
             </Box>
             {postItems.map((post, index) => (
               <Grid
