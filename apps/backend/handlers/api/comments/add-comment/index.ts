@@ -17,9 +17,7 @@ import doNotWaitForEmptyEventLoop from '@middy/do-not-wait-for-empty-event-loop'
 import { ObjectId } from 'mongodb';
 import { SES } from '@aws-sdk/client-ses';
 
-const ses = new SES({
-  maxAttempts: 4,
-});
+const ses = new SES();
 
 const main = getHandler(addNewCommentContract, { ajv })(async (
   event,
@@ -64,7 +62,6 @@ const main = getHandler(addNewCommentContract, { ajv })(async (
   }
 
   const updatedPost = updateResult as unknown as ItemType;
-  console.log(process.env);
 
   const sesEmailProps = {
     Source: process.env.SES_EMAIL!,
@@ -75,7 +72,7 @@ const main = getHandler(addNewCommentContract, { ajv })(async (
       Body: {
         Html: {
           Charset: 'UTF-8',
-          Data: `User ${user.username} has left a commend under your post <b>${updatedPost.title}</b>. Comment: <i>${text}</i>`,
+          Data: `User ${user.username} has left a commend under your post <b>${updatedPost.title}</b>.<br><br>Comment: <i>${text}</i>`,
         },
       },
       Subject: {
@@ -85,7 +82,7 @@ const main = getHandler(addNewCommentContract, { ajv })(async (
     },
   };
 
-  if (user.email !== updatedPost.user.email) {
+  if (updatedPost.user.email !== user.email) {
     await ses.sendEmail(sesEmailProps);
   }
 

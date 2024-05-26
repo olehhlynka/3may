@@ -195,6 +195,7 @@ provider:
           Action:
             - cognito-idp:*
             - s3:*
+            - ses:*
           Resource: '*'
   httpApi:
     cors: true
