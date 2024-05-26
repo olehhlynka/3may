@@ -54,6 +54,12 @@ Resources:
             Resource:
               Fn::Join: ['', [Fn::GetAtt: ImagesBucket.Arn, '/*']]
 
+  EmailNotificationQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: ${self:custom.servicePrefix}-NewsletterHubsQueue
+      VisibilityTimeout: 900
+
 Outputs:
   UserPoolId:
     Value: !Ref UserPool

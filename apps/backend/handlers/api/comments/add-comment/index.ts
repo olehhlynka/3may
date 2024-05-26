@@ -15,9 +15,9 @@ import {
 } from '@/common/constants/database-constants';
 import doNotWaitForEmptyEventLoop from '@middy/do-not-wait-for-empty-event-loop';
 import { ObjectId } from 'mongodb';
-import { SES } from '@aws-sdk/client-ses';
+import { SQS } from '@aws-sdk/client-sqs';
 
-const ses = new SES();
+const sqs = new SQS();
 
 const main = getHandler(addNewCommentContract, { ajv })(async (
   event,
@@ -63,27 +63,17 @@ const main = getHandler(addNewCommentContract, { ajv })(async (
 
   const updatedPost = updateResult as unknown as ItemType;
 
-  const sesEmailProps = {
-    Source: process.env.SES_EMAIL!,
-    Destination: {
-      ToAddresses: [updatedPost.user.email],
-    },
-    Message: {
-      Body: {
-        Html: {
-          Charset: 'UTF-8',
-          Data: `User ${user.username} has left a commend under your post <b>${updatedPost.title}</b>.<br><br>Comment: <i>${text}</i>`,
-        },
-      },
-      Subject: {
-        Charset: 'UTF-8',
-        Data: `New comment for ${updatedPost.title}`,
-      },
-    },
-  };
+  if (updatedPost.user.email === user.email) {
+    const sqsParams = {
+      MessageBody: JSON.stringify({
+        email: updatedPost.user.email,
+        text: `User ${user.username} has left a commend under your post <b>${updatedPost.title}</b>.<br><br>Comment: <i>${text}</i>`,
+        title: `New comment for ${updatedPost.title}`,
+      }),
+      QueueUrl: process.env.NOTIFICATIONS_SQS_URL!,
+    };
 
-  if (updatedPost.user.email !== user.email) {
-    await ses.sendEmail(sesEmailProps);
+    await sqs.sendMessage(sqsParams);
   }
 
   return httpResponse({ id: comment._id.toString() });

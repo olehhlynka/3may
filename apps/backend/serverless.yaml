@@ -171,6 +171,14 @@ functions:
           authorizer:
             name: ApiGatewayAuthorizer
 
+  SendEmailCommentNotification:
+    handler: handlers/sqs/notifications/email-notification/index.handler
+    name: ${self:custom.servicePrefix}-email-notification-sender
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt: [EmailNotificationQueue, Arn]
+
 provider:
   name: aws
   runtime: nodejs20.x
@@ -188,6 +196,8 @@ provider:
     IMAGES_BUCKET_NAME:
       Ref: ImagesBucket
     SES_EMAIL: ${env:SES_EMAIL}
+    NOTIFICATIONS_SQS_URL:
+      Ref: EmailNotificationQueue
   iam:
     role:
       statements:
@@ -196,6 +206,7 @@ provider:
             - cognito-idp:*
             - s3:*
             - ses:*
+            - sqs:*
           Resource: '*'
   httpApi:
     cors: true
