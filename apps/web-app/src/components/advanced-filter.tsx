@@ -34,9 +34,8 @@ const AdvancedFilter: React.FC<IProps> = ({
   const [circleCenter, setCircleCenter] = useState<LatLngLiteral | null>(null);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    onSubmit(e);
+  const onSubmitHandler = () => {
+    onSubmit();
     handleClose();
   };
 
