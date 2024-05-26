@@ -1,6 +1,6 @@
 import cors from '@middy/http-cors';
 import middy from '@middy/core';
-import { UserType, addNewCommentContract } from '@3may/contracts';
+import { ItemType, UserType, addNewCommentContract } from '@3may/contracts';
 import { HttpStatusCodes, getHandler } from '@swarmion/serverless-contracts';
 import { httpResponse } from '@/common/http';
 import { ajv } from '@/common/ajv';
@@ -15,6 +15,11 @@ import {
 } from '@/common/constants/database-constants';
 import doNotWaitForEmptyEventLoop from '@middy/do-not-wait-for-empty-event-loop';
 import { ObjectId } from 'mongodb';
+import { SES } from '@aws-sdk/client-ses';
+
+const ses = new SES({
+  maxAttempts: 4,
+});
 
 const main = getHandler(addNewCommentContract, { ajv })(async (
   event,
@@ -56,6 +61,32 @@ const main = getHandler(addNewCommentContract, { ajv })(async (
 
   if (!updateResult) {
     throw new Error('Item not found', { cause: HttpStatusCodes.NOT_FOUND });
+  }
+
+  const updatedPost = updateResult as unknown as ItemType;
+  console.log(process.env);
+
+  const sesEmailProps = {
+    Source: process.env.SES_EMAIL!,
+    Destination: {
+      ToAddresses: [updatedPost.user.email],
+    },
+    Message: {
+      Body: {
+        Html: {
+          Charset: 'UTF-8',
+          Data: `User ${user.username} has left a commend under your post <b>${updatedPost.title}</b>. Comment: <i>${text}</i>`,
+        },
+      },
+      Subject: {
+        Charset: 'UTF-8',
+        Data: `New comment for ${updatedPost.title}`,
+      },
+    },
+  };
+
+  if (user.email !== updatedPost.user.email) {
+    await ses.sendEmail(sesEmailProps);
   }
 
   return httpResponse({ id: comment._id.toString() });

@@ -187,6 +187,7 @@ provider:
     STAGE: ${self:provider.stage}
     IMAGES_BUCKET_NAME:
       Ref: ImagesBucket
+    SES_EMAIL: ${env:SES_EMAIL}
   iam:
     role:
       statements:
