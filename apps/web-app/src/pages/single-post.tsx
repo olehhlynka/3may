@@ -178,8 +178,8 @@ const SinglePost = ({ username }: IProps) => {
             {post.user && (
               <>
                 <i>Author: </i>
-                {post.user.email && (
-                  <b>{post.user.email as unknown as string}</b>
+                {post.user.name && (
+                  <b>{post.user.name as unknown as string}</b>
                 )}
               </>
             )}
