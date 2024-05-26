@@ -108,22 +108,25 @@ const main = getHandler(searchItemsContract, { ajv, validateOutput: false })(
     pipe.push({
       $facet: {
         paginatedResults: [{ $skip: itemsSkip }, { $limit: itemsLimit }],
-        totalCount: [{ $count: 'count' }],
+        totalData: [{ $count: 'count' }],
       },
     });
 
     const queryResult = await db
       .collection(ITEMS_COLLECTION)
-      .aggregate<{ paginatedResults: ItemType[]; total: number }>(pipe)
+      .aggregate<{
+        paginatedResults: ItemType[];
+        totalData: { count: number }[];
+      }>(pipe)
       .toArray();
 
     if (!queryResult[0]) {
       return httpResponse({ items: [], total: 0 });
     }
 
-    const { paginatedResults: items, total } = queryResult[0];
+    const { paginatedResults: items, totalData } = queryResult[0];
 
-    return httpResponse({ items, total });
+    return httpResponse({ items, total: totalData[0].count });
   },
 );
 
