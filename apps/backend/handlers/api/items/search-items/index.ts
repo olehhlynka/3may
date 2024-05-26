@@ -126,7 +126,7 @@ const main = getHandler(searchItemsContract, { ajv, validateOutput: false })(
 
     const { paginatedResults: items, totalData } = queryResult[0];
 
-    return httpResponse({ items, total: totalData[0].count });
+    return httpResponse({ items, total: totalData[0]?.count ?? 0 });
   },
 );
 

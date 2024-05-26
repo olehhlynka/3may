@@ -15,7 +15,7 @@ import doNotWaitForEmptyEventLoop from '@middy/do-not-wait-for-empty-event-loop'
 const main = getHandler(updateUserContract, { ajv, validateOutput: false })(
   async (event, context) => {
     const { db } = context as DbConnectionContext;
-    const { name, photo } = event.body;
+    const { name, photo, allowNotifications } = event.body;
     const { sub: cognitoId } = event.requestContext.authorizer.jwt.claims;
 
     const insertResult = await db.collection(USERS_COLLECTION).findOneAndUpdate(
@@ -24,6 +24,7 @@ const main = getHandler(updateUserContract, { ajv, validateOutput: false })(
         $set: {
           ...(name && { username: name }),
           ...(photo && { photoUrl: photo }),
+          ...(allowNotifications && { allowNotifications }),
           updatedAt: new Date(),
         },
       },

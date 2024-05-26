@@ -12,6 +12,7 @@ const bodySchema = {
   properties: {
     name: { type: 'string', maxLength: 60, minLength: 2 },
     photo: { type: 'string' },
+    allowNotifications: { type: 'boolean' },
   },
   additionalProperties: false,
 } as const satisfies JSONSchema;
