@@ -159,6 +159,7 @@ const MainPage = () => {
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
+              width: '100%',
             }}>
               <SearchBar query={query} onSubmit={onSearchSubmit} setQuery={setQuery} distance={distance} lat={lat} setDistance={setDistance} setLat={setLat} lng={lng} setLng={setLng} />
             </Box>

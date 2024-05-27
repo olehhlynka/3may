@@ -41,32 +41,36 @@ const SearchBar: React.FC<IProps> = ({
         flexDirection: 'column',
         gap: '1rem',
         alignItems: 'center',
+        width: '100%',
       }}
     >
       <Box sx={{
         display: 'flex',
         gap: '1rem',
         alignItems: 'center',
+        width: '100%',
       }}>
         <TextField
           value={query}
           sx={{
             flexGrow: 1,
             display: 'block',
-          }}
+            width: '100%',
+            ".MuiInputBase-root": {
+              width: "100%"
+          }}}
           onChange={(e) => setQuery(e.target.value)}
         />
-        <Button type="submit">Search</Button>
+        <AdvancedFilter
+          setLng={setLng}
+          setLat={setLat}
+          setDistance={setDistance}
+          lng={lng}
+          lat={lat}
+          distance={distance}
+          onSubmit={() => handleSubmit()}
+        />
       </Box>
-      <AdvancedFilter
-        setLng={setLng}
-        setLat={setLat}
-        setDistance={setDistance}
-        lng={lng}
-        lat={lat}
-        distance={distance}
-        onSubmit={() => handleSubmit()}
-      />
     </Box>
   );
 };

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getFetchRequest } from '@swarmion/serverless-contracts';
 import { getSingleItemContract, getUserContract, ItemType, UserType } from '@3may/contracts';
 import { useParams } from 'react-router-dom';
@@ -13,6 +13,7 @@ import Avatar from '@mui/material/Avatar';
 import CommentForm from '../components/comment-form.tsx';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
+import { AdvancedMarker, Map, MapCameraChangedEvent } from '@vis.gl/react-google-maps';
 
 interface IProps {
   username?: string;
@@ -179,11 +180,30 @@ const SinglePost = ({ username }: IProps) => {
               <>
                 <i>Author: </i>
                 {post.user.name && (
-                  <b>{post.user.name as unknown as string}</b>
+                  <b>{post.user.name as unknown as string && post.user.email as unknown as string}</b>
                 )}
               </>
             )}
           </Typography>
+          <Divider />
+          <Typography sx={{
+            margin: "1.5rem 0",
+            fontSize: "1.5rem",
+            fontWeight: "bold",
+          }}>
+            Location:
+          </Typography>
+          <Map
+            style={{
+              height: '400px',
+              marginBottom: '1.5rem',
+            }}
+            mapId={'6515e20e255c704b'}
+            defaultZoom={15}
+            defaultCenter={{ lat: +post.location.coordinates[1], lng: +post.location.coordinates[0] }}
+          >
+            <AdvancedMarker position={{ lat: +post.location.coordinates[1], lng: +post.location.coordinates[0] }} />
+          </Map>
           <Divider />
           <Box>
             <Typography
