@@ -20,6 +20,7 @@ import {
 import { withAuth } from '../hocs/withAuth.tsx';
 import { useAuth } from '../providers/auth.provider.tsx';
 import Box from '@mui/material/Box';
+import { ItemStatus } from '@3may/types';
 import SearchBar from '../components/search-bar.tsx';
 
 const MainPage = () => {
@@ -35,6 +36,9 @@ const MainPage = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [query, setQuery] = useState('');
+  const [itemType, setItemType] = useState<ItemStatus | undefined>(undefined);
+  const [sortBy, setSortBy] = useState<"dist" | "date" | undefined>('dist');
+  const [order, setOrder] = useState<"asc" | "desc" | undefined>('desc');
 
   const { token, loading } = useAuth();
 
@@ -96,9 +100,10 @@ const MainPage = () => {
           lat: String(lat),
           lng: String(lng),
           description: query,
-          sortBy: "date",
-          order: "desc",
+          sortBy: sortBy,
+          order: order,
           dist: String(distance),
+          type: itemType,
         },
         // @ts-expect-error headers are not defined
         headers: {
@@ -161,7 +166,13 @@ const MainPage = () => {
               alignItems: 'center',
               width: '100%',
             }}>
-              <SearchBar query={query} onSubmit={onSearchSubmit} setQuery={setQuery} distance={distance} lat={lat} setDistance={setDistance} setLat={setLat} lng={lng} setLng={setLng} />
+              <SearchBar sortBy={sortBy}
+                         setItemType={setItemType}
+                          setSortBy={setSortBy}
+                          setOrder={setOrder}
+                         itemType={itemType}
+                         order={order}
+                         query={query} onSubmit={onSearchSubmit} setQuery={setQuery} distance={String(distance)} lat={String(lat)} setDistance={(val) => setDistance(Number(val))} setLat={(val) => setLat(Number(val))} lng={String(lng)} setLng={(val) => setLng(Number(val))} />
             </Box>
             {postItems.map((post, index) => (
               <Grid

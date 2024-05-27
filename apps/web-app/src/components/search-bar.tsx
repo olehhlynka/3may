@@ -1,8 +1,8 @@
 import React from 'react';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import AdvancedFilter from './advanced-filter.tsx';
+import { ItemStatus } from '@3may/types';
 
 interface IProps {
   onSubmit: () => void;
@@ -14,6 +14,12 @@ interface IProps {
   lng: string;
   lat: string;
   distance: string;
+  setItemType?: (val: ItemStatus | undefined) => void;
+  setSortBy?: (val: 'date' | 'dist' | undefined) => void;
+  setOrder?: (val: 'desc' | 'asc' | undefined) => void;
+  itemType?: string;
+  sortBy?: string;
+  order?: string;
 }
 
 const SearchBar: React.FC<IProps> = ({
@@ -26,6 +32,7 @@ const SearchBar: React.FC<IProps> = ({
   setLng,
   lat,
   setLat,
+  sortBy, setSortBy, itemType, setItemType, setOrder, order
 }) => {
   const handleSubmit = (e?: React.FormEvent<HTMLFormElement>) => {
     e?.preventDefault();
@@ -69,6 +76,12 @@ const SearchBar: React.FC<IProps> = ({
           lat={lat}
           distance={distance}
           onSubmit={() => handleSubmit()}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+          setOrder={setOrder}
+          order={order}
+          itemType={itemType}
+          setItemType={setItemType}
         />
       </Box>
     </Box>

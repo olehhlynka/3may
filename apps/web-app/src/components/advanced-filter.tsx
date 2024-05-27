@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
-import { Dialog, Input } from '@mui/material';
+import { Dialog, FormControl, Input, InputLabel, MenuItem, Select } from '@mui/material';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import {
@@ -10,6 +10,7 @@ import {
 } from '@vis.gl/react-google-maps';
 import { MapCircle } from './map-circle.tsx';
 import LatLngLiteral = google.maps.LatLngLiteral;
+import { ItemStatus } from '@3may/types';
 
 interface IProps {
   setLng: (val: string) => void;
@@ -19,6 +20,12 @@ interface IProps {
   lat: string;
   distance: string;
   onSubmit: () => void;
+  setItemType?: (val: ItemStatus | undefined) => void;
+  setSortBy?: (val: 'date' | 'dist' | undefined) => void;
+  setOrder?: (val: 'desc' | 'asc' | undefined) => void;
+  itemType?: string;
+  sortBy?: string;
+  order?: string;
 }
 
 const AdvancedFilter: React.FC<IProps> = ({
@@ -29,6 +36,7 @@ const AdvancedFilter: React.FC<IProps> = ({
   lat,
   setLat,
   onSubmit,
+  setOrder, setSortBy, setItemType, itemType, sortBy, order
 }) => {
   const [open, setOpen] = React.useState(false);
   const [circleCenter, setCircleCenter] = useState<LatLngLiteral | null>(null);
@@ -141,6 +149,55 @@ const AdvancedFilter: React.FC<IProps> = ({
                 onChange={(e) => setDistance(e.target.value)}
               />
             </Box>
+          </Box>
+          <Box sx={{
+            display: 'flex',
+            gap: '1rem',
+            alignItems: 'center',
+            width: '100%',
+          }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Sort By</InputLabel>
+              <Select
+                labelId="sort-by"
+                id="sort-by"
+                value={sortBy}
+                label="Sort By"
+                onChange={(e) => setSortBy?.(e.target.value as 'date' | 'dist' | undefined)}
+              >
+                <MenuItem value={undefined}>None</MenuItem>
+                <MenuItem value={"date"}>Date</MenuItem>
+                <MenuItem value={"dist"}>Distance</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Order</InputLabel>
+              <Select
+                labelId="order"
+                id="order"
+                value={order}
+                label="Order"
+                onChange={(e) => setOrder?.(e.target.value as 'desc' | 'asc' | undefined)}
+              >
+                <MenuItem value={undefined}>None</MenuItem>
+                <MenuItem value={"desc"}>Descending</MenuItem>
+                <MenuItem value={"asc"}>Ascending</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Item Type</InputLabel>
+              <Select
+                labelId="item-type"
+                id="item-type"
+                value={itemType}
+                label="Item Type"
+                onChange={(e) => setItemType?.(e.target.value as ItemStatus | undefined)}
+              >
+                <MenuItem value={undefined}>None</MenuItem>
+                <MenuItem value={"lost"}>Lost</MenuItem>
+                <MenuItem value={"found"}>Found</MenuItem>
+              </Select>
+            </FormControl>
           </Box>
           <Button type={'button'} onClick={() => onSubmitHandler()}>
             Search
