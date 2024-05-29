@@ -220,7 +220,7 @@ const CreatePost = () => {
             marginTop: '2rem',
           }}
         >
-          Create Post
+          {id ? "Update" : "Create"} Post
         </Typography>
         <form
           onSubmit={handleSubmit}

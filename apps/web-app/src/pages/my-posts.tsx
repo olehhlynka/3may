@@ -1,29 +1,15 @@
-import Grid from '@mui/material/Grid';
-import {
-  Card,
-  CardActionArea,
-  CardContent,
-  CardMedia,
-  Chip,
-  Pagination,
-} from '@mui/material';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import Header from '../components/header.tsx';
+import { useAuth } from '../providers/auth.provider.tsx';
 import { useEffect, useState } from 'react';
 import { getFetchRequest } from '@swarmion/serverless-contracts';
-import {
-  getItemsContract,
-  ItemType,
-  searchItemsContract,
-} from '@3may/contracts';
-import { withAuth } from '../hocs/withAuth.tsx';
-import { useAuth } from '../providers/auth.provider.tsx';
+import { getItemsContract, ItemType } from '@3may/contracts';
+import Header from '../components/header.tsx';
+import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
-import { ItemStatus } from '@3may/types';
-import SearchBar from '../components/search-bar.tsx';
+import Grid from '@mui/material/Grid';
+import { Card, CardActionArea, CardContent, CardMedia, Chip, Pagination } from '@mui/material';
+import Typography from '@mui/material/Typography';
 
-const MainPage = () => {
+const MyPosts = () => {
   const PAGE_LIMIT = 10;
 
   const [isLocationAllowed, setIsLocationAllowed] = useState(false);
@@ -31,14 +17,9 @@ const MainPage = () => {
   const [isLocationError, setIsLocationError] = useState(false);
   const [lat, setLat] = useState(0);
   const [lng, setLng] = useState(0);
-  const [distance, setDistance] = useState(5000);
   const [postItems, setPostItems] = useState<ItemType[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [query, setQuery] = useState('');
-  const [itemType, setItemType] = useState<ItemStatus | undefined>(undefined);
-  const [sortBy, setSortBy] = useState<'dist' | 'date' | undefined>('dist');
-  const [order, setOrder] = useState<'asc' | 'desc' | undefined>('desc');
 
   const { token, loading } = useAuth();
 
@@ -66,44 +47,13 @@ const MainPage = () => {
       throw new Error('Unauthorized');
     }
     try {
-      if (!query) {
-        const { body } = await getFetchRequest(getItemsContract, fetch, {
-          baseUrl: import.meta.env.VITE_SWARMION_API_URL,
-          queryStringParameters: {
-            lat: String(lat),
-            lng: String(lng),
-            page: String(page),
-            limit: String(PAGE_LIMIT),
-            dist: String(distance),
-          },
-          // @ts-expect-error headers are not defined
-          headers: {
-            Authorization: token,
-          },
-        });
-
-        if ('items' in body) {
-          setPostItems(body.items as unknown as ItemType[]);
-          setTotalPages(body.total as unknown as number);
-        }
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const searchPosts = async () => {
-    try {
-      const { body } = await getFetchRequest(searchItemsContract, fetch, {
+      const { body } = await getFetchRequest(getItemsContract, fetch, {
         baseUrl: import.meta.env.VITE_SWARMION_API_URL,
         queryStringParameters: {
           lat: String(lat),
           lng: String(lng),
-          description: query,
-          sortBy: sortBy,
-          order: order,
-          dist: String(distance),
-          type: itemType,
+          page: String(page),
+          limit: String(PAGE_LIMIT),
         },
         // @ts-expect-error headers are not defined
         headers: {
@@ -118,10 +68,6 @@ const MainPage = () => {
     } catch (error) {
       console.error(error);
     }
-  };
-
-  const onSearchSubmit = () => {
-    searchPosts();
   };
 
   useEffect(() => {
@@ -159,33 +105,6 @@ const MainPage = () => {
         )}
         {isLocationAllowed && (
           <>
-            <Box
-              sx={{
-                padding: '1rem',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: '100%',
-              }}
-            >
-              <SearchBar
-                sortBy={sortBy}
-                setItemType={setItemType}
-                setSortBy={setSortBy}
-                setOrder={setOrder}
-                itemType={itemType}
-                order={order}
-                query={query}
-                onSubmit={onSearchSubmit}
-                setQuery={setQuery}
-                distance={String(distance)}
-                lat={String(lat)}
-                setDistance={(val) => setDistance(Number(val))}
-                setLat={(val) => setLat(Number(val))}
-                lng={String(lng)}
-                setLng={(val) => setLng(Number(val))}
-              />
-            </Box>
             {postItems.map((post, index) => (
               <Grid
                 item
@@ -269,5 +188,4 @@ const MainPage = () => {
   );
 };
 
-// export default MainPage;
-export default withAuth(MainPage);
+export default MyPosts;

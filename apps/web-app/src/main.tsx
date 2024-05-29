@@ -10,6 +10,7 @@ import { AuthProvider } from './providers/auth.provider.tsx';
 import SinglePost from './pages/single-post.tsx';
 import { APIProvider } from '@vis.gl/react-google-maps';
 import ProfilePage from './pages/profile-page.tsx';
+import MyPosts from './pages/my-posts.tsx';
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
   {
     path: "/profile",
     element: <ProfilePage />,
+  },
+  {
+    path: '/my-posts',
+    element: <MyPosts />,
   },
   {
     path: '*',
