@@ -36,6 +36,10 @@ const Header = ({ username }: IProps) => {
       link: '/profile',
     },
     {
+      name: 'My Posts',
+      link: '/my-posts',
+    },
+    {
       name: 'Log Out',
       onClick: logOut,
     }
