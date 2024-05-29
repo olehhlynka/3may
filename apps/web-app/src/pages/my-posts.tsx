@@ -54,8 +54,9 @@ const MyPosts = () => {
           lng: String(lng),
           page: String(page),
           limit: String(PAGE_LIMIT),
+          // @ts-expect-error property is not defined
+          own: true
         },
-        // @ts-expect-error headers are not defined
         headers: {
           Authorization: token,
         },
@@ -105,7 +106,14 @@ const MyPosts = () => {
         )}
         {isLocationAllowed && (
           <>
-            {postItems.map((post, index) => (
+            <Typography component="h1" variant="h4" sx={{
+              padding: "1rem 0"
+            }}>
+              My Posts
+            </Typography>
+            {postItems.length === 0 ? <div>
+              <Typography variant="h6">No posts found</Typography>
+            </div> : postItems.map((post, index) => (
               <Grid
                 item
                 xs={12}
@@ -174,7 +182,7 @@ const MyPosts = () => {
             padding: '1rem 0 2rem',
           }}
         >
-          {totalPages !== 0 && (
+          {totalPages !== 0 && postItems.length > 0 && (
             <Pagination
               // get pages count from totalCount (items count) and limit
               count={Math.ceil(totalPages / PAGE_LIMIT)}
