@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { getFetchRequest } from '@swarmion/serverless-contracts';
-import { getSingleItemContract, getUserContract, ItemType, UserType } from '@3may/contracts';
+import {
+  getSingleItemContract,
+  getUserContract,
+  ItemType,
+  UserType,
+} from '@3may/contracts';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../providers/auth.provider.tsx';
 import Header from '../components/header.tsx';
@@ -11,9 +16,8 @@ import { format } from 'date-fns';
 import { Chip, Divider } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import CommentForm from '../components/comment-form.tsx';
-import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
-import { AdvancedMarker, Map, MapCameraChangedEvent } from '@vis.gl/react-google-maps';
+import { AdvancedMarker, Map } from '@vis.gl/react-google-maps';
 
 interface IProps {
   username?: string;
@@ -104,11 +108,13 @@ const SinglePost = ({ username }: IProps) => {
             color: 'black',
           }}
         >
-          <Box sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
             <Typography
               component={'h1'}
               sx={{
@@ -120,10 +126,8 @@ const SinglePost = ({ username }: IProps) => {
             >
               {post?.title}
             </Typography>
-            {post.user._id === user?._id && (
-              <Link href={`/create-post?id=${post._id}`}>
-                Edit
-              </Link>
+            {String(post.user._id) === user?._id && (
+              <Link href={`/create-post?id=${post._id}`}>Edit</Link>
             )}
           </Box>
           <Box
@@ -180,17 +184,22 @@ const SinglePost = ({ username }: IProps) => {
               <>
                 <i>Author: </i>
                 {post.user.name && (
-                  <b>{post.user.name as unknown as string && post.user.email as unknown as string}</b>
+                  <b>
+                    {(post.user.name as unknown as string) &&
+                      (post.user.email as unknown as string)}
+                  </b>
                 )}
               </>
             )}
           </Typography>
           <Divider />
-          <Typography sx={{
-            margin: "1.5rem 0",
-            fontSize: "1.5rem",
-            fontWeight: "bold",
-          }}>
+          <Typography
+            sx={{
+              margin: '1.5rem 0',
+              fontSize: '1.5rem',
+              fontWeight: 'bold',
+            }}
+          >
             Location:
           </Typography>
           <Map
@@ -200,9 +209,17 @@ const SinglePost = ({ username }: IProps) => {
             }}
             mapId={'6515e20e255c704b'}
             defaultZoom={15}
-            defaultCenter={{ lat: +post.location.coordinates[1], lng: +post.location.coordinates[0] }}
+            defaultCenter={{
+              lat: +post.location.coordinates[1],
+              lng: +post.location.coordinates[0],
+            }}
           >
-            <AdvancedMarker position={{ lat: +post.location.coordinates[1], lng: +post.location.coordinates[0] }} />
+            <AdvancedMarker
+              position={{
+                lat: +post.location.coordinates[1],
+                lng: +post.location.coordinates[0],
+              }}
+            />
           </Map>
           <Divider />
           <Box>
@@ -284,7 +301,13 @@ const SinglePost = ({ username }: IProps) => {
                 marginBottom: '1rem',
               }}
             >
-              {postId && <CommentForm onSubmit={fetchPost} token={token} postId={postId} />}
+              {postId && (
+                <CommentForm
+                  onSubmit={fetchPost}
+                  token={token}
+                  postId={postId}
+                />
+              )}
             </Box>
           </Box>
         </Container>

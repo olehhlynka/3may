@@ -40,7 +40,7 @@ const MainPage = () => {
   const [sortBy, setSortBy] = useState<'dist' | 'date' | undefined>('dist');
   const [order, setOrder] = useState<'asc' | 'desc' | undefined>('desc');
 
-  const { token, loading } = useAuth();
+  const { token, loading, user } = useAuth();
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -132,7 +132,7 @@ const MainPage = () => {
 
   return (
     <main>
-      <Header />
+      <Header avatarUrl={user?.photoUrl} username={user?.username} />
       <Container
         sx={{
           display: 'flex',
