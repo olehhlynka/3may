@@ -7,12 +7,12 @@ export const commentSchema = {
     user: {
       type: 'object',
       properties: {
-        userId: { type: 'object' },
-        name: { type: 'string' },
+        _id: { type: 'object' },
+        username: { type: 'string' },
         photoUrl: { type: 'string' },
       },
       additionalProperties: false,
-      required: ['userId'],
+      required: ['_id', 'username'],
     },
     text: { type: 'string' },
     createdAt: { type: 'object' },

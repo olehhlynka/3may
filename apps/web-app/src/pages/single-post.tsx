@@ -100,7 +100,7 @@ const SinglePost = ({ username }: IProps) => {
 
   return (
     <div>
-      <Header username={username} />
+      <Header avatarUrl={user?.photoUrl} username={username} />
       <main>
         <Container
           sx={{
@@ -126,7 +126,7 @@ const SinglePost = ({ username }: IProps) => {
             >
               {post?.title}
             </Typography>
-            {String(post.user._id) === user?._id && (
+            {post.user?._id === user?._id && (
               <Link href={`/create-post?id=${post._id}`}>Edit</Link>
             )}
           </Box>
@@ -270,7 +270,7 @@ const SinglePost = ({ username }: IProps) => {
                             fontSize: '1.2rem',
                           }}
                         >
-                          <b>{comment.user.name}</b>
+                          <b>{comment.user.username}</b>
                         </Typography>
                       </Box>
                       <Typography
