@@ -11,9 +11,18 @@ export const userSchema = {
     photoUrl: { type: 'string' },
     createdAt: { type: 'string' },
     updatedAt: { type: 'string' },
+    allowNotifications: { type: 'boolean' },
   },
   //additionalProperties: false,
-  required: ['_id', 'username', 'email', 'cognitoId', 'createdAt', 'updatedAt'],
+  required: [
+    '_id',
+    'username',
+    'email',
+    'cognitoId',
+    'createdAt',
+    'updatedAt',
+    'allowNotifications',
+  ],
 } as const satisfies JSONSchema;
 
 export type UserType = FromSchema<typeof userSchema>;

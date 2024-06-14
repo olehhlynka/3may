@@ -124,6 +124,7 @@ const ProfilePage = () => {
         body: {
           name,
           photo: imageUrl,
+          allowNotifications: areNotificationsEnabled,
         },
         // @ts-expect-error headers are not defined
         headers: {
