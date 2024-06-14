@@ -23,7 +23,7 @@ const ProfilePage = () => {
   const [name, setName] = useState('');
   const [file, setFile] = React.useState<File | null>(null);
   const [areNotificationsEnabled, setAreNotificationsEnabled] =
-    React.useState(false);
+    useState<boolean>(false);
 
   const { token, loading } = useAuth();
 
@@ -72,6 +72,7 @@ const ProfilePage = () => {
       if (!('message' in body)) {
         setUser(body);
         setName(body.username);
+        setAreNotificationsEnabled(body.allowNotifications);
       }
     } catch (error) {
       console.error(error);
