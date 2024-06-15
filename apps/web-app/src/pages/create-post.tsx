@@ -60,11 +60,8 @@ const CreatePost = () => {
   const map = useMap();
 
   useEffect(() => {
-    console.log('getting location');
     navigator.geolocation.getCurrentPosition((position) => {
-      console.log("setting location 2", id);
       if (id) return;
-      console.log("setting location 3", id);
       setLat(String(position.coords.latitude));
       setLng(String(position.coords.longitude));
     });
@@ -81,8 +78,6 @@ const CreatePost = () => {
     clusterer.current?.clearMarkers();
     clusterer.current?.addMarkers(Object.values(markers));
   }, [markers]);
-
-  console.log(date);
 
   useEffect(() => {
     if (!id) return;
