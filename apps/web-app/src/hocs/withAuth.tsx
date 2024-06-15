@@ -5,7 +5,7 @@ import { validateTokenContract } from '@3may/contracts';
 import { useAuth } from '../providers/auth.provider.tsx';
 import Box from '@mui/material/Box';
 
-export function withAuth<P extends React.JSX.IntrinsicAttributes = {}>(
+export function withAuth<P>(
   Component: React.FC<P>,
 ) {
   return (props: P) => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getFetchRequest } from '@swarmion/serverless-contracts';
 import {
   getSingleItemContract,
@@ -14,10 +14,12 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { format } from 'date-fns';
 import { Chip, Divider } from '@mui/material';
-import Avatar from '@mui/material/Avatar';
 import CommentForm from '../components/comment-form.tsx';
 import Link from '@mui/material/Link';
 import { AdvancedMarker, Map } from '@vis.gl/react-google-maps';
+import Comment from '../components/comment.tsx';
+import { withAuth } from '../hocs/withAuth.tsx';
+import { EditAttributes, EditOutlined, EditSharp } from '@mui/icons-material';
 
 interface IProps {
   username?: string;
@@ -90,6 +92,10 @@ const SinglePost = ({ username }: IProps) => {
     }
   }, [loading, postId, token]);
 
+  const refreshPost = () => {
+    fetchPost();
+  };
+
   if (isPostLoading) {
     return <div>Loading...</div>;
   }
@@ -127,13 +133,24 @@ const SinglePost = ({ username }: IProps) => {
               {post?.title}
             </Typography>
             {post.user?._id === user?._id && (
-              <Link href={`/create-post?id=${post._id}`}>Edit</Link>
+              <Link href={`/create-post?id=${post._id}`} sx={{
+                border: '1px solid blue',
+                padding: '0.5rem 1rem',
+                borderRadius: '8px',
+                textDecoration: 'none',
+                color: 'blue',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+              }}>
+                <EditOutlined /> Edit
+              </Link>
             )}
           </Box>
           <Box
             sx={{
               display: 'flex',
-              justifyContent: 'space-between',
+              gap: '1rem',
               alignItems: 'center',
             }}
           >
@@ -237,56 +254,24 @@ const SinglePost = ({ username }: IProps) => {
             {post.comments ? (
               <>
                 {post.comments.map((comment, index) => (
-                  <Box
+                  <Comment
+                    canBeEdited={
+                      user?._id.toString() === comment.user._id.toString()
+                    }
+                    canBeDeleted={
+                      user?._id.toString() === comment.user._id.toString() ||
+                      user?._id.toString() === post.user._id.toString()
+                    }
+                    refreshPost={refreshPost}
+                    itemId={post._id.toString()}
+                    token={token}
+                    id={comment._id.toString()}
+                    text={comment.text}
+                    photoUrl={comment.user.photoUrl as string}
+                    username={comment.user.username as string}
+                    createdAt={comment.createdAt as unknown as string}
                     key={index}
-                    sx={{
-                      padding: '1rem',
-                      border: '1px solid #ccc',
-                      borderRadius: '8px',
-                      marginBottom: '1rem',
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        marginBottom: '1rem',
-                      }}
-                    >
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          gap: '1rem',
-                          alignItems: 'center',
-                        }}
-                      >
-                        <Avatar
-                          sx={{ width: 24, height: 24 }}
-                          src={comment.user.photoUrl}
-                        />
-                        <Typography
-                          sx={{
-                            fontSize: '1.2rem',
-                          }}
-                        >
-                          <b>{comment.user.username}</b>
-                        </Typography>
-                      </Box>
-                      <Typography
-                        sx={{
-                          fontSize: '1rem',
-                          color: 'gray',
-                        }}
-                      >
-                        {format(
-                          new Date(comment.createdAt as unknown as string),
-                          'MMMM dd, yyyy',
-                        )}
-                      </Typography>
-                    </Box>
-                    <Typography>{comment.text}</Typography>
-                  </Box>
+                  />
                 ))}
               </>
             ) : (
@@ -316,4 +301,4 @@ const SinglePost = ({ username }: IProps) => {
   );
 };
 
-export default SinglePost;
+export default withAuth<IProps>(SinglePost);
