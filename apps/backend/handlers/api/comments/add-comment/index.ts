@@ -58,9 +58,9 @@ const main = getHandler(addNewCommentContract, { ajv, validateOutput: false })(
     const updatedPost = updateResult as unknown as ItemType;
     const postOwner = await db
       .collection<UserType>(USERS_COLLECTION)
-      .findOne({ _id: updatedPost.user });
+      .findOne({ _id: updatedPost.user._id });
 
-    if (postOwner?.allowNotifications) {
+    if (postOwner?._id !== user._id && postOwner?.allowNotifications) {
       const sqsParams = {
         MessageBody: JSON.stringify({
           email: updatedPost.user.email,
