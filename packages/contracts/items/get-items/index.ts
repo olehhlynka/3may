@@ -22,6 +22,7 @@ const queryStringParametersSchema = {
     dist: { type: 'string' },
     page: { type: 'string' },
     limit: { type: 'string' },
+    own: { type: 'string' },
   },
   additionalProperties: false,
   required: ['lng', 'lat'],

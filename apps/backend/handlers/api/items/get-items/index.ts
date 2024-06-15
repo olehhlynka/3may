@@ -14,11 +14,13 @@ import {
   USERS_COLLECTION,
 } from '@/common/constants/database-constants';
 import doNotWaitForEmptyEventLoop from '@middy/do-not-wait-for-empty-event-loop';
+import { Filter } from 'mongodb';
 
 const DEFAULT_DISTANCE_M = 5_000;
+const MAX_DIST_M = 5_000_000_000;
 const EARTH_RADIUS_M = 6_378_100;
 
-const DEFAULT_LIMIT = 10;
+const DEFAULT_LIMIT = 4;
 
 function areValidCoordinates(longitude: number, latitude: number) {
   if (longitude < -180 || longitude > 180 || latitude < -90 || latitude > 90) {
@@ -35,7 +37,7 @@ function getDistanceInRadians(distance?: string | number) {
 const main = getHandler(getItemsContract, { ajv, validateOutput: false })(
   async (event, context) => {
     const { db } = context as DbConnectionContext;
-    const { lat, lng, dist, page, limit } = event.queryStringParameters;
+    const { lat, lng, dist, page, limit, own } = event.queryStringParameters;
     const { sub: cognitoId } = event.requestContext.authorizer.jwt.claims;
 
     const user = await db.collection(USERS_COLLECTION).findOne({ cognitoId });
@@ -72,29 +74,26 @@ const main = getHandler(getItemsContract, { ajv, validateOutput: false })(
       (limit ? Number(limit) : DEFAULT_LIMIT) * (page ? Number(page) - 1 : 0);
     const itemsLimit = limit ? Number(limit) : DEFAULT_LIMIT;
 
-    const [total, items] = await Promise.all([
-      db.collection(ITEMS_COLLECTION).countDocuments({
-        location: {
-          $geoWithin: {
-            $centerSphere: [
-              [Number(lng), Number(lat)],
-              getDistanceInRadians(dist),
-            ],
-          },
+    const query: Filter<ItemType> = {
+      location: {
+        $geoWithin: {
+          $centerSphere: [
+            [Number(lng), Number(lat)],
+            own ? getDistanceInRadians(MAX_DIST_M) : getDistanceInRadians(dist),
+          ],
         },
-      }),
+      },
+    };
+
+    if (own) {
+      query['user._id'] = user._id;
+    }
+
+    const [total, items] = await Promise.all([
+      db.collection<ItemType>(ITEMS_COLLECTION).countDocuments(query),
       db
         .collection<ItemType>(ITEMS_COLLECTION)
-        .find({
-          location: {
-            $geoWithin: {
-              $centerSphere: [
-                [Number(lng), Number(lat)],
-                getDistanceInRadians(dist),
-              ],
-            },
-          },
-        })
+        .find(query)
         .skip(itemsSkip)
         .limit(itemsLimit)
         .toArray(),

@@ -15,7 +15,7 @@ import { Document } from 'mongodb';
 
 const DEFAULT_DISTANCE_M = 5_000;
 
-const DEFAULT_LIMIT = 10;
+const DEFAULT_LIMIT = 4;
 const DEFAULT_ORDER = -1;
 
 const orderMap: Record<string, number> = {

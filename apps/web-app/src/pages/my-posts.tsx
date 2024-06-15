@@ -17,7 +17,7 @@ import {
 import Typography from '@mui/material/Typography';
 
 const MyPosts = () => {
-  const PAGE_LIMIT = 10;
+  const PAGE_LIMIT = 4;
 
   const [isLocationAllowed, setIsLocationAllowed] = useState(false);
   const [isLocationDenied, setIsLocationDenied] = useState(false);
