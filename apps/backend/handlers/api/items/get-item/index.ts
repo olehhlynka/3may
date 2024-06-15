@@ -28,7 +28,7 @@ const main = getHandler(getSingleItemContract, { ajv, validateOutput: false })(
       throw new Error('User not found', { cause: HttpStatusCodes.NOT_FOUND });
     }
 
-    const item = await db
+    const result = await db
       .collection(ITEMS_COLLECTION)
       .aggregate([
         {
@@ -39,6 +39,7 @@ const main = getHandler(getSingleItemContract, { ajv, validateOutput: false })(
         {
           $unwind: {
             path: '$comments',
+            preserveNullAndEmptyArrays: true,
           },
         },
         {
@@ -49,7 +50,12 @@ const main = getHandler(getSingleItemContract, { ajv, validateOutput: false })(
             as: 'comments.user',
           },
         },
-        { $unwind: { path: '$comments.user' } },
+        {
+          $unwind: {
+            path: '$comments.user',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
         {
           $project: {
             _id: 1,
@@ -91,11 +97,18 @@ const main = getHandler(getSingleItemContract, { ajv, validateOutput: false })(
       ])
       .toArray();
 
-    if (!item[0]) {
+    if (!result[0]) {
       throw new Error('Item not found', { cause: HttpStatusCodes.NOT_FOUND });
     }
 
-    return httpResponse(item[0] as unknown as ItemType);
+    if (Object.keys(result[0].comments[0]).length === 0) {
+      return httpResponse({
+        ...result[0],
+        comments: [],
+      } as unknown as ItemType);
+    }
+
+    return httpResponse(result[0] as unknown as ItemType);
   },
 );
 

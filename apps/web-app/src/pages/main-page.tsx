@@ -24,7 +24,7 @@ import { ItemStatus } from '@3may/types';
 import SearchBar from '../components/search-bar.tsx';
 
 const MainPage = () => {
-  const PAGE_LIMIT = 10;
+  const PAGE_LIMIT = 4;
 
   const [isLocationAllowed, setIsLocationAllowed] = useState(false);
   const [isLocationDenied, setIsLocationDenied] = useState(false);
