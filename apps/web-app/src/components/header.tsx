@@ -9,9 +9,10 @@ import { useNavigate } from 'react-router-dom';
 
 interface IProps {
   username?: string;
+  avatarUrl?: string;
 }
 
-const Header = ({ username }: IProps) => {
+const Header = ({ username, avatarUrl }: IProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
 
@@ -20,7 +21,7 @@ const Header = ({ username }: IProps) => {
   const logOut = () => {
     localStorage.removeItem('token');
     navigate('/sign-in');
-  }
+  };
 
   const navItems = [
     {
@@ -42,7 +43,7 @@ const Header = ({ username }: IProps) => {
     {
       name: 'Log Out',
       onClick: logOut,
-    }
+    },
   ];
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -50,7 +51,7 @@ const Header = ({ username }: IProps) => {
   };
   const handleClose = () => {
     setAnchorEl(null);
-  }
+  };
 
   return (
     <Box
@@ -106,7 +107,11 @@ const Header = ({ username }: IProps) => {
             padding: '0.5rem',
           }}
         >
-          <Avatar sx={{ width: 32, height: 32 }} alt={username}></Avatar>
+          <Avatar
+            src={avatarUrl}
+            sx={{ width: 32, height: 32 }}
+            alt={username}
+          ></Avatar>
         </IconButton>
         <Menu
           anchorEl={anchorEl}
@@ -143,13 +148,12 @@ const Header = ({ username }: IProps) => {
           }}
         >
           {navItems.map(({ name, link, onClick }) => {
-
             if (onClick) {
               return (
                 <MenuItem key={name} onClick={onClick}>
                   {name}
                 </MenuItem>
-              )
+              );
             }
 
             return (
@@ -163,7 +167,7 @@ const Header = ({ username }: IProps) => {
               >
                 <MenuItem>{name}</MenuItem>
               </Link>
-            )
+            );
           })}
         </Menu>
       </Container>

@@ -28,15 +28,87 @@ const main = getHandler(getSingleItemContract, { ajv, validateOutput: false })(
       throw new Error('User not found', { cause: HttpStatusCodes.NOT_FOUND });
     }
 
-    const item = await db
+    const result = await db
       .collection(ITEMS_COLLECTION)
-      .findOne({ _id: new ObjectId(itemId) });
+      .aggregate([
+        {
+          $match: {
+            _id: new ObjectId(itemId),
+          },
+        },
+        {
+          $unwind: {
+            path: '$comments',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'comments.user',
+            foreignField: '_id',
+            as: 'comments.user',
+          },
+        },
+        {
+          $unwind: {
+            path: '$comments.user',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $project: {
+            _id: 1,
+            title: 1,
+            description: 1,
+            status: 1,
+            location: 1,
+            photo: 1,
+            date: 1,
+            user: 1,
+            createdAt: 1,
+            updatedAt: 1,
+            'comments._id': 1,
+            'comments.text': 1,
+            'comments.createdAt': 1,
+            'comments.updatedAt': 1,
+            'comments.user._id': 1,
+            'comments.user.username': 1,
+            'comments.user.photoUrl': 1,
+          },
+        },
+        {
+          $group: {
+            _id: '$_id',
+            title: {
+              $first: '$title',
+            },
+            description: { $first: '$description' },
+            status: { $first: '$status' },
+            location: { $first: '$location' },
+            photo: { $first: '$photo' },
+            date: { $first: '$date' },
+            user: { $first: '$user' },
+            createdAt: { $first: '$createdAt' },
+            updatedAt: { $first: '$updatedAt' },
+            comments: { $push: '$comments' },
+          },
+        },
+      ])
+      .toArray();
 
-    if (!item) {
+    if (!result[0]) {
       throw new Error('Item not found', { cause: HttpStatusCodes.NOT_FOUND });
     }
 
-    return httpResponse(item as unknown as ItemType);
+    if (Object.keys(result[0].comments[0]).length === 0) {
+      return httpResponse({
+        ...result[0],
+        comments: [],
+      } as unknown as ItemType);
+    }
+
+    return httpResponse(result[0] as unknown as ItemType);
   },
 );
 

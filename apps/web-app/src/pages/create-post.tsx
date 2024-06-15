@@ -55,7 +55,7 @@ const CreatePost = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const id = searchParams.get('id');
 
-  const { token, loading } = useAuth();
+  const { token, loading, user } = useAuth();
 
   const map = useMap();
 
@@ -172,7 +172,7 @@ const CreatePost = () => {
             photo: imageUrl,
           },
           pathParameters: {
-            itemId: id || "",
+            itemId: id || '',
           },
           // @ts-expect-error headers are not defined
           headers: {
@@ -198,7 +198,7 @@ const CreatePost = () => {
 
   return (
     <main>
-      <Header />
+      <Header avatarUrl={user?.photoUrl} username={user?.username} />
       <Snackbar
         open={openSnackbar}
         autoHideDuration={6000}
@@ -222,7 +222,7 @@ const CreatePost = () => {
             marginTop: '2rem',
           }}
         >
-          {id ? "Update" : "Create"} Post
+          {id ? 'Update' : 'Create'} Post
         </Typography>
         <form
           onSubmit={handleSubmit}
@@ -359,7 +359,12 @@ const CreatePost = () => {
                 gap: '1rem',
               }}
             >
-              <FormControlLabel disabled={isSubmitting} value="lost" control={<Radio />} label="Lost" />
+              <FormControlLabel
+                disabled={isSubmitting}
+                value="lost"
+                control={<Radio />}
+                label="Lost"
+              />
               <FormControlLabel
                 disabled={isSubmitting}
                 value="found"
@@ -368,7 +373,12 @@ const CreatePost = () => {
               />
             </RadioGroup>
           </FormControl>
-          <Button variant="outlined" disabled={isSubmitting} color="secondary" type="submit">
+          <Button
+            variant="outlined"
+            disabled={isSubmitting}
+            color="secondary"
+            type="submit"
+          >
             Submit
           </Button>
         </form>

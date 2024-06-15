@@ -1,7 +1,7 @@
 import Header from '../components/header.tsx';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import { deleteUserContract, getUserContract, updateUserContract, UserType } from '@3may/contracts';
+import { getUserContract, updateUserContract, UserType } from '@3may/contracts';
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../providers/auth.provider.tsx';
 import { getFetchRequest } from '@swarmion/serverless-contracts';
@@ -15,7 +15,6 @@ import { getUploadImageUrl, uploadImage } from '../utils/image.ts';
 import { UploadInfo } from '../types.ts';
 import { Checkbox } from '@mui/material';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { useNavigate } from 'react-router-dom';
 import DeleteAccountModal from '../components/delete-account-modal.tsx';
 
 const ProfilePage = () => {
@@ -24,7 +23,7 @@ const ProfilePage = () => {
   const [name, setName] = useState('');
   const [file, setFile] = React.useState<File | null>(null);
   const [areNotificationsEnabled, setAreNotificationsEnabled] =
-    React.useState(false);
+    useState<boolean>(false);
 
   const { token, loading } = useAuth();
 
@@ -47,7 +46,7 @@ const ProfilePage = () => {
     (acceptedFiles: Array<File>) => {
       setFileImageHandler(acceptedFiles[0]);
     },
-    [setFileImageHandler]
+    [setFileImageHandler],
   );
 
   const { getRootProps, getInputProps, open } = useDropzone({
@@ -55,9 +54,9 @@ const ProfilePage = () => {
     onDrop: imageDropHandler,
     accept: {
       'image/jpeg': ['.jpg'],
-      'image/png': ['.png']
+      'image/png': ['.png'],
     },
-    multiple: false
+    multiple: false,
   });
 
   const getUser = async () => {
@@ -66,13 +65,14 @@ const ProfilePage = () => {
         baseUrl: import.meta.env.VITE_SWARMION_API_URL,
         // @ts-expect-error headers are not defined
         headers: {
-          Authorization: token
-        }
+          Authorization: token,
+        },
       });
 
       if (!('message' in body)) {
         setUser(body);
         setName(body.username);
+        setAreNotificationsEnabled(body.allowNotifications);
       }
     } catch (error) {
       console.error(error);
@@ -99,12 +99,11 @@ const ProfilePage = () => {
     let imageUrl: string | undefined = undefined;
 
     try {
-
       if (file && profileImageUrl) {
         const imageUrlData = await getUploadImageUrl(
           file.name || 'image',
           false,
-          token
+          token,
         );
 
         console.log(imageUrlData);
@@ -125,12 +124,13 @@ const ProfilePage = () => {
         baseUrl: import.meta.env.VITE_SWARMION_API_URL,
         body: {
           name,
-          photo: imageUrl
+          photo: imageUrl,
+          allowNotifications: areNotificationsEnabled,
         },
         // @ts-expect-error headers are not defined
         headers: {
-          Authorization: token
-        }
+          Authorization: token,
+        },
       });
 
       setIsEditing(false);
@@ -142,7 +142,7 @@ const ProfilePage = () => {
 
   return (
     <div>
-      <Header />
+      <Header avatarUrl={user?.photoUrl} />
       <Container>
         <Box
           sx={{
@@ -150,7 +150,7 @@ const ProfilePage = () => {
             justifyContent: 'space-between',
             alignItems: 'center',
             marginTop: '6rem',
-            marginBottom: '2rem'
+            marginBottom: '2rem',
           }}
         >
           <Typography
@@ -158,7 +158,7 @@ const ProfilePage = () => {
             sx={{
               color: 'black',
               fontSize: '2rem',
-              fontWeight: 'bold'
+              fontWeight: 'bold',
             }}
           >
             Profile
@@ -173,7 +173,7 @@ const ProfilePage = () => {
           sx={{
             border: '1px dashed gray',
             padding: '1.5rem',
-            borderRadius: '2rem'
+            borderRadius: '2rem',
           }}
         >
           <Box>
@@ -183,7 +183,7 @@ const ProfilePage = () => {
                 color: 'black',
                 fontSize: '1rem',
                 fontWeight: 'bold',
-                marginBottom: '1rem'
+                marginBottom: '1rem',
               }}
             >
               Profile Image
@@ -193,13 +193,13 @@ const ProfilePage = () => {
                 paddingBottom: '2rem',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '1rem'
+                gap: '1rem',
               }}
             >
               <Avatar
                 sx={{
                   height: '120px',
-                  width: '120px'
+                  width: '120px',
                 }}
                 // src={profileImageUrl || (user?.photo as string)}
                 src={
@@ -207,7 +207,7 @@ const ProfilePage = () => {
                     ? profileImageUrl || (user?.photoUrl as string)
                     : (user?.photoUrl as string)
                 }
-                alt={user?.name}
+                alt={String(user?.name)}
               />
               {isEditing && (
                 <div {...getRootProps()}>
@@ -226,7 +226,7 @@ const ProfilePage = () => {
                 color: 'black',
                 fontSize: '1rem',
                 fontWeight: 'bold',
-                marginBottom: '1rem'
+                marginBottom: '1rem',
               }}
             >
               Name
@@ -243,7 +243,7 @@ const ProfilePage = () => {
                 sx={{
                   color: 'black',
                   fontSize: '1.5rem',
-                  fontWeight: 'bold'
+                  fontWeight: 'bold',
                 }}
               >
                 {user?.username}
@@ -256,7 +256,7 @@ const ProfilePage = () => {
                 color: 'black',
                 padding: '1rem 0',
                 display: 'flex',
-                alignItems: 'center'
+                alignItems: 'center',
               }}
               control={
                 <Checkbox
@@ -274,7 +274,7 @@ const ProfilePage = () => {
         </Box>
       </Container>
     </div>
-);
+  );
 };
 
 export default withAuth(ProfilePage);

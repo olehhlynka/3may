@@ -6,7 +6,14 @@ import Header from '../components/header.tsx';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import { Card, CardActionArea, CardContent, CardMedia, Chip, Pagination } from '@mui/material';
+import {
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Chip,
+  Pagination,
+} from '@mui/material';
 import Typography from '@mui/material/Typography';
 
 const MyPosts = () => {
@@ -21,7 +28,7 @@ const MyPosts = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
-  const { token, loading } = useAuth();
+  const { token, loading, user } = useAuth();
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -55,7 +62,7 @@ const MyPosts = () => {
           page: String(page),
           limit: String(PAGE_LIMIT),
           // @ts-expect-error property is not defined
-          own: true
+          own: true,
         },
         headers: {
           Authorization: token,
@@ -79,7 +86,7 @@ const MyPosts = () => {
 
   return (
     <main>
-      <Header />
+      <Header avatarUrl={user?.photoUrl} username={user?.username} />
       <Container
         sx={{
           display: 'flex',
@@ -106,75 +113,88 @@ const MyPosts = () => {
         )}
         {isLocationAllowed && (
           <>
-            <Typography component="h1" variant="h4" sx={{
-              padding: "1rem 0"
-            }}>
+            <Typography
+              component="h1"
+              variant="h4"
+              sx={{
+                padding: '1rem 0',
+              }}
+            >
               My Posts
             </Typography>
-            {postItems.length === 0 ? <div>
-              <Typography variant="h6">No posts found</Typography>
-            </div> : postItems.map((post, index) => (
-              <Grid
-                item
-                xs={12}
-                md={6}
-                key={index + 'post'}
-                sx={{ width: '100%' }}
-              >
-                <CardActionArea component="a" href={`/post/${post._id}`}>
-                  <Card sx={{ display: 'flex' }}>
-                    <CardContent
-                      sx={{
-                        flex: 1,
-                        minWidth: 0,
-                        paddingRight: '4rem',
-                      }}
-                    >
-                      {post.status === 'lost' ? (
-                        <Chip label="lost" color="error" variant="outlined" />
-                      ) : (
-                        <Chip
-                          label="found"
-                          color="primary"
-                          variant="outlined"
-                        />
-                      )}
-                      <Typography
-                        component="h2"
-                        variant="h5"
+            {postItems.length === 0 ? (
+              <div>
+                <Typography variant="h6">No posts found</Typography>
+              </div>
+            ) : (
+              postItems.map((post, index) => (
+                <Grid
+                  item
+                  xs={12}
+                  md={6}
+                  key={index + 'post'}
+                  sx={{ width: '100%' }}
+                >
+                  <CardActionArea component="a" href={`/post/${post._id}`}>
+                    <Card sx={{ display: 'flex' }}>
+                      <CardContent
                         sx={{
-                          marginTop: '1rem',
+                          flex: 1,
+                          minWidth: 0,
+                          paddingRight: '4rem',
                         }}
                       >
-                        {post.title}
-                      </Typography>
-                      <Typography variant="subtitle1" color="text.secondary">
-                        {new Date(post.date as unknown as Date).toDateString()}
-                      </Typography>
-                      <Typography
-                        variant="subtitle1"
-                        paragraph
+                        {post.status === 'lost' ? (
+                          <Chip label="lost" color="error" variant="outlined" />
+                        ) : (
+                          <Chip
+                            label="found"
+                            color="primary"
+                            variant="outlined"
+                          />
+                        )}
+                        <Typography
+                          component="h2"
+                          variant="h5"
+                          sx={{
+                            marginTop: '1rem',
+                          }}
+                        >
+                          {post.title}
+                        </Typography>
+                        <Typography variant="subtitle1" color="text.secondary">
+                          {new Date(
+                            post.date as unknown as Date,
+                          ).toDateString()}
+                        </Typography>
+                        <Typography
+                          variant="subtitle1"
+                          paragraph
+                          sx={{
+                            // truncate string
+                            overflow: 'hidden',
+                            width: '100%',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          {post.description}
+                        </Typography>
+                      </CardContent>
+                      <CardMedia
+                        component="img"
                         sx={{
-                          // truncate string
-                          overflow: 'hidden',
-                          width: '100%',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
+                          width: 160,
+                          display: { xs: 'none', sm: 'block' },
                         }}
-                      >
-                        {post.description}
-                      </Typography>
-                    </CardContent>
-                    <CardMedia
-                      component="img"
-                      sx={{ width: 160, display: { xs: 'none', sm: 'block' } }}
-                      image={post.photo}
-                      alt={post.title}
-                    />
-                  </Card>
-                </CardActionArea>
-              </Grid>
-            ))}
+                        image={post.photo}
+                        alt={post.title}
+                      />
+                    </Card>
+                  </CardActionArea>
+                </Grid>
+              ))
+            )}
           </>
         )}
         <Box

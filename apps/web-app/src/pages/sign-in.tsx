@@ -107,17 +107,18 @@ export default function SignIn() {
             alignItems: 'center',
           }}
         >
+          <img
+            src={'/3may-logo.png'}
+            alt={'3may'}
+            style={{ width: '50%', height: 'auto', marginBottom: 16 }}
+          />
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            sx={{ mt: 1 }}
-          >
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
