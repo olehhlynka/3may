@@ -39,8 +39,8 @@ const CreatePost = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState(new Date().toISOString());
-  const [lat, setLat] = useState('49.825291415855844');
-  const [lng, setLng] = useState('24.0117430876972');
+  const [lat, setLat] = useState('49.6');
+  const [lng, setLng] = useState('24.9117430876972');
   const [itemStatus, setItemStatus] = useState<'lost' | 'found'>('lost');
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -62,7 +62,9 @@ const CreatePost = () => {
   useEffect(() => {
     console.log('getting location');
     navigator.geolocation.getCurrentPosition((position) => {
+      console.log("setting location 2", id);
       if (id) return;
+      console.log("setting location 3", id);
       setLat(String(position.coords.latitude));
       setLng(String(position.coords.longitude));
     });
@@ -309,6 +311,7 @@ const CreatePost = () => {
                 ev.detail.zoom,
               )
             }
+            center={{ lat: +lat, lng: +lng }}
             disableDefaultUI={isSubmitting}
             onClick={(e) => {
               console.log(e);
