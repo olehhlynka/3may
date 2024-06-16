@@ -49,7 +49,7 @@ const main = getHandler(editCommentContract, { ajv })(async (
   }
 
   if (user._id.toString() !== itemTyped.user.toString()) {
-    if (user._id.toString() !== comment.user.userId.toString()) {
+    if (user._id.toString() !== comment.user.toString()) {
       throw new Error('Forbidden', { cause: HttpStatusCodes.FORBIDDEN });
     }
   }
