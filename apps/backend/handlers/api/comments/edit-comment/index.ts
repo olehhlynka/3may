@@ -1,6 +1,6 @@
 import cors from '@middy/http-cors';
 import middy from '@middy/core';
-import { ItemType, editCommentContract } from '@3may/contracts';
+import { ItemType, UserType, editCommentContract } from '@3may/contracts';
 import { HttpStatusCodes, getHandler } from '@swarmion/serverless-contracts';
 import { httpResponse } from '@/common/http';
 import { ajv } from '@/common/ajv';
@@ -15,6 +15,9 @@ import {
 } from '@/common/constants/database-constants';
 import { ObjectId } from 'mongodb';
 import doNotWaitForEmptyEventLoop from '@middy/do-not-wait-for-empty-event-loop';
+import { SQS } from '@aws-sdk/client-sqs';
+
+const sqs = new SQS();
 
 const main = getHandler(editCommentContract, { ajv })(async (
   event,
@@ -40,6 +43,9 @@ const main = getHandler(editCommentContract, { ajv })(async (
   }
 
   const itemTyped = item as unknown as ItemType;
+  const postOwner = await db
+    .collection<UserType>(USERS_COLLECTION)
+    .findOne({ _id: item.user._id });
   const comment = itemTyped.comments?.find(
     (comment) => comment._id.toString() === commentId,
   );
@@ -67,6 +73,19 @@ const main = getHandler(editCommentContract, { ajv })(async (
 
   if (!insertResult) {
     throw new Error('Item not found', { cause: HttpStatusCodes.NOT_FOUND });
+  }
+
+  if (postOwner?._id !== String(user._id) && postOwner?.allowNotifications) {
+    const sqsParams = {
+      MessageBody: JSON.stringify({
+        email: item.user.email,
+        text: `User ${user.username} has updated the commend under your post <b>${item.title}</b>.<br><br>Comment old: <i>${comment.text}</i><br>Comment new: ${text}`,
+        title: `Comment under your post ${item.title} was changed`,
+      }),
+      QueueUrl: process.env.NOTIFICATIONS_SQS_URL!,
+    };
+
+    await sqs.sendMessage(sqsParams);
   }
 
   return httpResponse({ id: insertResult._id.toString() });
