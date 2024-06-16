@@ -19,6 +19,7 @@
     "@mui/icons-material": "^5.15.17",
     "@mui/material": "^5.15.17",
     "@swarmion/serverless-contracts": "^0.31.3",
+    "@types/validator": "^13.12.0",
     "@vis.gl/react-google-maps": "^1.0.0",
     "common": "workspace:*",
     "date-fns": "^3.6.0",
@@ -26,7 +27,8 @@
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
     "react-leaflet": "^4.2.1",
-    "react-router-dom": "^6.23.1"
+    "react-router-dom": "^6.23.1",
+    "validator": "^13.12.0"
   },
   "devDependencies": {
     "@types/google.maps": "^3.55.9",

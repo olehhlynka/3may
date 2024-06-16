@@ -13,6 +13,7 @@ import { getFetchRequest } from '@swarmion/serverless-contracts';
 import { signUpContract, confirmContract } from '@3may/contracts';
 import { useNavigate } from 'react-router-dom';
 import { Snackbar } from '@mui/material';
+import validator from 'validator';
 
 function Copyright(props: TypographyProps) {
   return (
@@ -47,6 +48,23 @@ export default function SignUp() {
   const [login, setLogin] = React.useState('');
 
   const navigate = useNavigate();
+
+  const validate = (value: string) => {
+    if (
+      !validator.isStrongPassword(value, {
+        minLength: 8,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+      })
+    ) {
+      setErrorMessage(`Password is too weak`);
+      setOpenSnackbar(true);
+      return false;
+    }
+    return true;
+  };
 
   const signUpHandler = async () => {
     try {
@@ -86,6 +104,10 @@ export default function SignUp() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const isPasswordStrong = validate(password);
+    if (!isPasswordStrong) {
+      return;
+    }
     if (password !== checkPassword) {
       setErrorMessage('Passwords do not match');
       setOpenSnackbar(true);
@@ -198,6 +220,55 @@ export default function SignUp() {
                 />
               </>
             )}
+            <Box component={'ul'} sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              fontSize: '0.75rem',
+              color: 'gray',
+              paddingLeft: '0',
+            }}>
+              <Typography>Password should contain:</Typography>
+              <Typography
+                component={'li'}
+                sx={{
+                  margin: '0.5rem 0',
+                  marginLeft: '1.5rem',
+                  fontSize: '0.75rem',
+                }}
+              >
+                at least 8 characters
+              </Typography>
+              <Typography
+                component={'li'}
+                sx={{
+                  margin: '0.5rem 0',
+                  marginLeft: '1.5rem',
+                  fontSize: '0.75rem',
+                }}
+              >
+                at least 1 number
+              </Typography>
+              <Typography
+                component={'li'}
+                sx={{
+                  margin: '0.5rem 0',
+                  marginLeft: '1.5rem',
+                  fontSize: '0.75rem',
+                }}
+              >
+                at least 1 uppercase letter
+              </Typography>
+              <Typography
+                component={'li'}
+                sx={{
+                  margin: '0.5rem 0',
+                  marginLeft: '1.5rem',
+                  fontSize: '0.75rem',
+                }}
+              >
+                at least 1 special character
+              </Typography>
+            </Box>
             <Button
               type="submit"
               fullWidth
