@@ -41,6 +41,9 @@ const CreatePost = () => {
   const [date, setDate] = useState(new Date().toISOString());
   const [lat, setLat] = useState('49.6');
   const [lng, setLng] = useState('24.9117430876972');
+  const [camera, setCamera] = useState<{ center: { lat: number; lng: number } }>({
+    center: { lat: 49.6, lng: 24.9117430876972 },
+  });
   const [itemStatus, setItemStatus] = useState<'lost' | 'found'>('lost');
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -64,6 +67,12 @@ const CreatePost = () => {
       if (id) return;
       setLat(String(position.coords.latitude));
       setLng(String(position.coords.longitude));
+      setCamera({
+        center: {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        },
+      });
     });
   }, []);
 
@@ -298,15 +307,22 @@ const CreatePost = () => {
             mapId={'6515e20e255c704b'}
             defaultZoom={13}
             defaultCenter={{ lat: +lat, lng: +lng }}
-            onCameraChanged={(ev: MapCameraChangedEvent) =>
+            onCameraChanged={(ev: MapCameraChangedEvent) => {
               console.log(
                 'camera changed:',
                 ev.detail.center,
                 'zoom:',
                 ev.detail.zoom,
-              )
+              );
+              setCamera({
+                center: ev.detail.center
+              })
             }
-            center={{ lat: +lat, lng: +lng }}
+            }
+            onCenterChanged={(ev) => {
+              console.log('center changed:', ev.detail.center);
+            }}
+            center={{ lat: +camera.center.lat, lng: +camera.center.lng }}
             disableDefaultUI={isSubmitting}
             onClick={(e) => {
               console.log(e);
