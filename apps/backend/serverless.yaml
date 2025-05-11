@@ -179,8 +179,15 @@ functions:
           arn:
             Fn::GetAtt: [EmailNotificationQueue, Arn]
 
+  ConnectHandler:
+    handler: handlers/ws/test/index.handler
+    events:
+      - websocket: $connect
+
 provider:
   name: aws
+  logs:
+    websocket: true
   runtime: nodejs20.x
   region: eu-central-1
   stage: ${opt:stage, 'dev'}
